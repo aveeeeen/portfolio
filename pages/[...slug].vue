@@ -59,4 +59,9 @@ a {
 .show-right{
   align-items: flex-end;
 }
+
+.flex-content{
+  display: flex;
+  flex-direction: column;
+}
 </style>
