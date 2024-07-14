@@ -6,7 +6,6 @@ export default defineNuxtConfig({
   modules: [
     'nuxt-content-assets'
     ,'@nuxt/content'
-    ,'@nuxt/image'
   ],
   routeRules: {
     '/': { prerender: true }
@@ -26,8 +25,5 @@ export default defineNuxtConfig({
     
     // output debug messages
     debug: false,
-  },
-  extends: [
-    'node_modules/nuxt-content-assets/cache',
-  ],
+  }
 })
