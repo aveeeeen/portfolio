@@ -1,12 +1,12 @@
 <script setup>
 const isShowToC = ref(false);
 defineProps(["imgSrc"]);
-watch(isShowToC, )
+watch(isShowToC);
 </script>
 
 <template>
   <div class="page center--">
-    <div >
+    <div>
       <main>
         <ContentDoc v-slot="{ doc }">
           <!-- Post title -->
@@ -18,26 +18,26 @@ watch(isShowToC, )
         </ContentDoc>
       </main>
     </div>
-  </div>
 
-  <div class="flex-vert menu show-right">
-    <Menu class=""></Menu>
-    <div class="">
-      <div class="ui-box toc relative" v-if="isShowToC">
-        <ContentDoc v-slot="{ doc }">
-        <ul>
-          <li v-for="link of doc.body.toc.links" :key="link.id">
-            <a :href="`#${link.id}`">{{ link.text }}</a>
-          </li>
-        </ul>
-        </ContentDoc>
+    <div class="flex-vert menu show-right">
+      <Menu class=""></Menu>
+      <div class="">
+        <div class="ui-box toc relative" v-if="isShowToC">
+          <ContentDoc v-slot="{ doc }">
+            <ul>
+              <li v-for="link of doc.body.toc.links" :key="link.id">
+                <a :href="`#${link.id}`">{{ link.text }}</a>
+              </li>
+            </ul>
+          </ContentDoc>
+        </div>
+        <div v-else class="ui-box relative">
+          <a @click="isShowToC = !isShowToC">Table of Contents</a>
+        </div>
       </div>
-      <div v-else class="ui-box relative">
-        <a @click="isShowToC = !isShowToC">Table of Contents</a>
+      <div v-if="isShowToC" class="ui-box">
+        <a @click="isShowToC = !isShowToC">Close</a>
       </div>
-    </div>
-    <div v-if="isShowToC" class="ui-box">
-      <a  @click="isShowToC = !isShowToC">Close</a>
     </div>
   </div>
 </template>
@@ -52,15 +52,15 @@ a {
   max-width: 300px;
 }
 
-.relative{
+.relative {
   position: relative;
 }
 
-.show-right{
+.show-right {
   align-items: flex-end;
 }
 
-.flex-content{
+.flex-content {
   display: flex;
   flex-direction: column;
 }
