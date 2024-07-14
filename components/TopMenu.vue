@@ -4,7 +4,7 @@
 
 <template>
  <div class="ui-box">
-    <div class="center">
+    <div class="nav-center">
       <NuxtLink to="/about"> about</NuxtLink>
       <NuxtLink to="/works"> works</NuxtLink>
       <NuxtLink to="/notes"> notes</NuxtLink>
@@ -13,15 +13,5 @@
 </template>
 
 <style>
-
-.center{
-  display: flex;
-  flex-direction: column;
-  row-gap: 10px;
-}
-
-.menuItems{
-  flex : 1;
-}
 
 </style>

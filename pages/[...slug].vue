@@ -22,8 +22,8 @@ watch(isShowToC);
     </div>
 
     <div class="flex-vert menu show-right">
-      <Menu class=""></Menu>
-      <div class="">
+      <Menu></Menu>
+      <div>
         <div class="ui-box toc relative" v-if="isShowToC">
           <ContentDoc v-slot="{ doc }">
             <ul class="table-ul">
@@ -47,14 +47,11 @@ watch(isShowToC);
 </template>
 
 <style>
-a {
-  font-size: 1rem;
-  color: blue;
-}
 
 .toc {
   max-width: 300px;
-  max-height: 300px;
+  max-height: 250px;
+  min-width: 100px;
   overflow-x: scroll;
 }
 
@@ -75,6 +72,7 @@ img{
 
 .table-ul{
   padding-left: 15px;
+  list-style: none;
 }
 
 .table-li{

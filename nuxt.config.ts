@@ -10,7 +10,9 @@ export default defineNuxtConfig({
   routeRules: {
     '/': { prerender: true }
   },
-
+  app: {
+    baseURL: '/'
+  },
   alias: {
     "@": resolve(__dirname, "/")
   },

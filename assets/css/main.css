@@ -12,6 +12,12 @@ html{
   word-break: break-all;
 }
 
+.nav-center {
+  display: flex;
+  flex-direction: column;
+  row-gap: 5px;
+}
+
 a:hover{
   color: white;
   display: inline;
@@ -32,6 +38,11 @@ h3 {
   line-height: 100%;
 }
 
+a {
+  font-size: 1rem;
+  color: blue;
+  text-decoration: none;
+}
 
 .ui-box {
   display: block;
