@@ -15,7 +15,7 @@
         </div>
         <!-- picture box -->
         <div class="img-box center-vert margin-left">
-          <img src="~/assets/img/matsumoto.png" />
+          <img class="about-img" src="~/assets/img/matsumoto.png" />
         </div>
       </div>
 
@@ -40,7 +40,7 @@
 </template>
 
 <style>
-img {
+.about-img {
   width: 20svh;
   height: 20svh;
 }

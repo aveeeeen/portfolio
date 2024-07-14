@@ -14,7 +14,9 @@ watch(isShowToC);
           <!-- Table of contents -->
 
           <!-- Main post content -->
-          <ContentRenderer class="content-box" :value="doc" />
+          <!-- imageSize: 'style' -->
+
+          <ContentRenderer class="content-box" :value="doc"/>
         </ContentDoc>
       </main>
     </div>
@@ -26,7 +28,9 @@ watch(isShowToC);
           <ContentDoc v-slot="{ doc }">
             <ul>
               <li v-for="link of doc.body.toc.links" :key="link.id">
-                <a @click="isShowToC = !isShowToC" :href="`#${link.id}`">{{ link.text }}</a>
+                <a @click="isShowToC = !isShowToC" :href="`#${link.id}`">{{
+                  link.text
+                }}</a>
               </li>
             </ul>
           </ContentDoc>
@@ -63,5 +67,11 @@ a {
 .flex-content {
   display: flex;
   flex-direction: column;
+}
+
+img{
+  width: 80svw;
+  height: auto;
+  max-width: 800px;
 }
 </style>
