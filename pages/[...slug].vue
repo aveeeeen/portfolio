@@ -6,7 +6,7 @@ watch(isShowToC, )
 
 <template>
   <div class="page center--">
-    <div class="content-box">
+    <div >
       <main>
         <ContentDoc v-slot="{ doc }">
           <!-- Post title -->
@@ -14,7 +14,7 @@ watch(isShowToC, )
           <!-- Table of contents -->
 
           <!-- Main post content -->
-          <ContentRenderer :value="doc" />
+          <ContentRenderer class="content-box" :value="doc" />
         </ContentDoc>
       </main>
     </div>
