@@ -14,6 +14,9 @@ export default defineNuxtConfig({
   alias: {
     "@": resolve(__dirname, "/")
   },
+  app: {
+    baseURL: '/index/'
+  },
   css: ['~/assets/css/main.css'],
   compatibilityDate: '2024-07-12',
   
