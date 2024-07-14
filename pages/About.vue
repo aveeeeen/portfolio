@@ -2,7 +2,7 @@
   <div class="page center-">
     <div class="">
       <div class="flex-hori margin-left">
-        <div class="box">
+        <div class="content-box">
           <h1>About Me</h1>
           <ul>
             <li>Institution -> IAMAS</li>
@@ -65,7 +65,7 @@ ul {
 
 @media (max-width: 786px) {
   .page-margin {
-    margin: 0px;
+    margin: 10px;
   }
 }
 </style>

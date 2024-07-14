@@ -26,7 +26,7 @@ watch(isShowToC);
           <ContentDoc v-slot="{ doc }">
             <ul>
               <li v-for="link of doc.body.toc.links" :key="link.id">
-                <a :href="`#${link.id}`">{{ link.text }}</a>
+                <a @click="isShowToC = !isShowToC" :href="`#${link.id}`">{{ link.text }}</a>
               </li>
             </ul>
           </ContentDoc>
