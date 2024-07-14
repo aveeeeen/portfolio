@@ -1,6 +1,6 @@
 <template>
-  <div class="page center-">
-    <div class="">
+  <div class="page">
+    <div class="relative center- flex-hori">
       <div class="flex-hori margin-left">
         <div class="content-box">
           <h1>About Me</h1>
@@ -41,8 +41,8 @@
 
 <style>
 .about-img {
-  width: 20svh;
-  height: 20svh;
+  width: 30svh;
+  height: 30svh;
 }
 
 .img-box {
@@ -61,6 +61,11 @@ ul {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.wrapper{
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 @media (max-width: 786px) {

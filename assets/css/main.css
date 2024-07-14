@@ -9,6 +9,7 @@ html{
   background-color: blue;
   font-family: "Noto Sans JP", sans-serif;
   font-optical-sizing: auto;
+  word-break: break-all;
 }
 
 a:hover{
@@ -106,6 +107,10 @@ p {
   gap: 5px;
 }
 
+.relative {
+  position: relative;
+}
+
 @media (max-width: 760px) {
   .ui-box {
     display: block;
@@ -137,6 +142,5 @@ p {
     padding: 20px;
     border-radius: 5px;
     overflow-x: hidden;
-    word-break: break-all;
   }
 }

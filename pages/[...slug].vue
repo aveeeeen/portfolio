@@ -26,8 +26,8 @@ watch(isShowToC);
       <div class="">
         <div class="ui-box toc relative" v-if="isShowToC">
           <ContentDoc v-slot="{ doc }">
-            <ul>
-              <li v-for="link of doc.body.toc.links" :key="link.id">
+            <ul class="table-ul">
+              <li class="table-li" v-for="link of doc.body.toc.links" :key="link.id">
                 <a @click="isShowToC = !isShowToC" :href="`#${link.id}`">{{
                   link.text
                 }}</a>
@@ -54,10 +54,8 @@ a {
 
 .toc {
   max-width: 300px;
-}
-
-.relative {
-  position: relative;
+  max-height: 300px;
+  overflow-x: scroll;
 }
 
 .show-right {
@@ -73,5 +71,13 @@ img{
   width: 80svw;
   height: auto;
   max-width: 800px;
+}
+
+.table-ul{
+  padding-left: 15px;
+}
+
+.table-li{
+  padding-bottom: 5px;
 }
 </style>
