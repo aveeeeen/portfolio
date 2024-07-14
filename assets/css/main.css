@@ -1,0 +1,128 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap');
+
+html{
+  font-size: 16px;
+  background-color: blue;
+}
+
+a:hover{
+  color: white;
+  display: inline;
+  background-color: blue;
+}
+
+ul {
+  padding-left: 20px;
+}
+
+h1{
+  font-size: 2.5rem;
+  line-height: 100%;
+}
+
+h3 {
+  font-size: 1.5rem;
+  line-height: 100%;
+}
+
+
+.ui-box {
+  display: block;
+  background-color: white;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 5px;
+  margin: 5px;
+}
+
+.box {
+  display: inline-block;
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  margin: 10px;
+  max-width: 1000px;
+}
+
+.content-box {
+  display:block;
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  margin-top: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 20px;
+  max-width: 800px;
+  overflow-x: hidden;
+}
+
+.page{
+  width: 100svw;
+  height: 100svh;
+  position: absolute;
+  left: 0%;
+  top: 0%;
+}
+
+.center-hori{
+  justify-items: center;
+}
+
+.center-vert {
+  align-content: center;
+}
+
+h1,
+h2,
+h3,
+p {
+  color: black;
+}
+
+.menu{
+  position: fixed;
+
+  right: 10%;
+  bottom: 10%;
+}
+
+.flex-hori{
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+  flex-grow: 1;
+}
+
+.flex-vert{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+@media (max-width: 786px) {
+  .ui-box {
+    display: block;
+    background-color: white;
+    padding: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 5px;
+  }
+
+  .menu{
+    position: fixed;
+    right: 5dvw;
+    bottom: 5dvh;
+    margin: 0px;
+    align-items: end;
+  }
+
+  .flex-hori{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+}
