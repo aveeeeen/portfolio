@@ -3,18 +3,21 @@
 onMounted(() => {
   const video = document.querySelector('video');
   video.load();
-  
+
   video.addEventListener('canplaythrough', (event) => {
     console.log('can play');
     video.play();
   });
-})
 
+  setTimeout(() => {
+    video.play()
+  }, 500)
+})
 
 </script>
 
 <template>
-  <video class="bg-video" src="~/assets/vid/bgVideo.mp4" preload="none" poster="" autoplay playsinline
+  <video class="bg-video" src="~/assets/vid/bgVideo.mp4" preload="none" autoplay playsinline
                 muted loop>
             </video>
   <div class="ui-box introduction">
