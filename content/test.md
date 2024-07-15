@@ -1,4 +1,11 @@
-
+---
+head:
+  meta:
+    - naem: 'update'
+      content: '2024.7.16'
+    - name: 'tags'
+      content: 'article'
+---
 # テスト
 
 これは複数のページが読み込めるかどうかを試すテストです。
