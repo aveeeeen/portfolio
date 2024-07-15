@@ -1,6 +1,6 @@
 <template>
-  <div class="page">
-    <div class="relative center- flex-hori">
+  <div class="page about-center" >
+    <div class="relative">
       <div class="flex-hori margin-left">
         <div class="content-box">
           <h1>About Me</h1>
@@ -56,11 +56,10 @@
 ul {
   padding-left: 10%;
 }
-
-.center- {
+.about-center {
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 }
 
 .wrapper{
@@ -72,5 +71,9 @@ ul {
   .page-margin {
     margin: 10px;
   }
+  .about-center {
+  display: flex;
+  justify-content: center;
+}
 }
 </style>
