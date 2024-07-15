@@ -1,5 +1,7 @@
 <script setup>
 
+const isVideoLoad = ref(false)
+
 onMounted(() => {
   const video = document.querySelector('video');
   video.load();
@@ -7,11 +9,18 @@ onMounted(() => {
   video.addEventListener('canplaythrough', (event) => {
     console.log('can play');
     video.play();
+    isVideoLoad.value = true;
   });
+})
 
+function videoPlay() {
   setTimeout(() => {
     video.play()
   }, 500)
+}
+
+watch(isVideoLoad, () => {
+  videoPlay()
 })
 
 </script>
