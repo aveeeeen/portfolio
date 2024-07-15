@@ -9,7 +9,6 @@ html{
   background-color: blue;
   font-family: "Noto Sans JP", sans-serif;
   font-optical-sizing: auto;
-  word-break: break-all;
 }
 
 .nav-center {

@@ -2,7 +2,7 @@
 </script>
 
 <template>
-  <video class="bg-video" src="~/assets/vid/bgVideo.mp4" preload="auto" poster="" webkit-playsinline playsinline autoplay
+  <video class="bg-video" src="~/assets/vid/bgVideo.mp4" preload="auto" poster="" autoplay
                 muted loop>
             </video>
   <div class="ui-box introduction">
