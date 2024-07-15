@@ -17,9 +17,9 @@ useSeoMeta({
   ogTitle: 'protfolio site of braven',
   ogUrl: "https://braveeeeen.vercel.app" ,
   ogType: "website",
-  ogImage: "~/assets/img/ogp.png",
+  ogImage: "https://raw.githubusercontent.com/aveeeeen/portfolio/main/assets/img/ogp.png",
   twitterCard: "summary_large_image",
-  twitterImage: "~/assets/img/ogp.png",
+  twitterImage: "https://raw.githubusercontent.com/aveeeeen/portfolio/main/assets/img/ogp.png",
 }) 
 
 function videoPlay() {
