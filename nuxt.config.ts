@@ -16,6 +16,11 @@ export default defineNuxtConfig({
   alias: {
     "@": resolve(__dirname, "/")
   },
+  head: {
+    link: [
+      { rel: "icon", type: "image/png", href: "/favicon.png" }, // これを追記する
+    ]
+  },
   css: ['~/assets/css/main.css'],
   compatibilityDate: '2024-07-12',
   contentAssets: {    

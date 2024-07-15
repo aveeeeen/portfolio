@@ -12,7 +12,15 @@ onMounted(() => {
   });
 });
 
-
+useSeoMeta({
+  title: 'braveeeeen',
+  ogTitle: 'protfolio site of braven',
+  ogUrl: "https://braveeeeen.vercel.app" ,
+  ogType: "website",
+  ogImage: "~/assets/img/ogp.png",
+  twitterCard: "summary_large_image",
+  twitterImage: "~/assets/img/ogp.png",
+}) 
 
 function videoPlay() {
   setTimeout(() => {
