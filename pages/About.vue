@@ -1,5 +1,5 @@
 <template>
-  <div class="page about-center" >
+  <div class="page center--" >
     <div class="relative">
       <div class="flex-hori margin-left">
         <div class="content-box">
@@ -56,7 +56,7 @@
 ul {
   padding-left: 10%;
 }
-.about-center {
+.center-- {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -71,7 +71,7 @@ ul {
   .page-margin {
     margin: 10px;
   }
-  .about-center {
+  .center-- {
     display: block;
   }
 }
