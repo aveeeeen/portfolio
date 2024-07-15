@@ -7,6 +7,8 @@ const contentList = await queryContent('/').sort({update: -1, $numeric: true}).f
   <div class="page center--">
     <div class="content-box">
       <h1>Notes</h1>
+      <p>new → old</p>
+      <hr>
       <ul v-for="content in contentList" :key="content.id">
         <li>
           <NuxtLink :to="content._path">{{ content.title }}</NuxtLink>
