@@ -225,4 +225,8 @@ h1 a {
   font-size: 2.5rem;
   color: black;
 }
+
+iframe{
+  max-width: 80svw; 
+}
 </style>
