@@ -72,7 +72,7 @@ ul {
     margin: 10px;
   }
   .about-center {
-    display: flex;
+    display: block;
   }
 }
 </style>
