@@ -19,9 +19,22 @@ html{
 }
 
 a:hover{
-  color: white;
-  display: inline;
-  background-color: blue;
+  animation-name: breath;
+  animation-duration: 2000ms;
+  animation-timing-function: ease-out;
+}
+
+@keyframes breath{
+  from {
+    color: white;
+    display: inline;
+    background-color: blue;
+  }
+
+  to {
+    color: blue;
+    background-color: white; 
+  }
 }
 
 ul {
