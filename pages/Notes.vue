@@ -5,6 +5,7 @@ const contentList = await queryContent("/").find();
 <template>
   <div class="page center--">
     <div class="content-box">
+      <h1>Notes</h1>
       <ul v-for="content in contentList">
         <li>
           <NuxtLink :to="content._path">{{ content.title }}</NuxtLink>
