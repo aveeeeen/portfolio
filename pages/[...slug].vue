@@ -55,14 +55,18 @@ watch(isShowToC);
   overflow-x: scroll;
 }
 
-.show-right {
-  align-items: flex-end;
-}
-
 img{
   width: 80svw;
   height: auto;
   max-width: 800px;
+}
+
+h2 > a{
+  font-size: 2rem;
+}
+
+h3 > a{
+  font-size: 1.25rem;
 }
 
 .table-ul{

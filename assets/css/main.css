@@ -5,6 +5,16 @@
   --alpha-zero: rgba(0,0,0,0)
 }
 
+.show-right {
+  align-items: flex-end;
+}
+
+.center- {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 html{
   font-size: 16px;
   background-color: blue;

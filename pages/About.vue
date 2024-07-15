@@ -100,11 +100,7 @@
 ul {
   padding-left: 10%;
 }
-.center- {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+
 
 .wrapper{
   margin-top: 10px;
