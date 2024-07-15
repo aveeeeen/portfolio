@@ -72,8 +72,7 @@ ul {
     margin: 10px;
   }
   .about-center {
-  display: flex;
-  justify-content: center;
-}
+    display: flex;
+  }
 }
 </style>
