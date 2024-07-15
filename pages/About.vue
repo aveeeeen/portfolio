@@ -1,7 +1,7 @@
 <template>
-  <div class="page center-" >
+  <div class="page center--">
     <div class="relative">
-      <div class="flex-hori ">
+      <div class="flex-hori">
         <div class="content-box">
           <h1>About Me</h1>
           <ul>
@@ -30,44 +30,14 @@
           <p>
             現在は、iamas（情報芸術科学大学院大学）に在学しており、そこでライブコーディングによる音楽の技術史と文化史がどのように表現を形成しているかについて研究しています。
           </p>
-          
+
           <h3>Find me on:</h3>
-          <div>
-            <div class="grid-parent">
-              <a class="grid-child" href="https://twitter.com/braveeeeen">
-                <div>
-                  <img class="icon" src="../assets/icon/twitter.png"><img>
-                <p>twitter</p>
-                </div>
-              </a>
-              <a class="grid-child" href="https://www.instagram.com/neeeeevarb/">
-                <div>
-                  <img class="icon" src="../assets/icon/insta.png"><img>
-                <p>instagram</p>
-                </div>
-              </a>
-              <a class="grid-child" href="mailto:taichimatsumoto360@gmail.com">
-                <div>
-                  <img class="icon" src="../assets/icon/mail.png"><img>
-                <p>e-mail</p>
-                </div>
-              </a>
-              <a class="grid-child" href="https://github.com/aveeeeen/">
-                <div>
-                  <img class="icon" src="../assets/icon/github.png"><img>
-                <p>github</p>
-                </div>
-              </a>
-              <a class="grid-child" href="https://www.youtube.com/@braven6009">
-                <div>
-                  <img class="icon" src="../assets/icon/youtube.png"><img>
-                <p>YouTube</p>
-                </div>
-              </a>
-              <a class="grid-child" href="https://soundcloud.com/braven-music">
-                <div>
-                  <img class="icon" src="../assets/icon/soundcloud.png"><img>
-                <p>SoundCloud</p>
+          <div class="grid-parent">
+            <div class="grid-child" v-for="data in socialMedias" :key="data.id">
+              <a :href="data.url">
+                <div class="flex-vert center-">
+                  <img class="icon" :src="data.src"/><img />
+                  <p>{{ data.name }}</p>
                 </div>
               </a>
             </div>
@@ -83,7 +53,7 @@
   </div>
 </template>
 
-<style>
+<style scoped>
 .about-img {
   width: 35svh;
   height: 35svh;
@@ -97,12 +67,7 @@
   margin: 80px;
 }
 
-ul {
-  padding-left: 10%;
-}
-
-
-.wrapper{
+.wrapper {
   margin-top: 10px;
   margin-bottom: 10px;
 }
@@ -112,26 +77,83 @@ ul {
   height: 40px;
 }
 
-.grid-parent{
+.grid-parent {
   display: grid;
-  grid-template-columns: repeat(3,1fr);
+  grid-template-columns: repeat(3, 1fr);
   max-width: 400px;
   padding: 10px;
-  row-gap: 10px;
+  row-gap: 20px;
 }
 
-.grid-child{
+.grid-child {
   max-width: 100px;
 }
 
+.sns{
+  width: 20svw;
+  height: 20svw;
+  max-width: 100px;
+  max-height: 100px;
+  border-radius: 100%;
+  background-color: black;
+}
 
+a > div > p {
+  margin: 0%;
+  border: 0%;
+}
 
 @media (max-width: 786px) {
   .page-margin {
     margin: 10px;
   }
-  .center- {
-    display: block;
-  }
 }
 </style>
+
+<script setup>
+import twitter from "~/assets/icon/twitter.png"
+import instagram from "~/assets/icon/insta.png"
+import mail from "~/assets/icon/mail.png"
+import github from "~/assets/icon/github.png"
+import soundcloud from "~/assets/icon/soundcloud.png"
+import youtube from "~/assets/icon/youtube.png"
+
+const socialMedias = ref([
+  {
+    name: "twitter",
+    url: "https://twitter.com/braveeeeen",
+    id: 0,
+    src: twitter
+  },
+  {
+    name: "instagram",
+    url: "https://www.instagram.com/neeeeevarb/",
+    id: 1,
+    src: instagram
+  },
+  {
+    name: "mail",
+    url: "mailto:taichimatsumoto360@gmail.com",
+    id: 2,
+    src: mail
+  },
+  {
+    name: "youtube",
+    url: "https://www.youtube.com/@braven6009",
+    id: 3,
+    src: youtube
+  },
+  {
+    name: "soundcloud",
+    url: "https://soundcloud.com/braven-music",
+    id: 4,
+    src: soundcloud
+  },
+  {
+    name: "github",
+    url: "https://github.com/aveeeeen/",
+    id: 5,
+    src: github
+  },
+]);
+</script>

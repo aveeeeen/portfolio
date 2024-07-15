@@ -46,7 +46,7 @@ watch(isShowToC);
   </div>
 </template>
 
-<style>
+<style scoped>
 
 .toc {
   max-width: 300px;
@@ -55,11 +55,7 @@ watch(isShowToC);
   overflow-x: scroll;
 }
 
-img{
-  width: 80svw;
-  height: auto;
-  max-width: 800px;
-}
+
 
 h2 > a{
   font-size: 2rem;

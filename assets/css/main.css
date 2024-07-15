@@ -15,11 +15,22 @@
   align-items: center;
 }
 
+.center-- {
+  display: flex;
+  justify-content: center;
+}
+
 html{
   font-size: 16px;
   background-color: blue;
   font-family: "Noto Sans JP", sans-serif;
   font-optical-sizing: auto;
+}
+
+img{
+  width: 80svw;
+  height: auto;
+  max-width: 800px;
 }
 
 .nav-center {
@@ -76,6 +87,10 @@ a {
   padding-right: 10px;
   border-radius: 5px;
   margin: 5px;
+}
+
+iframe{
+  max-width: 80svw; 
 }
 
 .box {
@@ -165,6 +180,10 @@ p {
     bottom: 5dvh;
     margin: 0px;
     align-items: end;
+  }
+
+  .center- {
+    display: block;
   }
 
   .flex-hori{

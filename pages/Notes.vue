@@ -19,12 +19,7 @@ const contentList = await queryContent("/").find();
   </div>
 </template>
 
-<style>
-.center--{
-  display: flex;
-  justify-content: center;
-}
-
+<style scoped>
 ul {
   padding-left: 20px;
   display: block;

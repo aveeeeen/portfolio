@@ -11,6 +11,7 @@
             height="200"
             scrolling="no"
             frameborder="no"
+            loading="lazy"
             allow="autoplay"
             src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/481794225&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
           ></iframe>
@@ -21,6 +22,7 @@
             height="200"
             scrolling="no"
             frameborder="no"
+            loading="lazy"
             allow="autoplay"
             src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/517119543&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
           ></iframe>
@@ -31,6 +33,7 @@
             height="200"
             scrolling="no"
             frameborder="no"
+            loading="lazy"
             allow="autoplay"
             src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/549043875&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
           ></iframe>
@@ -41,6 +44,7 @@
             height="200"
             scrolling="no"
             frameborder="no"
+            loading="lazy"
             allow="autoplay"
             src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/660919823&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
           ></iframe>
@@ -52,6 +56,7 @@
             scrolling="no"
             frameborder="no"
             allow="autoplay"
+            loading="lazy"
             src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/698142220&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
           ></iframe>
 
@@ -62,6 +67,7 @@
             scrolling="no"
             frameborder="no"
             allow="autoplay"
+            loading="lazy"
             src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/763720114&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
           ></iframe>
 
@@ -72,6 +78,7 @@
             scrolling="no"
             frameborder="no"
             allow="autoplay"
+            loading="lazy"
             src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/803811016&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
           ></iframe>
 
@@ -82,6 +89,7 @@
             scrolling="no"
             frameborder="no"
             allow="autoplay"
+            loading="lazy"
             src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/911655196&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
           ></iframe>
 
@@ -94,6 +102,7 @@
             scrolling="no"
             frameborder="no"
             allow="autoplay"
+            loading="lazy"
             src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/917088094&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
           ></iframe>
 
@@ -104,6 +113,7 @@
             scrolling="no"
             frameborder="no"
             allow="autoplay"
+            loading="lazy"
             src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/942924535&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
           ></iframe>
 
@@ -113,6 +123,7 @@
           <iframe
             width="560"
             height="315"
+            loading="lazy"
             src="https://www.youtube.com/embed/bw8Fw02QLVQ?si=TP2fSuvRta6owPLJ"
             title="YouTube video player"
             frameborder="0"
@@ -131,6 +142,7 @@
           <iframe
             width="560"
             height="315"
+            loading="lazy"
             src="https://www.youtube.com/embed/db0dgd0V9fA?si=WgdeX5Ak3dGTJI4f"
             title="YouTube video player"
             frameborder="0"
@@ -145,6 +157,7 @@
           <iframe
             width="560"
             height="315"
+            loading="lazy"
             src="https://www.youtube.com/embed/czN-1l_ykEw?si=uwbVbjUQCA8qPCe2"
             title="YouTube video player"
             frameborder="0"
@@ -157,6 +170,7 @@
           <iframe
             width="560"
             height="315"
+            loading="lazy"
             src="https://www.youtube.com/embed/WmLw4oTomhA?si=87Nf0kCIPPy8KkSB"
             title="YouTube video player"
             frameborder="0"
@@ -169,6 +183,7 @@
           <iframe
             width="560"
             height="315"
+            loading="lazy"
             src="https://www.youtube.com/embed/-oitKDAsfdc?si=LlvtkmWSKytLLlXq"
             title="YouTube video player"
             frameborder="0"
@@ -190,6 +205,7 @@
             <iframe
               width="560"
               height="315"
+              loading="lazy"
               src="https://www.youtube.com/embed/torxCXoCfh4?si=IN0-6k9W2skzpAaM"
               title="YouTube video player"
               frameborder="0"
@@ -220,13 +236,11 @@
   </div>
 </template>
 
-<style>
+<style scoped>
 h1 a {
   font-size: 2.5rem;
   color: black;
 }
 
-iframe{
-  max-width: 80svw; 
-}
+
 </style>

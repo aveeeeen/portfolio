@@ -29,7 +29,7 @@ function videoPlay() {
 }
 
 watch(isVideoLoad, () => {
-  videoPlay();
+  if(!isVideoLoad.value) videoPlay();
   console.log(isVideoLoad.value);
 });
 </script>
@@ -54,7 +54,7 @@ watch(isVideoLoad, () => {
   
 </template>
 
-<style>
+<style scoped>
 .bg-video {
   width: 100vw;
   height: 100vh;
