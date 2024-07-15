@@ -1,4 +1,10 @@
 <script setup>
+
+onMounted(() => {
+  const video = document.querySelector('video');
+  video.play();
+})
+
 </script>
 
 <template>
