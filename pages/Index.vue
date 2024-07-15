@@ -1,44 +1,51 @@
 <script setup>
-const video = ref(null)
-const isVideoLoad = ref(false)
+const video = ref(null);
+const isVideoLoad = ref(false);
 
 onMounted(() => {
-  video.value = document.querySelector('video');
+  video.value = document.querySelector("video");
   video.value.load();
 
-  video.value.addEventListener('canplaythrough', (event) => {
+  video.value.addEventListener("canplaythrough", (event) => {
     video.value.play();
     isVideoLoad.value = true;
   });
-})
+});
+
+
 
 function videoPlay() {
   setTimeout(() => {
-    video.value.play()
-  }, 500)
+    video.value.play();
+  }, 500);
 }
 
 watch(isVideoLoad, () => {
-  videoPlay()
-})
-
+  videoPlay();
+  console.log(isVideoLoad.value);
+});
 </script>
 
 <template>
-  <video class="bg-video" src="~/assets/vid/bgVideo.mp4" preload="none" autoplay playsinline
-                muted loop>
-            </video>
-  <div class="ui-box introduction">
-    <Introduction></Introduction>
-  </div>
-  <div class="menu">
-    <TopMenu></TopMenu>
-  </div>
+    <video
+      class="bg-video"
+      src="~/assets/vid/bgVideo.mp4"
+      preload="none"
+      autoplay
+      playsinline
+      muted
+      loop
+    ></video>
+    <div class="ui-box introduction">
+      <Introduction></Introduction>
+    </div>
+    <div class="menu">
+      <TopMenu @click="isHomeClicked = !isHomeClicked"></TopMenu>
+    </div>
+  
 </template>
 
 <style>
-
-
 .bg-video {
   width: 100vw;
   height: 100vh;
@@ -49,14 +56,14 @@ watch(isVideoLoad, () => {
   object-fit: cover;
 }
 
-.introduction{
+.introduction {
   position: absolute;
-  left :10%;
+  left: 10%;
   top: 10%;
 }
 
 @media (max-width: 786px) {
-  .introduction{
+  .introduction {
     align-items: center;
     left: 0%;
   }
