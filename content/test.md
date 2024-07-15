@@ -1,10 +1,7 @@
 ---
-head:
-  meta:
-    - naem: 'update'
-      content: '2024.7.16'
-    - name: 'tags'
-      content: 'article'
+title: 'テスト'
+update: 20240716
+tags: 'article'
 ---
 # テスト
 

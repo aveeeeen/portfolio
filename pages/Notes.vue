@@ -1,15 +1,6 @@
 <script setup>
-const contentList = await queryContent('/').find()
-const creationDate = ref();
+const contentList = await queryContent('/').sort({update: -1, $numeric: true}).find()
 
-async function getCreationDate () {
-  creationDate.value = await queryContent('/').only('head').find()
-  console.log(creationDate.value);
-}
-
-getCreationDate();
-
-console.log(contentList.value);
 </script>
 
 <template>
@@ -19,7 +10,7 @@ console.log(contentList.value);
       <ul v-for="content in contentList" :key="content.id">
         <li>
           <NuxtLink :to="content._path">{{ content.title }}</NuxtLink>
-          <p>更新日: {{ creationDate.value[0].head}}</p>
+          <p>更新日: {{content.update.toString().slice(0,4) + "." + content.update.toString().slice(4,6) + "." + content.update.toString().slice(6,8) }}</p>
         </li>
       </ul>
     </div>
