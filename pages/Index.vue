@@ -27,6 +27,13 @@ watch(isVideoLoad, () => {
 </script>
 
 <template>
+  <head>
+    <meta property="og:description" content='portfoli site of braven' />
+        <meta property="og:title" content="braveeeeen" />
+        <meta property="og:url" content="https://braveeeeen.vercel.app" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="../assets/img/ogp.png" />
+  </head>
     <video
       class="bg-video"
       src="~/assets/vid/bgVideo.mp4"
