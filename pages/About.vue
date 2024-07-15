@@ -1,7 +1,7 @@
 <template>
-  <div class="page center--" >
+  <div class="page center-" >
     <div class="relative">
-      <div class="flex-hori margin-left">
+      <div class="flex-hori ">
         <div class="content-box">
           <h1>About Me</h1>
           <ul>
@@ -41,8 +41,8 @@
 
 <style>
 .about-img {
-  width: 30svh;
-  height: 30svh;
+  width: 35svh;
+  height: 35svh;
 }
 
 .img-box {
@@ -56,7 +56,7 @@
 ul {
   padding-left: 10%;
 }
-.center-- {
+.center- {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -71,7 +71,7 @@ ul {
   .page-margin {
     margin: 10px;
   }
-  .center-- {
+  .center- {
     display: block;
   }
 }

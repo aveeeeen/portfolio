@@ -2,8 +2,13 @@
 
 onMounted(() => {
   const video = document.querySelector('video');
-  video.play();
+  
+  video.addEventListener('canplaythrough', (event) => {
+    console.log('can play');
+    video.play();
+  });
 })
+
 
 </script>
 
