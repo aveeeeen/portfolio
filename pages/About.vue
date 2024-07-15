@@ -35,7 +35,7 @@
           <div class="grid-parent">
             <div class="grid-child" v-for="data in socialMedias" :key="data.id">
               <a :href="data.url">
-                <div class="flex-vert center-">
+                <div class="flex-vert center--">
                   <img class="icon" :src="data.src"/><img />
                   <p>{{ data.name }}</p>
                 </div>
