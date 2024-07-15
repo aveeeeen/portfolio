@@ -1,21 +1,20 @@
 <script setup>
-
+const video = ref(null)
 const isVideoLoad = ref(false)
 
 onMounted(() => {
-  const video = document.querySelector('video');
-  video.load();
+  video.value = document.querySelector('video');
+  video.value.load();
 
-  video.addEventListener('canplaythrough', (event) => {
-    console.log('can play');
-    video.play();
+  video.value.addEventListener('canplaythrough', (event) => {
+    video.value.play();
     isVideoLoad.value = true;
   });
 })
 
 function videoPlay() {
   setTimeout(() => {
-    video.play()
+    video.value.play()
   }, 500)
 }
 
