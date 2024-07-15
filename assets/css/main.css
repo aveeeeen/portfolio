@@ -134,6 +134,10 @@ p {
   position: relative;
 }
 
+.block{
+  display: block;
+}
+
 @media (max-width: 760px) {
   .ui-box {
     display: block;

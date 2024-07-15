@@ -59,11 +59,6 @@ watch(isShowToC);
   align-items: flex-end;
 }
 
-.flex-content {
-  display: flex;
-  flex-direction: column;
-}
-
 img{
   width: 80svw;
   height: auto;
