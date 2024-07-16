@@ -45,7 +45,7 @@ watch(isVideoLoad, () => {
       muted
       loop
     ></video>
-    <div class="ui-box introduction">
+    <div class=" introduction">
       <Introduction></Introduction>
     </div>
     <div class="menu">

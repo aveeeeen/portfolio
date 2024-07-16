@@ -1,7 +1,7 @@
 <script setup>
-const contentList = ref(null);
-const contentArrary = ref(null);
-const contentFiltered = ref(null);
+const contentList = ref({});
+const contentArrary = ref({});
+const contentFiltered = ref({});
 const isUpdated = ref(false);
 const isShowTags = ref(false);
 const page = ref(0);
@@ -67,9 +67,11 @@ async function filterByTags(tag) {
 watch(selectedFilter, async () => {
   if (selectedFilter != "") {
     filterByTags(selectedFilter.value);
+    contentArrary = {};
     isShowTags.value = false;
   } else {
     getContent(page.value, 5);
+    contentFiltered = {};
   }
 
   console.log(selectedFilter.value);
@@ -88,38 +90,43 @@ watch(selectedFilter, async () => {
       </div>
 
       <hr />
+      <div v-if="contentArrary === {} || contentFiltered === {}">
+        <p>loading ...</p>
+      </div>
+        
+      <div v-else>
+        <ul v-if="selectedFilter == ''" v-for="content in contentArrary">
+          <li>
+            <NuxtLink :to="content._path">{{ content.title }}</NuxtLink>
+            <p>
+              更新日:
+              {{
+                content.update.toString().slice(0, 4) +
+                "." +
+                content.update.toString().slice(4, 6) +
+                "." +
+                content.update.toString().slice(6, 8)
+              }}
+            </p>
+          </li>
+        </ul>
 
-      <ul v-if="selectedFilter == ''" v-for="content in contentArrary">
-        <li>
-          <NuxtLink :to="content._path">{{ content.title }}</NuxtLink>
-          <p>
-            更新日:
-            {{
-              content.update.toString().slice(0, 4) +
-              "." +
-              content.update.toString().slice(4, 6) +
-              "." +
-              content.update.toString().slice(6, 8)
-            }}
-          </p>
-        </li>
-      </ul>
-
-      <ul v-else v-for="content in contentFiltered">
-        <li>
-          <NuxtLink :to="content._path">{{ content.title }}</NuxtLink>
-          <p>
-            更新日:
-            {{
-              content.update.toString().slice(0, 4) +
-              "." +
-              content.update.toString().slice(4, 6) +
-              "." +
-              content.update.toString().slice(6, 8)
-            }}
-          </p>
-        </li>
-      </ul>
+        <ul v-else v-for="content in contentFiltered">
+          <li>
+            <NuxtLink :to="content._path">{{ content.title }}</NuxtLink>
+            <p>
+              更新日:
+              {{
+                content.update.toString().slice(0, 4) +
+                "." +
+                content.update.toString().slice(4, 6) +
+                "." +
+                content.update.toString().slice(6, 8)
+              }}
+            </p>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
   <div class="center--">
@@ -188,8 +195,7 @@ button {
   overflow-x: scroll;
 }
 
-.tag-list{
-  display: flex;
-  flex-wrap: wrap;
+.tag-list {
+  list-style: none;
 }
 </style>

@@ -2,7 +2,8 @@
 
 :root {
   --bg-color: rgb(245, 245, 255);
-  --alpha-zero: rgba(0,0,0,0)
+  --alpha-zero: rgba(0,0,0,0);
+  --box-radius: 0px;
 }
 
 .show-right {
@@ -85,7 +86,7 @@ a {
   padding-bottom: 5px;
   padding-left: 10px;
   padding-right: 10px;
-  border-radius: 5px;
+  border-radius: var(--box-radius);
   margin: 5px;
 }
 
@@ -97,7 +98,7 @@ iframe{
   display: inline-block;
   background-color: var(--bg-color);
   padding: 20px;
-  border-radius: 5px;
+  border-radius: var(--box-radius);
   margin: 10px;
   max-width: 1000px;
 }
@@ -106,11 +107,12 @@ iframe{
   display: block;
   background-color: var(--bg-color);
   padding: 20px;
-  border-radius: 5px;
+  border-radius: var(--box-radius);
   max-width: 800px;
-  margin: 10px;
+  margin: 30px;
   overflow-x: hidden;
   word-break: break-all;
+  min-width: 50%;
 }
 
 .page{
@@ -171,7 +173,7 @@ p {
     padding: 10px;
     margin-left: 10px;
     margin-right: 10px;
-    border-radius: 5px;
+    border-radius: var(--box-radius);
   }
 
   .menu{
@@ -195,9 +197,9 @@ p {
   .content-box {
     display: block;
     background-color: var(--bg-color);
-    margin: 10px;
+    margin: 20px;
     padding: 20px;
-    border-radius: 5px;
+    border-radius: var(--box-radius);
     overflow-x: hidden;
     min-width: 80%;
   }
