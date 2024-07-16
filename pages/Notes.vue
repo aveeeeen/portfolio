@@ -3,6 +3,7 @@ const contentList = ref(null);
 const contentArrary = ref(null);
 const contentFiltered = ref(null);
 const isUpdated = ref(false);
+const isShowTags = ref(false);
 const page = ref(0);
 const pages = ref(0);
 const tagList = ref([]);
@@ -64,15 +65,16 @@ async function filterByTags(tag) {
 }
 
 watch(selectedFilter, async () => {
-  if(selectedFilter != ""){
+  if (selectedFilter != "") {
     filterByTags(selectedFilter.value);
-  }else{
+    isShowTags.value = false;
+  } else {
     getContent(page.value, 5);
   }
-  
-  console.log(selectedFilter.value)
-  console.log(contentFiltered.value)
-})
+
+  console.log(selectedFilter.value);
+  console.log(contentFiltered.value);
+});
 </script>
 
 <template>
@@ -80,19 +82,14 @@ watch(selectedFilter, async () => {
     <div class="content-box">
       <h1>Notes</h1>
       <p>new → old</p>
-      <div v-if="selectedFilter == ''" class="tag-list">
-        <div v-for="tags in tagList">
-          <a @click="selectedFilter = tags">{{ tags }}</a>
-        </div>
-      </div>
-      <div v-else>
+      <div v-if="selectedFilter != ''">
         <p>showing {{ selectedFilter }}</p>
         <a @click="selectedFilter = ''"> clear filter</a>
       </div>
 
       <hr />
 
-      <ul v-if="selectedFilter == '' " v-for="content in contentArrary">
+      <ul v-if="selectedFilter == ''" v-for="content in contentArrary">
         <li>
           <NuxtLink :to="content._path">{{ content.title }}</NuxtLink>
           <p>
@@ -123,7 +120,6 @@ watch(selectedFilter, async () => {
           </p>
         </li>
       </ul>
-
     </div>
   </div>
   <div class="center--">
@@ -135,8 +131,21 @@ watch(selectedFilter, async () => {
       </div>
     </div>
   </div>
-  <div class="menu">
+  <div class="menu show-right flex-vert">
     <Menu></Menu>
+    <div>
+      <div class="ui-box tags relative" v-if="isShowTags">
+        <div class="tag-list" v-for="tag in tagList">
+          <a @click="selectedFilter = tag">{{ tag }}</a>
+        </div>
+      </div>
+      <div v-else class="ui-box relative">
+        <a @click="isShowTags = !isShowTags">Tags</a>
+      </div>
+    </div>
+    <div v-if="isShowTags" class="ui-box">
+      <a @click="isShowTags = !isShowTags">Close</a>
+    </div>
   </div>
 </template>
 
@@ -170,5 +179,17 @@ button {
   display: flex;
   flex-direction: row;
   gap: 30px;
+}
+
+.tags {
+  max-width: 300px;
+  max-height: 250px;
+  min-width: 100px;
+  overflow-x: scroll;
+}
+
+.tag-list{
+  display: flex;
+  flex-wrap: wrap;
 }
 </style>
