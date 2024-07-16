@@ -1,7 +1,7 @@
 ---
 title: 'テスト'
 update: 20240716
-tags: 'article'
+tags: "article"
 ---
 # テスト
 

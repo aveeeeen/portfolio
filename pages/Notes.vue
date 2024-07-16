@@ -1,19 +1,22 @@
 <script setup>
 const contentList = ref(null);
 const contentArrary = ref(null);
+const contentFiltered = ref(null);
 const isUpdated = ref(false);
+const isShowTags = ref(false);
 const page = ref(0);
 const pages = ref(0);
+const tagList = ref([]);
+const selectedFilter = ref("");
 
 onMounted(async () => {
   contentList.value = await queryContent("/")
     .only(["title", "_path", "update", "tags"])
     .sort({ update: -1, $numeric: true })
     .find();
-  console.log(contentList.value);
   getContent(page.value, 5);
   pages.value = Math.floor(contentList.value.length / 5);
-  console.log(pages.value);
+  getAllTags();
 });
 
 async function getContent(start, move) {
@@ -23,7 +26,6 @@ async function getContent(start, move) {
     .skip(start)
     .limit(move)
     .find();
-  console.log(page.value);
 }
 
 function getNextContent() {
@@ -37,6 +39,42 @@ function getPrevContent() {
   page.value--;
   getContent(page.value * 5, 5);
 }
+
+function getAllTags() {
+  const tagSet = new Set();
+  let tagArr = [];
+  contentList.value.forEach((el) => tagArr.push(el.tags));
+  tagArr.forEach((tags) => {
+    let t = tags.split(",");
+    t.forEach((tag) => {
+      if (tag.trim() !== "") {
+        tagSet.add(tag.trim());
+      }
+    });
+  });
+  tagList.value = Array.from(tagSet);
+}
+
+async function filterByTags(tag) {
+  contentFiltered.value = await queryContent("/")
+    .where({ tags: { $containsAny: [tag] } })
+    .only(["title", "_path", "update", "tags"])
+    .sort({ update: -1, $numeric: true })
+    .find();
+  console.log(contentFiltered.value);
+}
+
+watch(selectedFilter, async () => {
+  if (selectedFilter != "") {
+    filterByTags(selectedFilter.value);
+    isShowTags.value = false;
+  } else {
+    getContent(page.value, 5);
+  }
+
+  console.log(selectedFilter.value);
+  console.log(contentFiltered.value);
+});
 </script>
 
 <template>
@@ -44,8 +82,30 @@ function getPrevContent() {
     <div class="content-box">
       <h1>Notes</h1>
       <p>new → old</p>
+      <div v-if="selectedFilter != ''">
+        <p>showing {{ selectedFilter }}</p>
+        <a @click="selectedFilter = ''"> clear filter</a>
+      </div>
+
       <hr />
-      <ul v-for="content in contentArrary">
+
+      <ul v-if="selectedFilter == ''" v-for="content in contentArrary">
+        <li>
+          <NuxtLink :to="content._path">{{ content.title }}</NuxtLink>
+          <p>
+            更新日:
+            {{
+              content.update.toString().slice(0, 4) +
+              "." +
+              content.update.toString().slice(4, 6) +
+              "." +
+              content.update.toString().slice(6, 8)
+            }}
+          </p>
+        </li>
+      </ul>
+
+      <ul v-else v-for="content in contentFiltered">
         <li>
           <NuxtLink :to="content._path">{{ content.title }}</NuxtLink>
           <p>
@@ -66,14 +126,26 @@ function getPrevContent() {
     <div class="page-selector">
       <div class="selector-flex center-">
         <a class="" @click="getPrevContent()">back</a>
-        <p class=" page-num">{{ `${page + 1} / ${pages + 1}` }}</p>
+        <p class="page-num">{{ `${page + 1} / ${pages + 1}` }}</p>
         <a class="" @click="getNextContent()">next</a>
       </div>
     </div>
   </div>
-
-  <div class="menu">
+  <div class="menu show-right flex-vert">
     <Menu></Menu>
+    <div>
+      <div class="ui-box tags relative" v-if="isShowTags">
+        <div class="tag-list" v-for="tag in tagList">
+          <a @click="selectedFilter = tag">{{ tag }}</a>
+        </div>
+      </div>
+      <div v-else class="ui-box relative">
+        <a @click="isShowTags = !isShowTags">Tags</a>
+      </div>
+    </div>
+    <div v-if="isShowTags" class="ui-box">
+      <a @click="isShowTags = !isShowTags">Close</a>
+    </div>
   </div>
 </template>
 
@@ -93,7 +165,7 @@ h2 {
   bottom: 5svh;
 }
 
-.page-selector div{
+.page-selector div {
   margin: 5px;
 }
 
@@ -103,10 +175,21 @@ button {
   z-index: 3;
 }
 
-.selector-flex{
+.selector-flex {
   display: flex;
   flex-direction: row;
   gap: 30px;
 }
 
+.tags {
+  max-width: 300px;
+  max-height: 250px;
+  min-width: 100px;
+  overflow-x: scroll;
+}
+
+.tag-list{
+  display: flex;
+  flex-wrap: wrap;
+}
 </style>
