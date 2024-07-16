@@ -60,7 +60,7 @@
 }
 
 .img-box {
-  margin: 10px;
+  margin: 30px;
 }
 
 .page-margin {
