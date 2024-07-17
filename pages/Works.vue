@@ -1,7 +1,7 @@
 <template>
   <div class="page center--">
     <div>
-      <div>
+      <div >
         <div id="music" class="content-box">
           <h1><a>Music</a></h1>
           <h2>MEGAREX releases</h2>
@@ -133,7 +133,7 @@
           ></iframe>
         </div>
       </div>
-      <div>
+      <div >
         <div id="live-performance" class="content-box">
           <h1><a>Live Performance</a></h1>
           <h2>Live Coding</h2>
@@ -195,7 +195,7 @@
           <h3></h3>
         </div>
       </div>
-      <div>
+      <div >
         <div id="projects" class="content-box">
           <h1><a>Projects</a></h1>
           <h3>
