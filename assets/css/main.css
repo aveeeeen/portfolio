@@ -14,13 +14,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-width: 800px;
 }
 
 .center-- {
   display: flex;
   justify-content: center;
-  min-width: 800px;
 }
 
 html{
@@ -111,7 +109,7 @@ iframe{
   margin-bottom: 40px;
   margin-left: 10%;
   margin-right: 10%;
-  max-width: 800px;
+  max-width: 1000px;
 }
 
 .content-box {
@@ -212,12 +210,6 @@ p {
     padding: 20px;
     border-radius: var(--box-radius);
     overflow-x: hidden;
-    min-width: 80%;
-  }
-
-  .center--{
-    display: flex;
-    align-items: center;
     min-width: 80%;
   }
 }
