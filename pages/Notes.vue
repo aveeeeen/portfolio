@@ -84,8 +84,8 @@ watch(contentFiltered,() => {if(contentArrary) isLoading.value = false})
 </script>
 
 <template>
-  <div class="page center-">
-    <div>
+  <div class="page">
+    <div class="center-">
       <div class="content-box article-list">
         <h1>Notes</h1>
         <p>new → old</p>
