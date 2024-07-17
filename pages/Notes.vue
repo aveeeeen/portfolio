@@ -208,6 +208,6 @@ button {
 .article-list{
   max-width: 800px;
   width: 80%;
-  min-height: 70svh;
+  min-height: 80svh;
 }
 </style>
