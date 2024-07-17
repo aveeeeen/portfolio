@@ -40,6 +40,12 @@ img{
   row-gap: 5px;
 }
 
+.page-end {
+  min-height: 100px;
+  width: 100svw;
+  position: relative;
+}
+
 a:hover{
   animation-name: breath;
   animation-duration: 2000ms;
@@ -99,7 +105,10 @@ iframe{
   background-color: var(--bg-color);
   padding: 20px;
   border-radius: var(--box-radius);
-  margin: 10px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  margin-left: 10%;
+  margin-right: 10%;
   max-width: 1000px;
 }
 
