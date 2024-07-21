@@ -78,13 +78,19 @@ watch(selectedFilter, async () => {
   console.log(contentFiltered.value);
 });
 
+function closeModal () {
+  if(isShowTags.value){
+    isShowTags.value = false;
+  }
+}
+
 watch(contentArrary,() => {if(contentArrary) isLoading.value = false})
 
 watch(contentFiltered,() => {if(contentArrary) isLoading.value = false})
 </script>
 
 <template>
-  <div class="page">
+  <div @click="closeModal()" class="page">
     <div class="center-">
       <div class="content-box article-list">
         <h1>Notes</h1>
@@ -147,17 +153,17 @@ watch(contentFiltered,() => {if(contentArrary) isLoading.value = false})
     <div class="menu show-right flex-vert">
       <Menu></Menu>
       <div>
-        <div class="ui-box tags relative" v-if="isShowTags">
+        <div @click.stop class="ui-box tags relative" v-if="isShowTags">
           <div class="tag-list" v-for="tag in tagList">
             <a @click="selectedFilter = tag">{{ tag }}</a>
           </div>
         </div>
         <div v-else class="ui-box relative">
-          <a @click="isShowTags = !isShowTags">Tags</a>
+          <a @click.stop="isShowTags = !isShowTags">Tags</a>
         </div>
       </div>
       <div v-if="isShowTags" class="ui-box">
-        <a @click="isShowTags = !isShowTags">Close</a>
+        <a @click.stop="isShowTags = !isShowTags">Close</a>
       </div>
     </div>
   </div>

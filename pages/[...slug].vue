@@ -2,10 +2,16 @@
 const isShowToC = ref(false);
 defineProps(["imgSrc"]);
 watch(isShowToC);
+
+function closeModal () {
+  if(isShowToC.value == true){
+    isShowToC.value = false
+  }
+}
 </script>
 
 <template>
-  <div class="page center--">
+  <div @click="closeModal()" class="page center--">
     <div>
       <main>
         <ContentDoc v-slot="{ doc }">
@@ -24,7 +30,7 @@ watch(isShowToC);
     <div class="flex-vert menu show-right">
       <Menu></Menu>
       <div>
-        <div class="ui-box toc relative" v-if="isShowToC">
+        <div @click.stop class="ui-box toc relative" v-if="isShowToC">
           <ContentDoc v-slot="{ doc }">
             <ul class="table-ul">
               <li class="table-li" v-for="link of doc.body.toc.links" :key="link.id">
@@ -36,11 +42,11 @@ watch(isShowToC);
           </ContentDoc>
         </div>
         <div v-else class="ui-box relative">
-          <a @click="isShowToC = !isShowToC">Table of Contents</a>
+          <a @click.stop="isShowToC = !isShowToC">Table of Contents</a>
         </div>
       </div>
       <div v-if="isShowToC" class="ui-box">
-        <a @click="isShowToC = !isShowToC">Close</a>
+        <a @click.stop="isShowToC = !isShowToC">Close</a>
       </div>
     </div>
   </div>
