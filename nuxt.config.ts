@@ -7,6 +7,9 @@ export default defineNuxtConfig({
     'nuxt-content-assets'
     ,'@nuxt/content'
   ],
+  plugins: [
+    '~/plugins/directives'
+  ],
   routeRules: {
     '/': { prerender: true }
   },

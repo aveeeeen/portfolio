@@ -1,6 +1,6 @@
 <template>
   <div class="page center--">
-    <div>
+    <div class="">
       <div >
         <div id="music" class="content-box">
           <h1><a>Music</a></h1>
