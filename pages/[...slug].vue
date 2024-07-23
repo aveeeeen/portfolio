@@ -32,11 +32,18 @@ function closeModal () {
       <div>
         <div @click.stop class="ui-box toc relative" v-if="isShowToC">
           <ContentDoc v-slot="{ doc }">
-            <ul class="table-ul">
-              <li class="table-li" v-for="link of doc.body.toc.links" :key="link.id">
+            <ul class="table-ul" v-for="link of doc.body.toc.links" :key="link.id">
+              <li class="table-li" >
                 <a @click="isShowToC = !isShowToC" :href="`#${link.id}`">{{
                   link.text
                 }}</a>
+                <ul v-if="link.children" class="table-ul">
+                  <li class="table-li" v-for="children in link.children">
+                  <a @click="isShowToC = !isShowToC" :href="`#${children.id}`">{{
+                    children.text
+                  }}</a>
+                  </li>
+                </ul>
               </li>
             </ul>
           </ContentDoc>
@@ -61,19 +68,13 @@ function closeModal () {
   overflow-x: scroll;
 }
 
-
-
-h2 > a{
-  font-size: 2rem;
-}
-
-h3 > a{
+h3 a{
   font-size: 1.25rem;
 }
 
 .table-ul{
   padding-left: 15px;
-  list-style: none;
+  list-style:none;
 }
 
 .table-li{
