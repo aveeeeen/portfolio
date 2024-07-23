@@ -127,7 +127,7 @@ watch(contentFiltered,() => {if(contentArrary) isLoading.value = false})
               <NuxtLink :to="content._path">{{ content.title }}</NuxtLink>
               <p>
                 更新日:
-                {{
+                {{  
                   content.update.toString().slice(0, 4) +
                   "." +
                   content.update.toString().slice(4, 6) +
