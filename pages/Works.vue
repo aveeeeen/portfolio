@@ -2,6 +2,104 @@
   <div class="page center--">
     <div class="">
       <div >
+        <div id="projects" class="content-box">
+          <h1><a>Projects / Reserch</a></h1>
+          <h3>
+            図形楽譜を用いた音楽インタフェースのデザインと演奏：画像、GUIを図形楽譜として捉える
+          </h3>
+          <div class="flex-vert">
+            <iframe
+            width="560"
+            height="315"
+            loading="lazy"
+            src="https://www.youtube.com/embed/torxCXoCfh4?si=IN0-6k9W2skzpAaM"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
+            ></iframe>
+            
+            <a
+            href="https://braveeeeen.notion.site/214f01334f084cf0b15d4fa3a159de0f"
+            >explanations, 解説</a
+            >
+          </div>
+          <h3>
+            音楽のライブコーディングのコードと表現のオリジナリティに関する分析
+          </h3>
+          <ul v-for="content in contentList">
+            <li>
+              <NuxtLink :to="content._path">{{ content.title }}</NuxtLink>
+            </li>
+          </ul> 
+        </div>
+      </div>
+      
+      <div >
+        <div id="live-performance" class="content-box">
+          <h1><a>Live Performance</a></h1>
+          <h2>Live Coding</h2>
+      
+          <h3>Myorph Monoliph release streaming event</h3>
+          <iframe
+            width="560"
+            height="315"
+            loading="lazy"
+            src="https://www.youtube.com/embed/db0dgd0V9fA?si=WgdeX5Ak3dGTJI4f"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
+          ></iframe>
+      
+          <h2>Electric Catfish</h2>
+      
+          <h3>NxPC.Live vol.63</h3>
+          <iframe
+            width="560"
+            height="315"
+            loading="lazy"
+            src="https://www.youtube.com/embed/czN-1l_ykEw?si=uwbVbjUQCA8qPCe2"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
+          ></iframe>
+      
+          <h3>NxPC.Live vol.66</h3>
+          <iframe
+            width="560"
+            height="315"
+            loading="lazy"
+            src="https://www.youtube.com/embed/WmLw4oTomhA?si=87Nf0kCIPPy8KkSB"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
+          ></iframe>
+      
+          <h3>NxPC.Live vol.68</h3>
+          <iframe
+            width="560"
+            height="315"
+            loading="lazy"
+            src="https://www.youtube.com/embed/-oitKDAsfdc?si=LlvtkmWSKytLLlXq"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
+          ></iframe>
+      
+          <h3></h3>
+        </div>
+      </div>
+      
+      <div>
         <div id="music" class="content-box">
           <h1><a>Music</a></h1>
           <h2>MEGAREX releases</h2>
@@ -133,94 +231,6 @@
           ></iframe>
         </div>
       </div>
-      <div >
-        <div id="live-performance" class="content-box">
-          <h1><a>Live Performance</a></h1>
-          <h2>Live Coding</h2>
-
-          <h3>Myorph Monoliph release streaming event</h3>
-          <iframe
-            width="560"
-            height="315"
-            loading="lazy"
-            src="https://www.youtube.com/embed/db0dgd0V9fA?si=WgdeX5Ak3dGTJI4f"
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen
-          ></iframe>
-
-          <h2>Electric Catfish</h2>
-
-          <h3>NxPC.Live vol.63</h3>
-          <iframe
-            width="560"
-            height="315"
-            loading="lazy"
-            src="https://www.youtube.com/embed/czN-1l_ykEw?si=uwbVbjUQCA8qPCe2"
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen
-          ></iframe>
-
-          <h3>NxPC.Live vol.66</h3>
-          <iframe
-            width="560"
-            height="315"
-            loading="lazy"
-            src="https://www.youtube.com/embed/WmLw4oTomhA?si=87Nf0kCIPPy8KkSB"
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen
-          ></iframe>
-
-          <h3>NxPC.Live vol.68</h3>
-          <iframe
-            width="560"
-            height="315"
-            loading="lazy"
-            src="https://www.youtube.com/embed/-oitKDAsfdc?si=LlvtkmWSKytLLlXq"
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen
-          ></iframe>
-
-          <h3></h3>
-        </div>
-      </div>
-      <div >
-        <div id="projects" class="content-box">
-          <h1><a>Projects</a></h1>
-          <h3>
-            図形楽譜を用いた音楽インタフェースのデザインと演奏：画像、GUIを図形楽譜として捉える
-          </h3>
-          <div class="flex-vert">
-            <iframe
-              width="560"
-              height="315"
-              loading="lazy"
-              src="https://www.youtube.com/embed/torxCXoCfh4?si=IN0-6k9W2skzpAaM"
-              title="YouTube video player"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerpolicy="strict-origin-when-cross-origin"
-              allowfullscreen
-            ></iframe>
-
-            <a
-              href="https://braveeeeen.notion.site/214f01334f084cf0b15d4fa3a159de0f"
-              >explanations, 解説</a
-            >
-          </div>
-        </div>
-      </div>
       <div>
         <div id="devs" class="content-box">
           <h1><a>Devs</a></h1>
@@ -262,9 +272,9 @@
     <Menu></Menu>
     <div class="ui-box" style="padding-left: 10px">
       <div class="flex-vert">
-        <a href="#music">Music</a>
+        <a href="#projects">Projects / Research</a>
         <a href="#live-performance">Live Performance</a>
-        <a href="#projects">Projects</a>
+        <a href="#music">Music</a>
         <a href="#devs">Devs</a>
       </div>
     </div>
@@ -279,3 +289,16 @@ h1 a {
 
 
 </style>
+
+<script setup>
+const contentList = ref(null);
+
+onMounted(async () => {
+  contentList.value = await queryContent("/")
+    .only(["title", "_path", "update", "tags"])
+    .where( {tags: {$contains: ['研究']}})
+    .sort({ update: -1, $numeric: true })
+    .find();
+});
+
+</script>
