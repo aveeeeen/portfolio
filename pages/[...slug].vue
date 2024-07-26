@@ -11,6 +11,7 @@ watch(isShowToC);
 onMounted(async () => {
   contentQuery = await queryContent(route.fullPath).findOne();
   isToCEmpty.value = contentQuery.body.toc.links.length == 0 ? true : false
+  console.log(contentQuery.body.toc)
 })
 
 function closeModal () {
@@ -58,7 +59,7 @@ function closeModal () {
             </ul>
           </ContentDoc>
         </div>
-        <div v-else" class="ui-box relative">
+        <div v-else class="ui-box relative">
           <a @click.stop="isShowToC = !isShowToC">Table of Contents</a>
         </div>
       </div>
@@ -85,6 +86,7 @@ h3 a{
 .table-ul{
   padding-left: 15px;
   list-style:none;
+  margin: 0;
 }
 
 .table-li{
