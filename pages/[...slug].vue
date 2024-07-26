@@ -1,7 +1,17 @@
 <script setup>
 const isShowToC = ref(false);
+const route = useRoute();
+const isToCEmpty = ref(true);
+let contentQuery = null;
+
+
 defineProps(["imgSrc"]);
 watch(isShowToC);
+
+onMounted(async () => {
+  contentQuery = await queryContent(route.fullPath).findOne();
+  isToCEmpty.value = contentQuery.body.toc.links.length == 0 ? true : false
+})
 
 function closeModal () {
   if(isShowToC.value == true){
@@ -29,10 +39,10 @@ function closeModal () {
 
     <div class="flex-vert menu show-right">
       <Menu></Menu>
-      <div>
+      <div v-if="!isToCEmpty">
         <div @click.stop class="ui-box toc relative" v-if="isShowToC">
           <ContentDoc v-slot="{ doc }">
-            <ul class="table-ul" v-for="link of doc.body.toc.links" :key="link.id">
+            <ul class="table-ul"  v-for="link of doc.body.toc.links" :key="link.id">
               <li class="table-li" >
                 <a @click="isShowToC = !isShowToC" :href="`#${link.id}`">{{
                   link.text
@@ -48,7 +58,7 @@ function closeModal () {
             </ul>
           </ContentDoc>
         </div>
-        <div v-else class="ui-box relative">
+        <div v-else" class="ui-box relative">
           <a @click.stop="isShowToC = !isShowToC">Table of Contents</a>
         </div>
       </div>
