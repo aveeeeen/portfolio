@@ -20,10 +20,9 @@
             allowfullscreen
             ></iframe>
             
-            <a
-            href="https://braveeeeen.notion.site/214f01334f084cf0b15d4fa3a159de0f"
-            >explanations, 解説</a
-            >
+            <div v-for="content in contentList">
+              <NuxtLink v-if="content._path == '/notes/bachelor-research/bachelor-research'" :to="content._path">解説 / explaination</NuxtLink>
+            </div>
           </div>
           <h3>
             音楽のライブコーディングのコードと表現のオリジナリティに関する分析

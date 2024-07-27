@@ -4,37 +4,37 @@ const route = useRoute();
 const isToCEmpty = ref(true);
 let contentQuery = null;
 
-
 defineProps(["imgSrc"]);
 watch(isShowToC);
 
 onBeforeMount(() => {
-  let bgC = getComputedStyle(document.body).getPropertyValue('--bg-color');
-  let html = document.querySelector('html');
+  let bgC = getComputedStyle(document.body).getPropertyValue("--bg-color");
+  let html = document.querySelector("html");
   html.style.backgroundColor = bgC;
-})
+});
 
 onMounted(async () => {
   contentQuery = await queryContent(route.fullPath).findOne();
-  isToCEmpty.value = contentQuery.body.toc.links.length == 0 ? true : false
-})
+  isToCEmpty.value = contentQuery.body.toc.links.length == 0 ? true : false;
+  console.log(contentQuery.body.toc)
+});
 
 onUnmounted(() => {
-  let html = document.querySelector('html');
-  let contetnBox = document.querySelector('content-box');
+  let html = document.querySelector("html");
+  let contetnBox = document.querySelector("content-box");
   html.style.backgroundColor = "blue";
-})
+});
 
-function closeModal () {
-  if(isShowToC.value == true){
-    isShowToC.value = false
+function closeModal() {
+  if (isShowToC.value == true) {
+    isShowToC.value = false;
   }
 }
 </script>
 
 <template>
   <div @click="closeModal()" class="page center--">
-    <div >
+    <div>
       <main>
         <ContentDoc v-slot="{ doc }">
           <!-- Post title -->
@@ -44,7 +44,7 @@ function closeModal () {
           <!-- Main post content -->
           <!-- imageSize: 'style' -->
 
-          <ContentRenderer class="content-box article" :value="doc"/>
+          <ContentRenderer class="content-box article" :value="doc" />
         </ContentDoc>
       </main>
     </div>
@@ -54,16 +54,22 @@ function closeModal () {
       <div v-if="!isToCEmpty">
         <div @click.stop class="ui-box toc relative" v-if="isShowToC">
           <ContentDoc v-slot="{ doc }">
-            <ul class="table-ul"  v-for="link of doc.body.toc.links" :key="link.id">
-              <li class="table-li" >
+            <ul
+              class="table-ul"
+              v-for="link of doc.body.toc.links"
+              :key="link.id"
+            >
+              <li class="table-li">
                 <a @click="isShowToC = !isShowToC" :href="`#${link.id}`">{{
                   link.text
                 }}</a>
                 <ul v-if="link.children" class="table-ul">
                   <li class="table-li" v-for="children in link.children">
-                  <a @click="isShowToC = !isShowToC" :href="`#${children.id}`">{{
-                    children.text
-                  }}</a>
+                    <a
+                      @click="isShowToC = !isShowToC"
+                      :href="`#${children.id}`"
+                      >{{ children.text }}</a
+                    >
                   </li>
                 </ul>
               </li>
@@ -82,7 +88,6 @@ function closeModal () {
 </template>
 
 <style scoped>
-
 .toc {
   max-width: 300px;
   max-height: 250px;
@@ -90,17 +95,17 @@ function closeModal () {
   overflow-x: scroll;
 }
 
-h3 a{
+h3 a {
   font-size: 1.25rem;
 }
 
-.table-ul{
+.table-ul {
   padding-left: 15px;
-  list-style:none;
+  list-style: none;
   margin: 0;
 }
 
-.table-li{
+.table-li {
   padding-bottom: 5px;
 }
 </style>
