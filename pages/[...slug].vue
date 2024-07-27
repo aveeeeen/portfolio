@@ -9,9 +9,20 @@ defineProps(["imgSrc"]);
 watch(isShowToC);
 
 onMounted(async () => {
+  let bgC = getComputedStyle(document.body).getPropertyValue('--bg-color');
   contentQuery = await queryContent(route.fullPath).findOne();
   isToCEmpty.value = contentQuery.body.toc.links.length == 0 ? true : false
   console.log(contentQuery.body.toc)
+  let html = document.querySelector('html');
+  let contentBox = document.getElementsByClassName("content-box");
+  html.style.backgroundColor = bgC;
+  contentBox.style.backgroundColor = bgC;
+})
+
+onUnmounted(() => {
+  let html = document.querySelector('html');
+  let contetnBox = document.querySelector('content-box');
+  html.style.backgroundColor = "blue";
 })
 
 function closeModal () {
@@ -23,7 +34,7 @@ function closeModal () {
 
 <template>
   <div @click="closeModal()" class="page center--">
-    <div>
+    <div >
       <main>
         <ContentDoc v-slot="{ doc }">
           <!-- Post title -->
@@ -33,7 +44,7 @@ function closeModal () {
           <!-- Main post content -->
           <!-- imageSize: 'style' -->
 
-          <ContentRenderer class="content-box" :value="doc"/>
+          <ContentRenderer class="content-box article" :value="doc"/>
         </ContentDoc>
       </main>
     </div>

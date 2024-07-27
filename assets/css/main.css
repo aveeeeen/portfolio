@@ -136,6 +136,10 @@ iframe{
   font-size: 1.2rem;
 }
 
+.article > p, li , ul {
+  line-height: 1.75rem;
+}
+
 .page{
   width: 100svw;
   height: 100svh;
