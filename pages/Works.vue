@@ -28,7 +28,7 @@
             音楽のライブコーディングのコードと表現のオリジナリティに関する分析
           </h3>
           <ul v-for="content in contentList">
-            <li>
+            <li v-if="content.tags.includes('研究')">
               <NuxtLink :to="content._path">{{ content.title }}</NuxtLink>
             </li>
           </ul> 
@@ -295,9 +295,11 @@ const contentList = ref(null);
 onMounted(async () => {
   contentList.value = await queryContent("/")
     .only(["title", "_path", "update", "tags"])
-    .where( {tags: {$contains: ['研究']}})
+    .where( {tags: {$containsAny: ['研究', 'archive']}})
     .sort({ update: -1, $numeric: true })
     .find();
+
+  console.log(contentList.value)
 });
 
 </script>

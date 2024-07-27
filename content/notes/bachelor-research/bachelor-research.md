@@ -1,7 +1,7 @@
 ---
 
 title: "卒業制作作品『図形楽譜を用いた音楽インタフェースのデザインと演奏"
-tags: "研究, archive"
+tags: "archive"
 update: 20231123
 
 ---
