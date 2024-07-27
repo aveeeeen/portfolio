@@ -8,15 +8,15 @@ let contentQuery = null;
 defineProps(["imgSrc"]);
 watch(isShowToC);
 
-onMounted(async () => {
+onBeforeMount(() => {
   let bgC = getComputedStyle(document.body).getPropertyValue('--bg-color');
+  let html = document.querySelector('html');
+  html.style.backgroundColor = bgC;
+})
+
+onMounted(async () => {
   contentQuery = await queryContent(route.fullPath).findOne();
   isToCEmpty.value = contentQuery.body.toc.links.length == 0 ? true : false
-  console.log(contentQuery.body.toc)
-  let html = document.querySelector('html');
-  let contentBox = document.getElementsByClassName("content-box");
-  html.style.backgroundColor = bgC;
-  contentBox.style.backgroundColor = bgC;
 })
 
 onUnmounted(() => {
