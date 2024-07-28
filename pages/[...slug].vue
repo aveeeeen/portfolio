@@ -1,5 +1,6 @@
 <script setup>
 const isShowToC = ref(false);
+const isMenuShown = ref(true);
 const route = useRoute();
 const isToCEmpty = ref(true);
 let contentQuery = null;
@@ -16,7 +17,7 @@ onBeforeMount(() => {
 onMounted(async () => {
   contentQuery = await queryContent(route.fullPath).findOne();
   isToCEmpty.value = contentQuery.body.toc.links.length == 0 ? true : false;
-  console.log(contentQuery.body.toc)
+  console.log(contentQuery.body.toc);
 });
 
 onUnmounted(() => {
@@ -28,6 +29,9 @@ onUnmounted(() => {
 function closeModal() {
   if (isShowToC.value == true) {
     isShowToC.value = false;
+  }
+  if (isMenuShown.value){
+    isMenuShown.value = false;
   }
 }
 </script>
@@ -49,41 +53,42 @@ function closeModal() {
       </main>
     </div>
 
-    <div class="flex-vert menu show-right">
+    <Nav @click.stop="isMenuShown = !isMenuShown" :close="isMenuShown" @isclose="(e) => isMenuShown = e">
       <Menu></Menu>
-      <div v-if="!isToCEmpty">
-        <div @click.stop class="ui-box toc relative" v-if="isShowToC">
-          <ContentDoc v-slot="{ doc }">
-            <ul
-              class="table-ul"
-              v-for="link of doc.body.toc.links"
-              :key="link.id"
-            >
-              <li class="table-li">
-                <a @click="isShowToC = !isShowToC" :href="`#${link.id}`">{{
-                  link.text
-                }}</a>
-                <ul v-if="link.children" class="table-ul">
-                  <li class="table-li" v-for="children in link.children">
-                    <a
-                      @click="isShowToC = !isShowToC"
-                      :href="`#${children.id}`"
-                      >{{ children.text }}</a
-                    >
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </ContentDoc>
+        <div v-if="!isToCEmpty">
+          <div @click.stop class="ui-box toc relative" v-if="isShowToC">
+            <ContentDoc v-slot="{ doc }">
+              <ul
+                class="table-ul"
+                v-for="link of doc.body.toc.links"
+                :key="link.id"
+              >
+                <li class="table-li">
+                  <a @click="isShowToC = !isShowToC" :href="`#${link.id}`">{{
+                    link.text
+                  }}</a>
+                  <ul v-if="link.children" class="table-ul">
+                    <li class="table-li" v-for="children in link.children">
+                      <a
+                        @click="isShowToC = !isShowToC"
+                        :href="`#${children.id}`"
+                        >{{ children.text }}</a
+                      >
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </ContentDoc>
+          </div>
+          <div v-else class="ui-box relative">
+            <a @click.stop="isShowToC = !isShowToC">Table of Contents</a>
+          </div>
         </div>
-        <div v-else class="ui-box relative">
-          <a @click.stop="isShowToC = !isShowToC">Table of Contents</a>
+        <div v-if="isShowToC" class="ui-box">
+          <a @click.stop="isShowToC = !isShowToC">Close</a>
         </div>
-      </div>
-      <div v-if="isShowToC" class="ui-box">
-        <a @click.stop="isShowToC = !isShowToC">Close</a>
-      </div>
-    </div>
+    </Nav>
+        
   </div>
 </template>
 

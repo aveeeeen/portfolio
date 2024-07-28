@@ -1,5 +1,5 @@
 <template>
-  <div class="page center-">
+  <div @click="closeModal()" class="page center-">
     <div>
       <div class="relative center-hori">
         <div class="flex-hori">
@@ -54,9 +54,9 @@
   </div>
 
   <!-- nav box -->
-  <div class="menu">
+  <Nav @click.stop="isMenuShown = !isMenuShown" :close="isMenuShown" @isclose="(e) => isMenuShown = e">
     <Menu></Menu>
-  </div>
+  </Nav>
 </template>
 
 <style scoped>
@@ -124,6 +124,7 @@ import github from "~/assets/icon/github.png";
 import soundcloud from "~/assets/icon/soundcloud.png";
 import youtube from "~/assets/icon/youtube.png";
 
+const isMenuShown = ref(false);
 const socialMedias = ref([
   {
     name: "twitter",
@@ -162,4 +163,10 @@ const socialMedias = ref([
     src: github,
   },
 ]);
+
+function closeModal() {
+  if(isMenuShown.value){
+    isMenuShown.value = false;
+  }
+}
 </script>

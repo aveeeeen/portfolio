@@ -165,9 +165,8 @@ p {
 
 .menu{
   position: fixed;
-
-  right: 10%;
-  bottom: 10%;
+  top: 5%;
+  right: 5%;
 }
 
 .flex-hori{
@@ -196,18 +195,16 @@ p {
     display: block;
     background-color: white;
     padding: 10px;
-    margin-left: 10px;
-    margin-right: 10px;
     border-radius: var(--box-radius);
   }
 
-  .menu{
+  /* .menu{
     position: fixed;
     right: 5dvw;
     bottom: 5dvh;
     margin: 0px;
     align-items: end;
-  }
+  } */
 
   .center- {
     display: block;
@@ -227,5 +224,13 @@ p {
     border-radius: var(--box-radius);
     overflow-x: hidden;
     min-width: 80%;
+  }
+
+  .menu{
+    position: fixed;
+    top: 5%;
+    right: 0%;
+    margin: 0px;
+    align-items: end;
   }
 }
