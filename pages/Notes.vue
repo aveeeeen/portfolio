@@ -103,7 +103,9 @@ watch(contentFiltered, () => {
 });
 
 watch(isMenuShown, () => {
-  console.log("from notes:" + isMenuShown.value)
+  if(!isMenuShown.value){
+    isShowTags.value = false;
+  }
 })
 </script>
 
