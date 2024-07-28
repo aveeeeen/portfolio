@@ -54,9 +54,9 @@
   </div>
 
   <!-- nav box -->
-  <div class="menu">
+  <Nav>
     <Menu></Menu>
-  </div>
+  </Nav>
 </template>
 
 <style scoped>

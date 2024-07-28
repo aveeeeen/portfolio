@@ -1,7 +1,7 @@
 <template>
   <div class="page center--">
     <div class="">
-      <div >
+      <div>
         <div id="projects" class="content-box">
           <h1><a>Projects / Reserch</a></h1>
           <h3>
@@ -9,19 +9,25 @@
           </h3>
           <div class="flex-vert">
             <iframe
-            width="560"
-            height="315"
-            loading="lazy"
-            src="https://www.youtube.com/embed/torxCXoCfh4?si=IN0-6k9W2skzpAaM"
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen
+              width="560"
+              height="315"
+              loading="lazy"
+              src="https://www.youtube.com/embed/torxCXoCfh4?si=IN0-6k9W2skzpAaM"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
             ></iframe>
-            
+
             <div v-for="content in contentList">
-              <NuxtLink v-if="content._path == '/notes/bachelor-research/bachelor-research'" :to="content._path">解説 / explaination</NuxtLink>
+              <NuxtLink
+                v-if="
+                  content._path == '/notes/bachelor-research/bachelor-research'
+                "
+                :to="content._path"
+                >解説 / explaination</NuxtLink
+              >
             </div>
           </div>
           <h3>
@@ -31,15 +37,15 @@
             <li v-if="content.tags.includes('研究')">
               <NuxtLink :to="content._path">{{ content.title }}</NuxtLink>
             </li>
-          </ul> 
+          </ul>
         </div>
       </div>
-      
-      <div >
+
+      <div>
         <div id="live-performance" class="content-box">
           <h1><a>Live Performance</a></h1>
           <h2>Live Coding</h2>
-      
+
           <h3>Myorph Monoliph release streaming event</h3>
           <iframe
             width="560"
@@ -52,9 +58,9 @@
             referrerpolicy="strict-origin-when-cross-origin"
             allowfullscreen
           ></iframe>
-      
+
           <h2>Electric Catfish</h2>
-      
+
           <h3>NxPC.Live vol.63</h3>
           <iframe
             width="560"
@@ -67,7 +73,7 @@
             referrerpolicy="strict-origin-when-cross-origin"
             allowfullscreen
           ></iframe>
-      
+
           <h3>NxPC.Live vol.66</h3>
           <iframe
             width="560"
@@ -80,7 +86,7 @@
             referrerpolicy="strict-origin-when-cross-origin"
             allowfullscreen
           ></iframe>
-      
+
           <h3>NxPC.Live vol.68</h3>
           <iframe
             width="560"
@@ -93,11 +99,11 @@
             referrerpolicy="strict-origin-when-cross-origin"
             allowfullscreen
           ></iframe>
-      
+
           <h3></h3>
         </div>
       </div>
-      
+
       <div>
         <div id="music" class="content-box">
           <h1><a>Music</a></h1>
@@ -233,41 +239,40 @@
       <div>
         <div id="devs" class="content-box">
           <h1><a>Devs</a></h1>
-          <h3>
-            NxPC.Live vol.63
-          </h3>
-          <img src="../assets/img/web-devs/hardpia.png"><img>
-          <a href="https://nxpclab.info/vol.63/">https://nxpclab.info/vol.63/</a>
+          <h3>NxPC.Live vol.63</h3>
+          <img src="../assets/img/web-devs/hardpia.png" /><img />
+          <a href="https://nxpclab.info/vol.63/"
+            >https://nxpclab.info/vol.63/</a
+          >
 
-          <h3>
-            NxPC.Live vol.64
-          </h3>
-          <img src="../assets/img/web-devs/proof_of_x.png"><img>
-          <a href="https://nxpclab.info/vol.64/">https://nxpclab.info/vol.64/</a>
+          <h3>NxPC.Live vol.64</h3>
+          <img src="../assets/img/web-devs/proof_of_x.png" /><img />
+          <a href="https://nxpclab.info/vol.64/"
+            >https://nxpclab.info/vol.64/</a
+          >
 
-          <h3>
-            NxPC.Live vol.65
-          </h3>
-          <img src="../assets/img/web-devs/nagase_somen.png"><img>
-          <a href="https://nxpclab.info/vol.65/">https://nxpclab.info/vol.65/</a>
+          <h3>NxPC.Live vol.65</h3>
+          <img src="../assets/img/web-devs/nagase_somen.png" /><img />
+          <a href="https://nxpclab.info/vol.65/"
+            >https://nxpclab.info/vol.65/</a
+          >
 
-          <h3>
-            NxPC.Live vol.66
-          </h3>
-          <img src="../assets/img/web-devs/yashimaru.png"><img>
-          <a href="https://nxpclab.info/vol.66/">https://nxpclab.info/vol.66/</a>
+          <h3>NxPC.Live vol.66</h3>
+          <img src="../assets/img/web-devs/yashimaru.png" /><img />
+          <a href="https://nxpclab.info/vol.66/"
+            >https://nxpclab.info/vol.66/</a
+          >
 
-          <h3>
-            NxPC.Live vol.68
-          </h3>
-          <img src="../assets/img/web-devs/space_debris.png"><img>
-          <a href="https://nxpclab.info/vol.68/">https://nxpclab.info/vol.68/</a>
+          <h3>NxPC.Live vol.68</h3>
+          <img src="../assets/img/web-devs/space_debris.png" /><img />
+          <a href="https://nxpclab.info/vol.68/"
+            >https://nxpclab.info/vol.68/</a
+          >
         </div>
       </div>
     </div>
   </div>
-
-  <div class="menu flex-vert show-right">
+  <Nav>
     <Menu></Menu>
     <div class="ui-box" style="padding-left: 10px">
       <div class="flex-vert">
@@ -277,7 +282,8 @@
         <a href="#devs">Devs</a>
       </div>
     </div>
-  </div>
+  </Nav>
+  
 </template>
 
 <style scoped>
@@ -286,20 +292,22 @@ h1 a {
   color: black;
 }
 
-
+.burger {
+  top: 5%;
+}
 </style>
 
 <script setup>
+
 const contentList = ref(null);
 
 onMounted(async () => {
   contentList.value = await queryContent("/")
     .only(["title", "_path", "update", "tags"])
-    .where( {tags: {$containsAny: ['研究', 'archive']}})
+    .where({ tags: { $containsAny: ["研究", "archive"] } })
     .sort({ update: -1, $numeric: true })
     .find();
 
-  console.log(contentList.value)
+  console.log(contentList.value);
 });
-
 </script>

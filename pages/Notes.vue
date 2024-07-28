@@ -4,6 +4,7 @@ const contentArrary = ref(null);
 const contentFiltered = ref(null);
 const isLoading = ref(true);
 const isShowTags = ref(false);
+const isMenuShown = ref(true);
 const page = ref(0);
 const pages = ref(0);
 const tagList = ref([]);
@@ -32,13 +33,13 @@ async function getContent(start, move) {
 function getNextContent() {
   if (page.value == pages.value) return;
   page.value++;
-  getContent(page.value * 5, 5)
+  getContent(page.value * 5, 5);
 }
 
 function getPrevContent() {
   if (page.value == 0) return;
   page.value--;
-  getContent(page.value * 5, 5)
+  getContent(page.value * 5, 5);
 }
 
 function getAllTags() {
@@ -78,20 +79,32 @@ watch(selectedFilter, async () => {
   console.log(contentFiltered.value);
 });
 
-function closeModal () {
-  if(isShowTags.value){
+function closeModal() {
+  if (isShowTags.value) {
     isShowTags.value = false;
+  }
+
+  if(isMenuShown.value) {
+    isMenuShown.value = false;
   }
 }
 
-watch(contentArrary,() => {if(contentArrary) isLoading.value = false})
+watch(contentArrary, () => {
+  if (contentArrary) isLoading.value = false;
+});
 
-watch(contentFiltered,() => {if(contentArrary) isLoading.value = false})
+watch(contentFiltered, () => {
+  if (contentArrary) isLoading.value = false;
+});
+
+watch(isMenuShown, () => {
+  console.log(isMenuShown.value)
+})
 </script>
 
 <template>
-  <div @click="closeModal()" class="page">
-    <div class="center-">
+  <div @click="closeModal()" class="page center--">
+    <div class="">
       <div class="content-box article-list">
         <h1>Notes</h1>
         <p>new → old</p>
@@ -127,7 +140,7 @@ watch(contentFiltered,() => {if(contentArrary) isLoading.value = false})
               <NuxtLink :to="content._path">{{ content.title }}</NuxtLink>
               <p>
                 更新日:
-                {{  
+                {{
                   content.update.toString().slice(0, 4) +
                   "." +
                   content.update.toString().slice(4, 6) +
@@ -148,25 +161,24 @@ watch(contentFiltered,() => {if(contentArrary) isLoading.value = false})
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="menu show-right flex-vert">
-      <Menu></Menu>
-      <div>
-        <div @click.stop class="ui-box tags relative" v-if="isShowTags">
-          <div class="tag-list" v-for="tag in tagList">
-            <a @click="selectedFilter = tag">{{ tag }}</a>
+    </div>      
+  </div>
+  <Nav @click.stop :close="isMenuShown" @isclose="(e) => isMenuShown = e">
+        <Menu></Menu>
+        <div>
+          <div @click.stop class="ui-box tags relative" v-if="isShowTags">
+            <div class="tag-list" v-for="tag in tagList">
+              <a @click="selectedFilter = tag">{{ tag }}</a>
+            </div>
+          </div>
+          <div v-else class="ui-box relative">
+            <a @click.stop="isShowTags = !isShowTags">Tags</a>
           </div>
         </div>
-        <div v-else class="ui-box relative">
-          <a @click.stop="isShowTags = !isShowTags">Tags</a>
+        <div v-if="isShowTags" class="ui-box">
+          <a @click.stop="isShowTags = !isShowTags">Close</a>
         </div>
-      </div>
-      <div v-if="isShowTags" class="ui-box">
-        <a @click.stop="isShowTags = !isShowTags">Close</a>
-      </div>
-    </div>
-  </div>
+    </Nav>
 </template>
 
 <style scoped>
@@ -211,7 +223,7 @@ button {
   list-style: none;
 }
 
-.article-list{
+.article-list {
   max-width: 800px;
   width: 80%;
   min-height: 80svh;

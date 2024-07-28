@@ -68,7 +68,7 @@ watch(isVideoLoad, () => {
 .introduction {
   position: absolute;
   left: 10%;
-  top: 10%;
+  top: 5%;
 }
 
 @media (max-width: 786px) {
