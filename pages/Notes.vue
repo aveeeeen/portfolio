@@ -89,6 +89,11 @@ function closeModal() {
   }
 }
 
+function selectFilter(tag) {
+  selectedFilter.value = tag
+  closeModal();
+}
+
 watch(contentArrary, () => {
   if (contentArrary) isLoading.value = false;
 });
@@ -168,7 +173,7 @@ watch(isMenuShown, () => {
         <div>
           <div @click.stop class="ui-box tags relative" v-if="isShowTags">
             <div class="tag-list" v-for="tag in tagList">
-              <a @click="selectedFilter = tag">{{ tag }}</a>
+              <a @click.stop="selectFilter(tag)">{{ tag }}</a>
             </div>
           </div>
           <div v-else class="ui-box relative">
