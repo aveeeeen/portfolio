@@ -1,7 +1,6 @@
 <template>
   <div @click="closeModal()" class="page">
     <div class="center-">
-      <div>
         <div class="relative center-hori">
           <div class="flex-hori">
             <div class="content-box">
@@ -51,7 +50,6 @@
             </div>
           </div>
         </div>
-      </div>
     </div>
   </div>
 

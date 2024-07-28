@@ -84,13 +84,13 @@ function closeModal() {
     isShowTags.value = false;
   }
 
-  if(isMenuShown.value) {
+  if (isMenuShown.value) {
     isMenuShown.value = false;
   }
 }
 
 function selectFilter(tag) {
-  selectedFilter.value = tag
+  selectedFilter.value = tag;
   closeModal();
 }
 
@@ -103,89 +103,93 @@ watch(contentFiltered, () => {
 });
 
 watch(isMenuShown, () => {
-  if(!isMenuShown.value){
+  if (!isMenuShown.value) {
     isShowTags.value = false;
   }
-})
+});
 </script>
 
 <template>
-  <div @click="closeModal()" class="page ">
-    <div class="center--">
-      <div class="content-box article-list">
-        <h1>Notes</h1>
-        <p>new → old</p>
-        <div v-if="selectedFilter != ''">
-          <p>showing: {{ selectedFilter }}</p>
-          <a @click="selectedFilter = ''"> clear filter</a>
-        </div>
+  <div @click="closeModal()" class="page">
+    <div class="center-">
+        <div class="content-box article-list">
+          <h1>Notes</h1>
+          <p>new → old</p>
+          <div v-if="selectedFilter != ''">
+            <p>showing: {{ selectedFilter }}</p>
+            <a @click="selectedFilter = ''"> clear filter</a>
+          </div>
 
-        <hr />
-        <div v-if="isLoading">
-          <p>loading ...</p>
-        </div>
+          <hr />
+          <div v-if="isLoading">
+            <p>loading ...</p>
+          </div>
 
-        <div v-else>
-          <ul v-if="selectedFilter == ''" v-for="content in contentArrary">
-            <li>
-              <NuxtLink :to="content._path">{{ content.title }}</NuxtLink>
-              <p>
-                更新日:
-                {{
-                  content.update.toString().slice(0, 4) +
-                  "." +
-                  content.update.toString().slice(4, 6) +
-                  "." +
-                  content.update.toString().slice(6, 8)
-                }}
-              </p>
-            </li>
-          </ul>
+          <div v-else>
+            <ul v-if="selectedFilter == ''" v-for="content in contentArrary">
+              <li>
+                <NuxtLink :to="content._path">{{ content.title }}</NuxtLink>
+                <p>
+                  更新日:
+                  {{
+                    content.update.toString().slice(0, 4) +
+                    "." +
+                    content.update.toString().slice(4, 6) +
+                    "." +
+                    content.update.toString().slice(6, 8)
+                  }}
+                </p>
+              </li>
+            </ul>
 
-          <ul v-else v-for="content in contentFiltered">
-            <li>
-              <NuxtLink :to="content._path">{{ content.title }}</NuxtLink>
-              <p>
-                更新日:
-                {{
-                  content.update.toString().slice(0, 4) +
-                  "." +
-                  content.update.toString().slice(4, 6) +
-                  "." +
-                  content.update.toString().slice(6, 8)
-                }}
-              </p>
-            </li>
-          </ul>
-        </div>
-        <div v-if="selectedFilter == ''" class="center--">
-          <div class="page-selector">
-            <div class="selector-flex center-">
-              <a class="" @click="getPrevContent()">back</a>
-              <p class="page-num">{{ `${page + 1} / ${pages + 1}` }}</p>
-              <a class="" @click="getNextContent()">next</a>
+            <ul v-else v-for="content in contentFiltered">
+              <li>
+                <NuxtLink :to="content._path">{{ content.title }}</NuxtLink>
+                <p>
+                  更新日:
+                  {{
+                    content.update.toString().slice(0, 4) +
+                    "." +
+                    content.update.toString().slice(4, 6) +
+                    "." +
+                    content.update.toString().slice(6, 8)
+                  }}
+                </p>
+              </li>
+            </ul>
+          </div>
+          <div v-if="selectedFilter == ''" class="center--">
+            <div class="page-selector">
+              <div class="selector-flex center-">
+                <a class="" @click="getPrevContent()">back</a>
+                <p class="page-num">{{ `${page + 1} / ${pages + 1}` }}</p>
+                <a class="" @click="getNextContent()">next</a>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>      
   </div>
-  <Nav @click.stop="isMenuShown = !isMenuShown" :close="isMenuShown" @isclose="(e) => isMenuShown = e">
-        <Menu></Menu>
-        <div>
-          <div @click.stop class="ui-box tags relative" v-if="isShowTags">
-            <div class="tag-list" v-for="tag in tagList">
-              <a @click.stop="selectFilter(tag)">{{ tag }}</a>
-            </div>
-          </div>
-          <div v-else class="ui-box relative">
-            <a @click.stop="isShowTags = !isShowTags">Tags</a>
-          </div>
+  <Nav
+    @click.stop="isMenuShown = !isMenuShown"
+    :close="isMenuShown"
+    @isclose="(e) => (isMenuShown = e)"
+  >
+    <Menu></Menu>
+    <div>
+      <div @click.stop class="ui-box tags relative" v-if="isShowTags">
+        <div class="tag-list" v-for="tag in tagList">
+          <a @click.stop="selectFilter(tag)">{{ tag }}</a>
         </div>
-        <div v-if="isShowTags" class="ui-box">
-          <a @click.stop="isShowTags = !isShowTags">Close</a>
-        </div>
-    </Nav>
+      </div>
+      <div v-else class="ui-box relative">
+        <a @click.stop="isShowTags = !isShowTags">Tags</a>
+      </div>
+    </div>
+    <div v-if="isShowTags" class="ui-box">
+      <a @click.stop="isShowTags = !isShowTags">Close</a>
+    </div>
+  </Nav>
 </template>
 
 <style scoped>

@@ -236,30 +236,35 @@
           <h1><a>Devs</a></h1>
           <h3>NxPC.Live vol.63</h3>
           <img src="../assets/img/web-devs/hardpia.png" /><img />
+          <br>
           <a href="https://nxpclab.info/vol.63/"
             >https://nxpclab.info/vol.63/</a
           >
 
           <h3>NxPC.Live vol.64</h3>
           <img src="../assets/img/web-devs/proof_of_x.png" /><img />
+          <br>
           <a href="https://nxpclab.info/vol.64/"
             >https://nxpclab.info/vol.64/</a
           >
 
           <h3>NxPC.Live vol.65</h3>
           <img src="../assets/img/web-devs/nagase_somen.png" /><img />
+          <br>
           <a href="https://nxpclab.info/vol.65/"
             >https://nxpclab.info/vol.65/</a
           >
 
           <h3>NxPC.Live vol.66</h3>
           <img src="../assets/img/web-devs/yashimaru.png" /><img />
+          <br>
           <a href="https://nxpclab.info/vol.66/"
             >https://nxpclab.info/vol.66/</a
           >
 
           <h3>NxPC.Live vol.68</h3>
           <img src="../assets/img/web-devs/space_debris.png" /><img />
+          <br>
           <a href="https://nxpclab.info/vol.68/"
             >https://nxpclab.info/vol.68/</a
           >
