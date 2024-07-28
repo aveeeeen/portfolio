@@ -64,13 +64,13 @@ function closeModal() {
                 :key="link.id"
               >
                 <li class="table-li">
-                  <a @click="isShowToC = !isShowToC" :href="`#${link.id}`">{{
+                  <a @click.stop="closeModal()" :href="`#${link.id}`">{{
                     link.text
                   }}</a>
                   <ul v-if="link.children" class="table-ul">
                     <li class="table-li" v-for="children in link.children">
                       <a
-                        @click="isShowToC = !isShowToC"
+                        @click.stop="closeModal()"
                         :href="`#${children.id}`"
                         >{{ children.text }}</a
                       >

@@ -276,10 +276,10 @@
     <Menu></Menu>
     <div class="ui-box" style="padding-left: 10px">
       <div class="flex-vert">
-        <a href="#projects">Projects / Research</a>
-        <a href="#live-performance">Live Performance</a>
-        <a href="#music">Music</a>
-        <a href="#devs">Devs</a>
+        <a @click.stop="closeModal()" href="#projects">Projects / Research</a>
+        <a @click.stop="closeModal()" href="#live-performance">Live Performance</a>
+        <a @click.stop="closeModal()" href="#music">Music</a>
+        <a @click.stop="closeModal()" href="#devs">Devs</a>
       </div>
     </div>
   </Nav>
