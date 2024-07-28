@@ -1,5 +1,5 @@
 <template>
-  <div class="page center--">
+  <div @click="closeModal()" class="page center--">
     <div class="">
       <div>
         <div id="projects" class="content-box">
@@ -272,7 +272,7 @@
       </div>
     </div>
   </div>
-  <Nav>
+  <Nav @click.stop="isMenuShown = !isMenuShown" :close="isMenuShown" @isclose="(e) => isMenuShown = e">
     <Menu></Menu>
     <div class="ui-box" style="padding-left: 10px">
       <div class="flex-vert">
@@ -300,6 +300,7 @@ h1 a {
 <script setup>
 
 const contentList = ref(null);
+const isMenuShown = ref(false);
 
 onMounted(async () => {
   contentList.value = await queryContent("/")
@@ -310,4 +311,10 @@ onMounted(async () => {
 
   console.log(contentList.value);
 });
+
+function closeModal() {
+  if(isMenuShown.value) {
+    isMenuShown.value = false;
+  }
+}
 </script>

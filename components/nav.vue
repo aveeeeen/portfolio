@@ -2,7 +2,7 @@
   <div v-if="isMobile" class="menu show-right flex-vert">
     <Burger @click="isMenuShown = !isMenuShown" class="burger" :isClose="isMenuShown"></Burger>
 
-    <div v-if="isMenuShown || close">
+    <div v-if="isMenuShown">
       <slot></slot>
     </div>
   </div>
@@ -22,7 +22,12 @@ const props = defineProps({
   close: Boolean
 })
 
-const emit = defineEmits(['isClose'])
+watch(() => props.close, () => {
+  isMenuShown.value = props.close;
+  console.log("from nav:" + isMenuShown.value)
+});
+
+const emit = defineEmits(['isclose'])
 emit('isclose', isMenuShown.value)
 
 function checkMobile () {

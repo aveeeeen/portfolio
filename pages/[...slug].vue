@@ -30,6 +30,9 @@ function closeModal() {
   if (isShowToC.value == true) {
     isShowToC.value = false;
   }
+  if (isMenuShown.value){
+    isMenuShown.value = false;
+  }
 }
 </script>
 
@@ -50,7 +53,7 @@ function closeModal() {
       </main>
     </div>
 
-    <Nav>
+    <Nav @click.stop="isMenuShown = !isMenuShown" :close="isMenuShown" @isclose="(e) => isMenuShown = e">
       <Menu></Menu>
         <div v-if="!isToCEmpty">
           <div @click.stop class="ui-box toc relative" v-if="isShowToC">

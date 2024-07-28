@@ -98,7 +98,7 @@ watch(contentFiltered, () => {
 });
 
 watch(isMenuShown, () => {
-  console.log(isMenuShown.value)
+  console.log("from notes:" + isMenuShown.value)
 })
 </script>
 
@@ -163,7 +163,7 @@ watch(isMenuShown, () => {
       </div>
     </div>      
   </div>
-  <Nav @click.stop :close="isMenuShown" @isclose="(e) => isMenuShown = e">
+  <Nav @click.stop="isMenuShown = !isMenuShown" :close="isMenuShown" @isclose="(e) => isMenuShown = e">
         <Menu></Menu>
         <div>
           <div @click.stop class="ui-box tags relative" v-if="isShowTags">
