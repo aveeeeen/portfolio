@@ -34,6 +34,12 @@ function closeModal() {
     isMenuShown.value = false;
   }
 }
+
+watch(isMenuShown, () =>{
+  if(!isMenuShown.value){
+    isShowToC.value = false;
+  }
+})
 </script>
 
 <template>
