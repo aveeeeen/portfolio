@@ -2,7 +2,7 @@
   <div v-if="isMobile" class="menu show-right flex-vert">
     <Burger @click="isMenuShown = !isMenuShown" class="burger" :isClose="isMenuShown"></Burger>
 
-    <div v-if="isMenuShown">
+    <div v-if="isMenuShown" class="show-right flex-vert">
       <slot></slot>
     </div>
   </div>

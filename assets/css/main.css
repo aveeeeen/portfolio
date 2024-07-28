@@ -8,6 +8,7 @@
 
 .show-right {
   align-items: flex-end;
+  justify-content: flex-end;
 }
 
 .center- {
@@ -65,6 +66,12 @@ a:hover{
   }
 }
 
+a {
+  font-size: 1rem;
+  color: blue;
+  text-decoration: none;
+}
+
 ul {
   padding-left: 20px;
 }
@@ -79,11 +86,6 @@ h3 {
   line-height: 100%;
 }
 
-a {
-  font-size: 1rem;
-  color: blue;
-  text-decoration: none;
-}
 
 .ui-box {
   display: block;
@@ -192,9 +194,8 @@ p {
 
 @media (max-width: 760px) {
   .ui-box {
-    display: block;
+    display: inline-block;
     background-color: white;
-    padding: 10px;
     border-radius: var(--box-radius);
   }
 
@@ -231,6 +232,5 @@ p {
     top: 5%;
     right: 0%;
     margin: 0px;
-    align-items: end;
   }
 }
