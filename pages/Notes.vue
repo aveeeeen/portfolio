@@ -109,7 +109,7 @@ watch(isMenuShown, () => {
 
 <template>
   <div @click="closeModal()" class="page ">
-    <div class="center-">
+    <div class="center--">
       <div class="content-box article-list">
         <h1>Notes</h1>
         <p>new → old</p>
