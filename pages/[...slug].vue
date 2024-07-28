@@ -37,23 +37,26 @@ function closeModal() {
 </script>
 
 <template>
-  <div @click="closeModal()" class="page center--">
-    <div>
-      <main>
-        <ContentDoc v-slot="{ doc }">
-          <!-- Post title -->
+  <div @click="closeModal()" class="page">
+    <div class="center-">
+      <div>
+        <main>
+          <ContentDoc v-slot="{ doc }">
+            <!-- Post title -->
 
-          <!-- Table of contents -->
+            <!-- Table of contents -->
 
-          <!-- Main post content -->
-          <!-- imageSize: 'style' -->
+            <!-- Main post content -->
+            <!-- imageSize: 'style' -->
 
-          <ContentRenderer class="content-box article" :value="doc" />
-        </ContentDoc>
-      </main>
+            <ContentRenderer class="content-box article" :value="doc" />
+          </ContentDoc>
+        </main>
+      </div>
     </div>
+  </div>
 
-    <Nav @click.stop="isMenuShown = !isMenuShown" :close="isMenuShown" @isclose="(e) => isMenuShown = e">
+  <Nav @click.stop="isMenuShown = !isMenuShown" :close="isMenuShown" @isclose="(e) => isMenuShown = e">
       <Menu></Menu>
         <div v-if="!isToCEmpty">
           <div @click.stop class="ui-box toc relative" v-if="isShowToC">
@@ -88,8 +91,6 @@ function closeModal() {
           <a @click.stop="isShowToC = !isShowToC">Close</a>
         </div>
     </Nav>
-        
-  </div>
 </template>
 
 <style scoped>

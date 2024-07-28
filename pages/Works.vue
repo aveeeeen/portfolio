@@ -1,6 +1,6 @@
 <template>
-  <div @click="closeModal()" class="page center--">
-    <div class="">
+  <div @click="closeModal()" class="page">
+    <div class="center-">
       <div>
         <div id="projects" class="content-box">
           <h1><a>Projects / Reserch</a></h1>
@@ -39,9 +39,7 @@
             </li>
           </ul>
         </div>
-      </div>
 
-      <div>
         <div id="live-performance" class="content-box">
           <h1><a>Live Performance</a></h1>
           <h2>Live Coding</h2>
@@ -102,9 +100,7 @@
 
           <h3></h3>
         </div>
-      </div>
 
-      <div>
         <div id="music" class="content-box">
           <h1><a>Music</a></h1>
           <h2>MEGAREX releases</h2>
@@ -235,8 +231,7 @@
             allowfullscreen
           ></iframe>
         </div>
-      </div>
-      <div>
+      
         <div id="devs" class="content-box">
           <h1><a>Devs</a></h1>
           <h3>NxPC.Live vol.63</h3>
