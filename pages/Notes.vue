@@ -108,8 +108,8 @@ watch(isMenuShown, () => {
 </script>
 
 <template>
-  <div @click="closeModal()" class="page center--">
-    <div class="">
+  <div @click="closeModal()" class="page ">
+    <div class="center-">
       <div class="content-box article-list">
         <h1>Notes</h1>
         <p>new → old</p>
@@ -230,7 +230,6 @@ button {
 
 .article-list {
   max-width: 800px;
-  width: 80%;
   min-height: 80svh;
 }
 </style>
