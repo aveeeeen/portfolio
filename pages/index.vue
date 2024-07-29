@@ -48,7 +48,8 @@ watch(isVideoLoad, () => {
     <div class=" introduction">
       <Introduction></Introduction>
     </div>
-    <div class="menu">
+
+    <div class="top-menu">
       <TopMenu @click="isHomeClicked = !isHomeClicked"></TopMenu>
     </div>
   
@@ -71,10 +72,22 @@ watch(isVideoLoad, () => {
   top: 5%;
 }
 
+.top-menu{
+  position: absolute;
+  left: 10%;
+  top: 70%;
+}
+
 @media (max-width: 786px) {
   .introduction {
     align-items: center;
     left: 0%;
+  }
+
+  .top-menu{
+    position: absolute;
+    left: 0%;
+    top: 70%;
   }
 }
 </style>
