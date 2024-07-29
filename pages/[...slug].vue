@@ -1,4 +1,6 @@
 <script setup>
+import Navslug from '../components/Navslug.vue';
+
 const isShowToC = ref(false);
 const isMenuShown = ref(true);
 const route = useRoute();
@@ -9,9 +11,12 @@ defineProps(["imgSrc"]);
 watch(isShowToC);
 
 onBeforeMount(() => {
-  let bgC = getComputedStyle(document.body).getPropertyValue("--bg-color");
-  let html = document.querySelector("html");
-  html.style.backgroundColor = bgC;
+  const bgc = document.querySelector("html").style.backgroundColor;
+  let htmlBgc = "rgb(245, 245, 255)";
+  if(bgc != "blue"){
+    htmlBgc = "rgb(40,40,40)";
+  }
+  document.querySelector("html").style.backgroundColor = htmlBgc;
 });
 
 onMounted(async () => {
@@ -23,24 +28,27 @@ onMounted(async () => {
 onUnmounted(() => {
   let html = document.querySelector("html");
   let contetnBox = document.querySelector("content-box");
-  html.style.backgroundColor = "blue";
+  html.style.backgroundColor = getComputedStyle(document.body).getPropertyValue(
+    "--html-bg-color"
+  );
 });
 
 function closeModal() {
   if (isShowToC.value == true) {
     isShowToC.value = false;
   }
-  if (isMenuShown.value){
+  if (isMenuShown.value) {
     isMenuShown.value = false;
   }
 }
 
-watch(isMenuShown, () =>{
-  if(!isMenuShown.value){
+watch(isMenuShown, () => {
+  if (!isMenuShown.value) {
     isShowToC.value = false;
   }
-})
-</script>
+});
+
+</script> 
 
 <template>
   <div @click="closeModal()" class="page">
@@ -62,41 +70,41 @@ watch(isMenuShown, () =>{
     </div>
   </div>
 
-  <Nav @click.stop="isMenuShown = !isMenuShown" :close="isMenuShown" @isclose="(e) => isMenuShown = e">
-      <Menu></Menu>
-        <div v-if="!isToCEmpty">
-          <div @click.stop class="ui-box toc relative" v-if="isShowToC">
-            <ContentDoc v-slot="{ doc }">
-              <ul
-                class="table-ul"
-                v-for="link of doc.body.toc.links"
-                :key="link.id"
-              >
-                <li class="table-li">
-                  <a @click="closeModal()" :href="`#${link.id}`">{{
-                    link.text
+  <Navslug
+    @click.stop="isMenuShown = !isMenuShown"
+    :close="isMenuShown"
+    @isclose="(e) => (isMenuShown = e)"
+  >
+    <Menu></Menu>
+    <div v-if="!isToCEmpty">
+      <div @click.stop class="ui-box toc relative" v-if="isShowToC">
+        <ContentDoc v-slot="{ doc }">
+          <ul
+            class="table-ul"
+            v-for="link of doc.body.toc.links"
+            :key="link.id"
+          >
+            <li class="table-li">
+              <a @click="closeModal()" :href="`#${link.id}`">{{ link.text }}</a>
+              <ul v-if="link.children" class="table-ul">
+                <li class="table-li" v-for="children in link.children">
+                  <a @click="closeModal()" :href="`#${children.id}`">{{
+                    children.text
                   }}</a>
-                  <ul v-if="link.children" class="table-ul">
-                    <li class="table-li" v-for="children in link.children">
-                      <a
-                        @click="closeModal()"
-                        :href="`#${children.id}`"
-                        >{{ children.text }}</a
-                      >
-                    </li>
-                  </ul>
                 </li>
               </ul>
-            </ContentDoc>
-          </div>
-          <div v-else class="ui-box relative">
-            <a @click.stop="isShowToC = !isShowToC">Table of Contents</a>
-          </div>
-        </div>
-        <div v-if="isShowToC" class="ui-box">
-          <a @click.stop="isShowToC = !isShowToC">Close</a>
-        </div>
-    </Nav>
+            </li>
+          </ul>
+        </ContentDoc>
+      </div>
+      <div v-else class="ui-box relative">
+        <a @click.stop="isShowToC = !isShowToC">Table of Contents</a>
+      </div>
+    </div>
+    <div v-if="isShowToC" class="ui-box">
+      <a @click.stop="isShowToC = !isShowToC">Close</a>
+    </div>
+  </Navslug>
 </template>
 
 <style scoped>

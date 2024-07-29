@@ -57,7 +57,7 @@ onUnmounted(() => {
 
 function defaultTheme () {
   const colorPalete = {
-    html:"blue",
+    html: "blue",
     bg: "rgb(245, 245, 255)",
     uibg: "white",
     text: "black",
