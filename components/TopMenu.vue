@@ -1,8 +1,11 @@
 <script setup>
+
+
+
 </script>
 
-
 <template>
+   
     <div class="nav-center top-nav">
       <NuxtLink to="/about"> &nbsp; about &nbsp; </NuxtLink>
       <NuxtLink to="/works"> &nbsp; works &nbsp; </NuxtLink>
@@ -13,8 +16,8 @@
 <style scoped>
 .top-nav > a{
   display: inline;
-  background-color: white;
-  color: blue;
+  background-color: var(--text-bg-color-a);
+  color: var(--text-color-a);
   font-size: 1.25rem;
   line-height: normal;
   margin-bottom: 10px;

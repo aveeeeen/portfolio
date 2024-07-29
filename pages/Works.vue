@@ -289,7 +289,7 @@
 <style scoped>
 h1 a {
   font-size: 2rem;
-  color: black;
+  color: var(--text-color);
 }
 
 .burger {

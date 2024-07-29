@@ -2,6 +2,11 @@
 
 :root {
   --bg-color: rgb(245, 245, 255);
+  --ui-bg-color: white;
+  --text-color: black;
+  --text-color-a: blue;
+  --text-bg-color: white;
+  --text-bg-color-a: white;
   --alpha-zero: rgba(0,0,0,0);
   --box-radius: 0px;
 }
@@ -48,27 +53,14 @@ img{
 }
 
 a:hover{
-  animation-name: breath;
-  animation-duration: 2000ms;
-  animation-timing-function: ease-out;
-}
-
-@keyframes breath{
-  from {
-    color: white;
-    display: inline;
-    background-color: blue;
-  }
-
-  to {
-    color: blue;
-    background-color: white; 
-  }
+  color: white;
+  display: inline;
+  background-color: blue;
 }
 
 a {
   font-size: 1rem;
-  color: blue;
+  color: var(--text-color-a);
   text-decoration: none;
 }
 
@@ -89,13 +81,12 @@ h3 {
 
 .ui-box {
   display: block;
-  background-color: white;
+  background-color: var(--ui-bg-color);
   padding-top: 5px;
   padding-bottom: 5px;
   padding-left: 10px;
   padding-right: 10px;
   border-radius: var(--box-radius);
-  margin: 5px;
 }
 
 iframe{
@@ -161,14 +152,16 @@ iframe{
 h1,
 h2,
 h3,
-p {
-  color: black;
+p,
+li {
+  color: var(--text-color);
 }
 
 .menu{
   position: fixed;
   top: 5%;
   right: 5%;
+  z-index: 1;
 }
 
 .flex-hori{
@@ -195,7 +188,7 @@ p {
 @media (max-width: 760px) {
   .ui-box {
     display: inline-block;
-    background-color: white;
+    background-color: var(--ui-bg-color);
     border-radius: var(--box-radius);
   }
 
@@ -232,5 +225,6 @@ p {
     top: 5%;
     right: 0%;
     margin: 0px;
+    z-index: 1;
   }
 }
