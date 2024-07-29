@@ -100,10 +100,6 @@ watch(isDarkmode, async () => {
     <div class="top-menu">
       <TopMenu></TopMenu>
     </div>
-
-    <div class="menu show-right">
-      <Theme @click="isDarkmode = !isDarkmode"></Theme>
-    </div>
   
 </template>
 
