@@ -3,15 +3,20 @@
 
 
 <template>
- <div class="ui-box">
-    <div class="nav-center">
-      <NuxtLink to="/about"> about</NuxtLink>
-      <NuxtLink to="/works"> works</NuxtLink>
-      <NuxtLink to="/notes"> notes</NuxtLink>
+    <div class="nav-center top-nav">
+      <NuxtLink to="/about"> → about &nbsp; </NuxtLink>
+      <NuxtLink to="/works"> → works &nbsp; </NuxtLink>
+      <NuxtLink to="/notes"> → notes &nbsp; </NuxtLink>
     </div>
-  </div>
 </template>
 
-<style>
-
+<style scoped>
+.top-nav > a{
+  display: inline;
+  background-color: white;
+  color: blue;
+  font-size: 1.5rem;
+  line-height: normal;
+  margin-bottom: 15px;
+}
 </style>
