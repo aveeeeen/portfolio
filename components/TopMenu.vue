@@ -15,8 +15,8 @@
   display: inline;
   background-color: white;
   color: blue;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   line-height: normal;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 </style>
