@@ -8,7 +8,7 @@
   --text-bg-color: white;
   --text-bg-color-a: white;
   --alpha-zero: rgba(0,0,0,0);
-  --box-radius: 0px;
+  --box-radius: 10px;
 }
 
 .show-right {
@@ -174,7 +174,7 @@ li {
 .flex-vert{
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 10px;
 }
 
 .relative {
@@ -224,7 +224,7 @@ li {
     position: fixed;
     top: 5%;
     right: 0%;
-    margin: 0px;
+    margin-right: 10px;
     z-index: 1;
   }
 }

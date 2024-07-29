@@ -1,7 +1,7 @@
 <template>
   <div v-if="isMobile" class="menu show-right flex-vert">
     <Theme @click.stop="isDarkmode = !isDarkmode"></Theme>
-    <Burger @click.stop="isMenuShown = !isMenuShown" class="burger" :isClose="isMenuShown"></Burger>
+    <Burger @click="isMenuShown = !isMenuShown" class="burger" :isClose="isMenuShown"></Burger>
     <div v-if="isMenuShown" class="show-right flex-vert">
       <slot></slot>
     </div>

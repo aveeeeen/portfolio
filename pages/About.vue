@@ -55,7 +55,7 @@
 
   <!-- nav box -->
   <Nav
-    @click.stop="isMenuShown = !isMenuShown"
+    @click="isMenuShown = !isMenuShown"
     :close="isMenuShown"
     @isclose="(e) => (isMenuShown = e)"
   >
