@@ -21,5 +21,7 @@
   font-size: 1.25rem;
   line-height: normal;
   margin-bottom: 10px;
+  border-radius: var(--box-radius);
+  margin-left: 10px;
 }
 </style>
