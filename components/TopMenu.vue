@@ -4,9 +4,9 @@
 
 <template>
     <div class="nav-center top-nav">
-      <NuxtLink to="/about"> about &nbsp; </NuxtLink>
-      <NuxtLink to="/works"> works &nbsp; </NuxtLink>
-      <NuxtLink to="/notes"> notes &nbsp; </NuxtLink>
+      <NuxtLink to="/about"> &nbsp; about &nbsp; </NuxtLink>
+      <NuxtLink to="/works"> &nbsp; works &nbsp; </NuxtLink>
+      <NuxtLink to="/notes"> &nbsp; notes &nbsp; </NuxtLink>
     </div>
 </template>
 
