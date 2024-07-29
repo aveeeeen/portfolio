@@ -11,9 +11,9 @@ defineProps(["imgSrc"]);
 watch(isShowToC);
 
 onBeforeMount(() => {
-  const bgc = document.querySelector("html").style.backgroundColor;
+  const bgc = getComputedStyle(document.body).getPropertyValue("--bg-color")
   let htmlBgc = "rgb(245, 245, 255)";
-  if(bgc != "blue"){
+  if(bgc != "rgb(245, 245, 255)"){
     htmlBgc = "rgb(40,40,40)";
   }
   document.querySelector("html").style.backgroundColor = htmlBgc;
@@ -25,13 +25,13 @@ onMounted(async () => {
   console.log(contentQuery.body.toc);
 });
 
-onUnmounted(() => {
-  let html = document.querySelector("html");
-  let contetnBox = document.querySelector("content-box");
-  html.style.backgroundColor = getComputedStyle(document.body).getPropertyValue(
-    "--html-bg-color"
-  );
-});
+// onUnmounted(() => {
+//   let html = document.querySelector("html");
+//   let contetnBox = document.querySelector("content-box");
+//   html.style.backgroundColor = getComputedStyle(document.body).getPropertyValue(
+//     "--html-bg-color"
+//   );
+// });
 
 function closeModal() {
   if (isShowToC.value == true) {
