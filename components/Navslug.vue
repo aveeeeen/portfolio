@@ -65,7 +65,7 @@ onUnmounted(() => {
     r.style.setProperty("--text-bg-color-a", colorPalete.abg);
     r.style.setProperty("--ui-bg-color", colorPalete.uibg);
     r.style.setProperty("--bg-color", colorPalete.bg);
-    r.style.setProperty("--html-bg-color", colorPalete.html);
+    document.querySelector("html").style.backgroundColor = colorPalete.html;
   } else {
     const colorPalete = {
       html: "blue",
@@ -81,7 +81,7 @@ onUnmounted(() => {
     r.style.setProperty("--text-bg-color-a", colorPalete.uibg);
     r.style.setProperty("--ui-bg-color", colorPalete.uibg);
     r.style.setProperty("--bg-color", colorPalete.bg);
-    r.style.setProperty("--html-bg-color", colorPalete.html);
+    document.querySelector("html").style.backgroundColor = colorPalete.html;
   }
 
   window.removeEventListener("resize", () => checkMobile());

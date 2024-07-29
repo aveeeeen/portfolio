@@ -30,7 +30,7 @@
 
 html{
   font-size: 16px;
-  background-color: var(--html-bg-color);
+  background-color: blue;
   font-family: "Noto Sans JP", sans-serif;
   font-optical-sizing: auto;
 }
