@@ -8,7 +8,7 @@
               <ul>
                 <li>Taichi Matsumoto</li>
                 <li>Artist name: braven</li>
-                <li>Institution -> IAMAS</li>
+                <li>Institution: IAMAS</li>
                 <li>I live in Gifu, Japan</li>
                 <li>
                   Experties : Live Coding, TidalCycles, NIME, Geneaology of Live
