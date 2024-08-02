@@ -16,7 +16,10 @@ onMounted(async () => {
     .sort({ update: -1, $numeric: true })
     .find();
   getContent(page.value, 5);
-  pages.value = Math.floor(contentList.value.length / 5);
+  pages.value = contentList.value.length % 5 == 0 
+    ? Math.floor(contentList.value.length / 5) - 1 
+    : Math.floor(contentList.value.length / 5);
+  console.log(contentList.value.length);
   getAllTags();
 });
 
@@ -170,6 +173,7 @@ watch(isMenuShown, () => {
         </div>
       </div>
   </div>
+  
   <Nav
     @click.stop="isMenuShown = !isMenuShown"
     :close="isMenuShown"

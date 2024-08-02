@@ -17,14 +17,21 @@
   justify-content: flex-end;
 }
 
+.show-left {
+  align-items: flex-end;
+  align-items: flex-end;
+}
+
 .center- {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
 .center-- {
   display: flex;
+  flex-direction: column;
   justify-content: center;
 }
 
@@ -45,12 +52,6 @@ img{
   display: flex;
   flex-direction: column;
   row-gap: 5px;
-}
-
-.page-end {
-  min-height: 100px;
-  width: 100svw;
-  position: relative;
 }
 
 a:hover{
@@ -110,7 +111,6 @@ iframe{
   display: block;
   background-color: var(--bg-color);
   padding: 20px;
-  border-radius: var(--box-radius);
   max-width: 800px;
   margin: 30px;
   overflow-x: hidden;
@@ -132,6 +132,15 @@ iframe{
 
 .article > p, li , ul {
   line-height: 1.75rem;
+}
+
+th, td {
+  border: solid 1px;  /* 枠線指定 */
+  padding: 10px;      /* 余白指定 */
+}
+
+table {
+  border-collapse:  collapse; /* セルの線を重ねる */
 }
 
 .page{
@@ -216,7 +225,6 @@ li {
     background-color: var(--bg-color);
     margin: 20px;
     padding: 20px;
-    border-radius: var(--box-radius);
     overflow-x: hidden;
     min-width: 80%;
   }
