@@ -3,11 +3,10 @@ const video = ref(null);
 const isVideoLoad = ref(false);
 const isDarkmode = ref(false);
 
-
 onMounted(() => {
   video.value = document.querySelector("video");
   video.value.load();
-  
+
   video.value.addEventListener("canplaythrough", (event) => {
     video.value.play();
     isVideoLoad.value = true;
@@ -15,14 +14,16 @@ onMounted(() => {
 });
 
 useSeoMeta({
-  title: 'braveeeeen',
-  ogTitle: 'protfolio site of braven',
-  ogUrl: "https://braveeeeen.vercel.app" ,
+  title: "braveeeeen",
+  ogTitle: "protfolio site of braven",
+  ogUrl: "https://braveeeeen.vercel.app",
   ogType: "website",
-  ogImage: "https://raw.githubusercontent.com/aveeeeen/portfolio/main/assets/img/ogp.png",
+  ogImage:
+    "https://raw.githubusercontent.com/aveeeeen/portfolio/main/assets/img/ogp.png",
   twitterCard: "summary_large_image",
-  twitterImage: "https://raw.githubusercontent.com/aveeeeen/portfolio/main/assets/img/ogp.png",
-}) 
+  twitterImage:
+    "https://raw.githubusercontent.com/aveeeeen/portfolio/main/assets/img/ogp.png",
+});
 
 function videoPlay() {
   setTimeout(() => {
@@ -31,19 +32,19 @@ function videoPlay() {
 }
 
 watch(isVideoLoad, () => {
-  if(!isVideoLoad.value) videoPlay();
+  if (!isVideoLoad.value) videoPlay();
   console.log(isVideoLoad.value);
 });
 
-function defaultTheme () {
+function defaultTheme() {
   const colorPalete = {
     html: "blue",
     bg: "rgb(245, 245, 255)",
     uibg: "white",
     text: "black",
-    a: "blue"
-  }
-  const r = document.querySelector(':root');
+    a: "blue",
+  };
+  const r = document.querySelector(":root");
   r.style.setProperty("--text-color", colorPalete.text);
   r.style.setProperty("--text-color-a", colorPalete.a);
   r.style.setProperty("--text-bg-color", colorPalete.bg);
@@ -53,54 +54,52 @@ function defaultTheme () {
   document.querySelector("html").style.backgroundColor = colorPalete.html;
 }
 
-function darkmode () {
+function darkmode() {
   const colorPalete = {
-    html:"rgb(25,25,25)",
+    html: "rgb(25,25,25)",
     bg: "rgb(40,40,40)",
     uibg: "rgb(100,100,100)",
-    abg: "rgb(10,10,10)"
-  }
-  const r = document.querySelector(':root');
+    abg: "rgb(10,10,10)",
+  };
+  const r = document.querySelector(":root");
   r.style.setProperty("--text-color", "white");
   r.style.setProperty("--text-color-a", "rgb(200,200,255)");
   r.style.setProperty("--text-bg-color", colorPalete.bg);
   r.style.setProperty("--text-bg-color-a", colorPalete.abg);
   r.style.setProperty("--ui-bg-color", colorPalete.uibg);
-  r.style.setProperty("--bg-color",colorPalete.bg);
+  r.style.setProperty("--bg-color", colorPalete.bg);
   document.querySelector("html").style.backgroundColor = colorPalete.html;
 }
 
 watch(isDarkmode, async () => {
   await nextTick();
-  if(isDarkmode.value){
+  if (isDarkmode.value) {
     darkmode();
-    console.log("is darkmode")
-  }else{
+    console.log("is darkmode");
+  } else {
     defaultTheme();
-    console.log("is not darkmode")
+    console.log("is not darkmode");
   }
 });
 </script>
 
 <template>
-  
-    <video
-      class="bg-video"
-      src="~/assets/vid/bgVideo.mp4"
-      preload="none"
-      autoplay
-      playsinline
-      muted
-      loop
-    ></video>
-    <div class=" introduction">
-      <Introduction></Introduction>
-    </div>
+  <video
+    class="bg-video"
+    src="~/assets/vid/bgVideo.mp4"
+    preload="none"
+    autoplay
+    playsinline
+    muted
+    loop
+  ></video>
+  <div class="introduction">
+    <Introduction></Introduction>
+  </div>
 
-    <div class="top-menu">
-      <TopMenu></TopMenu>
-    </div>
-  
+  <div class="top-menu">
+    <TopMenu></TopMenu>
+  </div>
 </template>
 
 <style scoped>
@@ -120,7 +119,7 @@ watch(isDarkmode, async () => {
   top: 5%;
 }
 
-.top-menu{
+.top-menu {
   position: absolute;
   left: 10%;
   top: 70%;
@@ -132,7 +131,7 @@ watch(isDarkmode, async () => {
     left: 0%;
   }
 
-  .top-menu{
+  .top-menu {
     position: absolute;
     left: 0%;
     top: 70%;
