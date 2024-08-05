@@ -60,6 +60,7 @@ watch(isMenuShown, () =>{
         </main>
       </div>
     </div>
+    <Footer class="footer-area"></Footer>
   </div>
 
   <Nav @click.stop="isMenuShown = !isMenuShown" :close="isMenuShown" @isclose="(e) => isMenuShown = e">
@@ -120,6 +121,5 @@ h3 a {
 .table-li {
   padding-bottom: 5px;
 }
-
 
 </style>

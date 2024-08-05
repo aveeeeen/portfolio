@@ -51,6 +51,7 @@
           </div>
         </div>
     </div>
+    <Footer></Footer>
   </div>
 
   <!-- nav box -->

@@ -271,6 +271,7 @@
         </div>
       </div>
     </div>
+    <Footer></Footer>
   </div>
   <Nav @click.stop="isMenuShown = !isMenuShown" :close="isMenuShown" @isclose="(e) => isMenuShown = e">
     <Menu></Menu>
