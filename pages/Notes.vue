@@ -173,7 +173,6 @@ watch(isMenuShown, () => {
         </div>
       </div>
     </div>
-    <Footer class="footer-area"></Footer>
   </div>
 
   <Nav

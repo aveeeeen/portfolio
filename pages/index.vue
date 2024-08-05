@@ -85,7 +85,6 @@ watch(isDarkmode, async () => {
 
 <template>
   <div class="page">
-
     <video
       class="bg-video"
       src="~/assets/vid/bgVideo.mp4"
@@ -95,15 +94,12 @@ watch(isDarkmode, async () => {
       muted
       loop
     ></video>
-    <div class="introduction">
-      <Introduction></Introduction>
-    </div>
-  
-    <div class="top-menu">
-      <TopMenu></TopMenu>
-    </div>
-  
-    <Footer class="footer-area"></Footer>
+  </div>
+  <div class="introduction">
+    <Introduction></Introduction>
+  </div>
+  <div class="top-menu">
+    <TopMenu></TopMenu>
   </div>
 </template>
 
@@ -132,7 +128,7 @@ watch(isDarkmode, async () => {
   z-index: 1;
 }
 
-.footer-area{
+.footer-area {
   position: absolute;
   bottom: 0svh;
   width: 100svw;
