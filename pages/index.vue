@@ -84,21 +84,26 @@ watch(isDarkmode, async () => {
 </script>
 
 <template>
-  <video
-    class="bg-video"
-    src="~/assets/vid/bgVideo.mp4"
-    preload="none"
-    autoplay
-    playsinline
-    muted
-    loop
-  ></video>
-  <div class="introduction">
-    <Introduction></Introduction>
-  </div>
+  <div class="page">
 
-  <div class="top-menu">
-    <TopMenu></TopMenu>
+    <video
+      class="bg-video"
+      src="~/assets/vid/bgVideo.mp4"
+      preload="none"
+      autoplay
+      playsinline
+      muted
+      loop
+    ></video>
+    <div class="introduction">
+      <Introduction></Introduction>
+    </div>
+  
+    <div class="top-menu">
+      <TopMenu></TopMenu>
+    </div>
+  
+    <Footer class="footer-area"></Footer>
   </div>
 </template>
 
@@ -109,7 +114,7 @@ watch(isDarkmode, async () => {
   position: fixed;
   top: 0%;
   left: 0%;
-  z-index: 0;
+  z-index: -1;
   object-fit: cover;
 }
 
@@ -117,12 +122,21 @@ watch(isDarkmode, async () => {
   position: absolute;
   left: 10%;
   top: 5%;
+  z-index: 1;
 }
 
 .top-menu {
   position: absolute;
   left: 10%;
   top: 70%;
+  z-index: 1;
+}
+
+.footer-area{
+  position: absolute;
+  bottom: 0svh;
+  width: 100svw;
+  z-index: 1;
 }
 
 @media (max-width: 786px) {

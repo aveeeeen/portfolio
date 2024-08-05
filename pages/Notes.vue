@@ -16,9 +16,10 @@ onMounted(async () => {
     .sort({ update: -1, $numeric: true })
     .find();
   getContent(page.value, 5);
-  pages.value = contentList.value.length % 5 == 0 
-    ? Math.floor(contentList.value.length / 5) - 1 
-    : Math.floor(contentList.value.length / 5);
+  pages.value =
+    contentList.value.length % 5 == 0
+      ? Math.floor(contentList.value.length / 5) - 1
+      : Math.floor(contentList.value.length / 5);
   console.log(contentList.value.length);
   getAllTags();
 });
@@ -115,65 +116,66 @@ watch(isMenuShown, () => {
 <template>
   <div @click="closeModal()" class="page">
     <div class="center-">
-        <div class="content-box article-list">
-          <h1>Notes</h1>
-          <p>new → old</p>
-          <div v-if="selectedFilter != ''">
-            <p>showing: {{ selectedFilter }}</p>
-            <a @click="selectedFilter = ''"> clear filter</a>
-          </div>
+      <div class="content-box article-list">
+        <h1>Notes</h1>
+        <p>new → old</p>
+        <div v-if="selectedFilter != ''">
+          <p>showing: {{ selectedFilter }}</p>
+          <a @click="selectedFilter = ''"> clear filter</a>
+        </div>
 
-          <hr />
-          <div v-if="isLoading">
-            <p>loading ...</p>
-          </div>
+        <hr />
+        <div v-if="isLoading">
+          <p>loading ...</p>
+        </div>
 
-          <div v-else>
-            <ul v-if="selectedFilter == ''" v-for="content in contentArrary">
-              <li>
-                <NuxtLink :to="content._path">{{ content.title }}</NuxtLink>
-                <p>
-                  更新日:
-                  {{
-                    content.update.toString().slice(0, 4) +
-                    "." +
-                    content.update.toString().slice(4, 6) +
-                    "." +
-                    content.update.toString().slice(6, 8)
-                  }}
-                </p>
-              </li>
-            </ul>
+        <div v-else>
+          <ul v-if="selectedFilter == ''" v-for="content in contentArrary">
+            <li>
+              <NuxtLink :to="content._path">{{ content.title }}</NuxtLink>
+              <p>
+                更新日:
+                {{
+                  content.update.toString().slice(0, 4) +
+                  "." +
+                  content.update.toString().slice(4, 6) +
+                  "." +
+                  content.update.toString().slice(6, 8)
+                }}
+              </p>
+            </li>
+          </ul>
 
-            <ul v-else v-for="content in contentFiltered">
-              <li>
-                <NuxtLink :to="content._path">{{ content.title }}</NuxtLink>
-                <p>
-                  更新日:
-                  {{
-                    content.update.toString().slice(0, 4) +
-                    "." +
-                    content.update.toString().slice(4, 6) +
-                    "." +
-                    content.update.toString().slice(6, 8)
-                  }}
-                </p>
-              </li>
-            </ul>
-          </div>
-          <div v-if="selectedFilter == ''" class="center--">
-            <div class="page-selector">
-              <div class="selector-flex center-">
-                <a class="" @click="getPrevContent()">back</a>
-                <p class="page-num">{{ `${page + 1} / ${pages + 1}` }}</p>
-                <a class="" @click="getNextContent()">next</a>
-              </div>
+          <ul v-else v-for="content in contentFiltered">
+            <li>
+              <NuxtLink :to="content._path">{{ content.title }}</NuxtLink>
+              <p>
+                更新日:
+                {{
+                  content.update.toString().slice(0, 4) +
+                  "." +
+                  content.update.toString().slice(4, 6) +
+                  "." +
+                  content.update.toString().slice(6, 8)
+                }}
+              </p>
+            </li>
+          </ul>
+        </div>
+        <div v-if="selectedFilter == ''" class="center--">
+          <div class="page-selector">
+            <div class="selector-flex center-">
+              <a class="" @click="getPrevContent()">back</a>
+              <p class="page-num">{{ `${page + 1} / ${pages + 1}` }}</p>
+              <a class="" @click="getNextContent()">next</a>
             </div>
           </div>
         </div>
       </div>
+    </div>
+    <Footer class="footer-area"></Footer>
   </div>
-  
+
   <Nav
     @click.stop="isMenuShown = !isMenuShown"
     :close="isMenuShown"
