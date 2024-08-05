@@ -197,7 +197,7 @@ li {
 
 @media (max-width: 760px) {
   html{
-    font-size: 14px;
+    font-size: 16px;
     background-color: blue;
     font-family: "Noto Sans JP", sans-serif;
     font-optical-sizing: auto;
