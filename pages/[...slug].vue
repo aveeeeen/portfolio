@@ -55,7 +55,7 @@ watch(isMenuShown, () =>{
             <!-- Main post content -->
             <!-- imageSize: 'style' -->
 
-            <ContentRenderer class="content-box article" :value="doc" />
+            <ContentRenderer class="article-box article" :value="doc" />
           </ContentDoc>
         </main>
       </div>
@@ -121,5 +121,26 @@ h3 a {
   padding-bottom: 5px;
 }
 
+.article-box {
+  display: block;
+  background-color: var(--bg-color);
+  padding: 20px;
+  max-width: 800px;
+  margin: 30px;
+  overflow-x: hidden;
+  word-break: break-all;
+  min-width: 50%;
+}
+
+@media (max-width: 760px) {
+  .article-box {
+    display: block;
+    background-color: var(--bg-color);
+    margin: 20px;
+    padding: 10px;
+    overflow-x: hidden;
+    min-width: 80%;
+  }
+}
 
 </style>
