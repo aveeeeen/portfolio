@@ -1,64 +1,65 @@
 <template>
   <div @click="closeModal()" class="page">
-    <div class="center-">
-        <div class="relative center-hori">
-          <div class="flex-hori">
-            <div class="content-box">
-              <h1>About Me</h1>
-              <ul>
-                <li>Taichi Matsumoto</li>
-                <li>Artist name: braven</li>
-                <li>Institution: IAMAS</li>
-                <li>I live in Gifu, Japan</li>
-                <li>
-                  Experties : Live Coding, TidalCycles, NIME, Geneaology of Live
-                  Coding
-                </li>
-              </ul>
-            </div>
-            <!-- picture box -->
-            <div class="img-box center-vert margin-left">
-              <img class="about-img" src="~/assets/img/matsumoto.png" />
-            </div>
+    <div class="center- flex-vert">
+      <div class="relative center-hori">
+        <div class="content-box">
+          <h1>About Me</h1>
+          <div class="spacing">
+          
+          <ContentTile>
+            <div>
+            <ul>
+              <li>Taichi Matsumoto</li>
+              <li>Artist name:  braven</li>
+              <li>Institution:  IAMAS</li>
+              <li>I live in Gifu, Japan</li>
+              <li>
+                Experties : Live Coding, TidalCycles, NIME, Geneaology of Live
+                Coding
+              </li>
+            </ul>
+          </div>
+          </ContentTile>
+
+          <!-- picture box -->
+          <div class="img-box center-vert margin-left">
+            <img class="about-img" src="~/assets/img/matsumoto.png" />
           </div>
 
           <!-- description -->
-          <div class="">
-            <div class="content-box">
-              <p>
-                初めまして、松本です。また、bravenという名で音楽家として活動しています。
-              </p>
-              <p>
-                現在は、iamas（情報芸術科学大学院大学）に在学しており、そこでライブコーディングによる音楽の技術史と文化史がどのように表現を形成しているかについて研究しています。
-              </p>
+          <div>
+            <p>
+              初めまして、松本です。また、bravenという名で音楽家として活動しています。
+            </p>
+            <p>
+              現在は、iamas（情報芸術科学大学院大学）に在学しており、そこでライブコーディングによる音楽の技術史と文化史がどのように表現を形成しているかについて研究しています。
+            </p>
+          </div>
 
+          <ContentTile>
               <h3>Find me on:</h3>
-              <div class="grid-parent">
-                <div
-                  class="grid-child"
-                  v-for="data in socialMedias"
-                  :key="data.id"
-                >
-                  <a :href="data.url">
-                    <div class="flex-vert center--">
-                      <img class="icon" :src="data.src" /><img />
-                      <p>{{ data.name }}</p>
-                    </div>
-                  </a>
-                </div>
+            <div class="grid-parent">
+              <div class="grid-child" v-for="data in socialMedias" :key="data.id">
+                <a :href="data.url">
+                  <div class="" style="align-items: center; display: flex; flex-direction: column; gap: 5px;">
+                    <img class="icon" :src="data.src" /><img />
+                    <p>{{ data.name }}</p>
+                  </div>
+                </a>
               </div>
             </div>
+          </ContentTile>
           </div>
+          
+
         </div>
+      </div>
+      <div class="bottom"></div>
     </div>
   </div>
 
   <!-- nav box -->
-  <Nav
-    @click="isMenuShown = !isMenuShown"
-    :close="isMenuShown"
-    @isclose="(e) => (isMenuShown = e)"
-  >
+  <Nav @click="isMenuShown = !isMenuShown" :close="isMenuShown" @isclose="(e) => (isMenuShown = e)">
     <Menu></Menu>
   </Nav>
 </template>
@@ -70,7 +71,7 @@
 }
 
 .img-box {
-  margin: 30px;
+  margin: 0px;
 }
 
 .page-margin {
@@ -82,6 +83,16 @@
   margin-bottom: 10px;
 }
 
+.sns{
+  
+}
+
+.spacing{
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
 .icon {
   width: 40px;
   height: 40px;
@@ -91,24 +102,17 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   max-width: 400px;
-  padding: 10px;
   row-gap: 20px;
+  grid-auto-columns: max-content;
+  padding: 20px 0px;
 }
 
 .grid-child {
   max-width: 100px;
 }
 
-.sns {
-  width: 20svw;
-  height: 20svw;
-  max-width: 100px;
-  max-height: 100px;
-  border-radius: 100%;
-  background-color: black;
-}
 
-a > div > p {
+a>div>p {
   margin: 0%;
   border: 0%;
 }
@@ -117,6 +121,12 @@ a > div > p {
   .page-margin {
     margin: 10px;
   }
+
+  .flex-hori {
+    flex-direction: column;
+    display: flex;
+  }
+
 }
 </style>
 

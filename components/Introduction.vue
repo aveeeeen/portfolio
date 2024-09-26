@@ -16,6 +16,7 @@ h1{
   line-height: normal;
   text-align: right;
   display: inline;
+  padding: 2px 10px;
 }
 
 h3{
@@ -23,6 +24,7 @@ h3{
   line-height: normal;
   text-align: right;
   display: inline;
+  padding: 2px 10px ;
 }
 
 .spacing{

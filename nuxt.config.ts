@@ -24,7 +24,7 @@ export default defineNuxtConfig({
       { rel: "icon", type: "image/png", href: "/favicon.png" }, // これを追記する
     ]
   },
-  css: ['~/assets/css/main.css'],
+  css: ['~/assets/css/main.css', '~/assets/css/utils.css', '~/assets/css/fmdrums.css'],
   compatibilityDate: '2024-07-12',
   contentAssets: {    
     // inject image size hints into the rendered html

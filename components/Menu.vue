@@ -4,10 +4,12 @@
 
 <template>
   <div class="ui-box">
-    <div class="nav-center">
-      <NuxtLink @click="$emit('gotoHome')" to="/"> home</NuxtLink>
+    <div class="flex-vert gap-5">
+      <!-- @click="$emit('gotoHome')" -->
+      <NuxtLink  to="/"> home</NuxtLink>
       <NuxtLink to="/about"> about</NuxtLink>
       <NuxtLink to="/works" > works</NuxtLink>
+      <NuxtLink to="/playground"> playground </NuxtLink>
       <NuxtLink to="/notes"> notes</NuxtLink>      
     </div>
   </div>

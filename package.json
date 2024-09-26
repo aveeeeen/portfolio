@@ -12,6 +12,7 @@
     "@nuxt/content": "^2.13.0",
     "@nuxt/image": "^1.7.0",
     "nuxt": "^3.12.3",
-    "nuxt-content-assets": "^1.4.4"
+    "nuxt-content-assets": "^1.4.4",
+    "tone": "^15.0.4"
   }
 }

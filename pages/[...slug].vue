@@ -44,7 +44,7 @@ watch(isMenuShown, () =>{
 
 <template>
   <div @click="closeModal()" class="page">
-    <div class="center-">
+    <div class="flex-vert center-">
       <div>
         <main>
           <ContentDoc v-slot="{ doc }">

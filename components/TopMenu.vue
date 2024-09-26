@@ -6,10 +6,11 @@
 
 <template>
    
-    <div class="nav-center top-nav">
-      <NuxtLink to="/about"> &nbsp; about &nbsp; </NuxtLink>
-      <NuxtLink to="/works"> &nbsp; works &nbsp; </NuxtLink>
-      <NuxtLink to="/notes"> &nbsp; notes &nbsp; </NuxtLink>
+    <div class="flex-vert show-left top-nav">
+      <NuxtLink to="/about"> about </NuxtLink>
+      <NuxtLink to="/works"> works </NuxtLink>
+      <NuxtLink to="/playground"> playground </NuxtLink>
+      <NuxtLink to="/notes"> notes </NuxtLink>
     </div>
 </template>
 
@@ -19,7 +20,8 @@
   background-color: var(--text-bg-color-a);
   color: var(--text-color-a);
   font-size: 1.25rem;
-  line-height: normal;
+  text-align: center;
+  padding: 2px 10px;
   margin-bottom: 10px;
 }
 </style>

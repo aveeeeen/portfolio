@@ -1,6 +1,6 @@
 <template>
   <div @click="closeModal()" class="page">
-    <div class="center-">
+    <div class="center- flex-vert">
       <div>
         <div id="projects" class="content-box">
           <h1><a>Projects / Reserch</a></h1>
@@ -270,12 +270,13 @@
           >
         </div>
       </div>
+      <div class="bottom"></div>
     </div>
   </div>
   <Nav @click.stop="isMenuShown = !isMenuShown" :close="isMenuShown" @isclose="(e) => isMenuShown = e">
     <Menu></Menu>
     <div class="ui-box" style="padding-left: 10px">
-      <div class="flex-vert">
+      <div class="flex-vert gap-5">
         <a @click.stop="closeModal()" href="#projects">Projects / Research</a>
         <a @click.stop="closeModal()" href="#live-performance">Live Performance</a>
         <a @click.stop="closeModal()" href="#music">Music</a>

@@ -115,7 +115,7 @@ watch(isMenuShown, () => {
 
 <template>
   <div @click="closeModal()" class="page">
-    <div class="center-">
+    <div class="center- flex-vert gap-10">
       <div class="content-box article-list">
         <h1>Notes</h1>
         <p>new → old</p>
@@ -172,14 +172,11 @@ watch(isMenuShown, () => {
           </div>
         </div>
       </div>
+      <div class="bottom"></div>
     </div>
   </div>
 
-  <Nav
-    @click.stop="isMenuShown = !isMenuShown"
-    :close="isMenuShown"
-    @isclose="(e) => (isMenuShown = e)"
-  >
+  <Nav @click.stop="isMenuShown = !isMenuShown" :close="isMenuShown" @isclose="(e) => (isMenuShown = e)">
     <Menu></Menu>
     <div>
       <div @click.stop class="ui-box tags relative" v-if="isShowTags">

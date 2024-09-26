@@ -1,8 +1,10 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap');
 
 :root {
   --html-bg-color: blue;
   --bg-color: rgb(245, 245, 255);
+  --tile-bg-color: rgb(230,230,230);
   --ui-bg-color: white;
   --text-color: black;
   --text-color-a: blue;
@@ -10,30 +12,10 @@
   --text-bg-color-a: white;
   --alpha-zero: rgba(0,0,0,0);
   --box-radius: 10px;
+  --content-radius: 0px;
 }
 
-.show-right {
-  align-items: flex-end;
-  justify-content: flex-end;
-}
 
-.show-left {
-  align-items: flex-end;
-  align-items: flex-end;
-}
-
-.center- {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.center-- {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
 
 html{
   font-size: 16px;
@@ -80,7 +62,10 @@ h3 {
   line-height: 100%;
 }
 
-
+.bottom{
+  display: block;
+  padding-top: 20px;
+}
 .ui-box {
   display: block;
   background-color: var(--ui-bg-color);
@@ -116,6 +101,7 @@ iframe{
   overflow-x: hidden;
   word-break: break-all;
   min-width: 50%;
+  border-radius: var(--content-radius);
 }
 
 .content-box h1{
@@ -147,8 +133,11 @@ table {
   width: 100svw;
   height: 100svh;
   position: absolute;
+  display: block;
   left: 0%;
   top: 0%;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 .center-hori{
@@ -174,27 +163,6 @@ li {
   z-index: 1;
 }
 
-.flex-hori{
-  display: flex;
-  flex-direction: row;
-  gap: 50px;
-  flex-grow: 1;
-}
-
-.flex-vert{
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.relative {
-  position: relative;
-}
-
-.block{
-  display: block;
-}
-
 @media (max-width: 760px) {
   html{
     font-size: 16px;
@@ -209,20 +177,10 @@ li {
     border-radius: var(--box-radius);
   }
 
-  .center- {
-    display: block;
-  }
-
-  .flex-hori{
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
   .content-box {
     display: block;
     background-color: var(--bg-color);
-    margin: 20px;
+    margin: 0px 20px;
     padding: 20px;
     overflow-x: hidden;
     min-width: 80%;
