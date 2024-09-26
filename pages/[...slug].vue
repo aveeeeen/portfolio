@@ -8,6 +8,13 @@ let contentQuery = null;
 defineProps(["imgSrc"]);
 watch(isShowToC);
 
+onMounted(async () => {
+  contentQuery = await queryContent(route.fullPath).findOne();
+  isToCEmpty.value = contentQuery.body.toc.links.length == 0 ? true : false;
+  console.log(contentQuery.body.toc);
+});
+
+
 function closeModal() {
   if (isShowToC.value == true) {
     isShowToC.value = false;
