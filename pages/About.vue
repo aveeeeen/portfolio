@@ -4,17 +4,28 @@
       <div class="relative center-hori">
         <div class="content-box">
           <h1>About Me</h1>
+          <Border></Border>
+          
           <div class="spacing">
           
           <ContentTile>
             <div>
             <ul>
               <li>Taichi Matsumoto</li>
-              <li>Artist name:  braven</li>
-              <li>Institution:  IAMAS</li>
-              <li>I live in Gifu, Japan</li>
               <li>
-                Experties : Live Coding, TidalCycles, NIME, Geneaology of Live
+                  Artist name: &nbsp;&nbsp;&nbsp;&nbsp;
+                  braven
+              </li>
+              <li>
+                Institution: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                IAMAS
+              </li>
+              <li>
+                Location: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                Gifu, Japan
+              </li>
+              <li>
+                Experties: Live Coding, TidalCycles, NIME, Geneaology of Live
                 Coding
               </li>
             </ul>
@@ -83,14 +94,15 @@
   margin-bottom: 10px;
 }
 
-.sns{
-  
-}
 
 .spacing{
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
+}
+
+.space{
+  height: 2rem;
 }
 
 .icon {

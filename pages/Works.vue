@@ -4,6 +4,7 @@
       <div>
         <div id="projects" class="content-box">
           <h1><a>Projects / Reserch</a></h1>
+          <Border></Border>
           <h3>
             図形楽譜を用いた音楽インタフェースのデザインと演奏：画像、GUIを図形楽譜として捉える
           </h3>
@@ -42,6 +43,7 @@
 
         <div id="live-performance" class="content-box">
           <h1><a>Live Performance</a></h1>
+          <Border></Border>
           <h2>Live Coding</h2>
 
           <h3>Myorph Monoliph release streaming event</h3>
@@ -103,6 +105,7 @@
 
         <div id="music" class="content-box">
           <h1><a>Music</a></h1>
+          <Border></Border>
           <h2>MEGAREX releases</h2>
           <h3>It's Gonna Be All Right (feat.shully)</h3>
           <iframe
@@ -234,6 +237,7 @@
       
         <div id="devs" class="content-box">
           <h1><a>Devs</a></h1>
+          <Border></Border>
           <h3>NxPC.Live vol.63</h3>
           <img src="../assets/img/web-devs/hardpia.png" /><img />
           <br>

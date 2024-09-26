@@ -3,6 +3,18 @@ const video = ref(null);
 const isVideoLoad = ref(false);
 const isDarkmode = ref(false);
 
+onBeforeMount(() => {
+  let bgC = getComputedStyle(document.body).getPropertyValue("--bg-color");
+  let html = document.querySelector("html");
+  html.style.backgroundColor = "blue";
+});
+
+onUnmounted(() => {
+  let html = document.querySelector("html");
+  let contetnBox = document.querySelector("content-box");
+  html.style.backgroundColor = getComputedStyle(document.body).getPropertyValue("--bg-color")
+});
+
 onMounted(() => {
   video.value = document.querySelector("video");
   video.value.load();
@@ -104,6 +116,7 @@ watch(isDarkmode, async () => {
 </template>
 
 <style scoped>
+
 .bg-video {
   width: 100vw;
   height: 100vh;

@@ -9,6 +9,7 @@ const isMenuShown = ref(false)
     <div class="flex-vert center-">
       <div class="content-box">
         <h1>Playground</h1>
+        <Border></Border>
         <p>
           実験や趣味で作っているものです。
         </p>

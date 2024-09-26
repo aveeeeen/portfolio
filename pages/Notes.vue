@@ -118,13 +118,14 @@ watch(isMenuShown, () => {
     <div class="center- flex-vert gap-10">
       <div class="content-box article-list">
         <h1>Notes</h1>
+        <Border></Border>
         <p>new → old</p>
         <div v-if="selectedFilter != ''">
           <p>showing: {{ selectedFilter }}</p>
           <a @click="selectedFilter = ''"> clear filter</a>
         </div>
 
-        <hr />
+        <Border></Border>
         <div v-if="isLoading">
           <p>loading ...</p>
         </div>
