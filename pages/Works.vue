@@ -1,7 +1,6 @@
 <template>
   <div @click="closeModal()" class="page">
     <div class="center- flex-vert">
-      <div>
         <div id="projects" class="content-box">
           <h1><a>Projects / Reserch</a></h1>
           <Border></Border>
@@ -275,7 +274,6 @@
         </div>
       </div>
       <div class="bottom"></div>
-    </div>
   </div>
   <Nav @click.stop="isMenuShown = !isMenuShown" :close="isMenuShown" @isclose="(e) => isMenuShown = e">
     <Menu></Menu>

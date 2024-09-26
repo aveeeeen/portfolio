@@ -96,7 +96,7 @@ iframe{
   margin-bottom: 40px;
   margin-left: 10%;
   margin-right: 10%;
-  max-width: 1000px;
+  max-width: 800px;
 }
 
 .content-box {
@@ -170,7 +170,7 @@ li {
   z-index: 1;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 800px) {
   html{
     font-size: 16px;
     background-color: var(--html-bg-color);

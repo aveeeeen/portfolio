@@ -1,7 +1,6 @@
 <template>
   <div @click="closeModal()" class="page">
     <div class="center- flex-vert">
-      <div class="relative center-hori">
         <div class="content-box">
           <h1>About Me</h1>
           <Border></Border>
@@ -66,7 +65,6 @@
         </div>
       </div>
       <div class="bottom"></div>
-    </div>
   </div>
 
   <!-- nav box -->
