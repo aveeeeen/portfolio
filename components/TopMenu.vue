@@ -5,8 +5,7 @@
 </script>
 
 <template>
-   
-    <div class="flex-vert show-left top-nav">
+    <div class="flex-hori top-nav">
       <NuxtLink to="/about"> about </NuxtLink>
       <NuxtLink to="/works"> works </NuxtLink>
       <NuxtLink to="/playground"> playground </NuxtLink>
@@ -21,7 +20,12 @@
   color: var(--text-color-a);
   font-size: 1.25rem;
   text-align: center;
-  padding: 2px 10px;
-  margin-bottom: 10px;
+  padding: 2px 5px;
+}
+
+a:hover{
+  color: white;
+  display: inline;
+  background-color: blue;
 }
 </style>

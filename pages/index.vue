@@ -137,7 +137,7 @@ watch(isDarkmode, async () => {
 .top-menu {
   position: absolute;
   left: 10%;
-  top: 70%;
+  bottom: 10svh;
   z-index: 1;
 }
 
@@ -157,7 +157,7 @@ watch(isDarkmode, async () => {
   .top-menu {
     position: absolute;
     left: 0%;
-    top: 70%;
+    bottom: 10svh;
   }
 }
 </style>
