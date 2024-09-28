@@ -12,7 +12,7 @@
             <ul>
               <li>Taichi Matsumoto</li>
               <li>
-                  Artist name: &nbsp;&nbsp;&nbsp;&nbsp;
+                  Artist name: &nbsp;&nbsp;&nbsp;
                   braven
               </li>
               <li>
