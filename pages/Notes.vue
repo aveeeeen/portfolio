@@ -21,7 +21,7 @@ onMounted(() => {;
   tagList.value = getAllTags(contentList.value)
   contentTags.value = getTags(contentList.value)
   pages.value = Math.ceil(contentList.value.length / 5)
-  if(contentArrayStatus.value == "success" || contentListStatus.value == "success") isLoading.value = false
+  if(contentArrayStatus.value == "success" && contentListStatus.value == "success") isLoading.value = false
 });
 
 async function getContent(start, move) {
