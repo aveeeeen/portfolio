@@ -7,13 +7,13 @@ const pages = ref(0);
 const tagList = ref([]);
 const selectedFilter = ref("");
 const contentTags = ref([])
-const { data:contentList, status:tagStatus } = await useAsyncData("_value", () => 
+const { data:contentList, status:tagStatus } = await useLazyAsyncData("_value", () => 
   queryContent("/")
     .only(["tags"])
     .sort({ update: -1, $numeric: true })
     .find()
 )
-const { data:contentArrary, status:contentArrayStatus, refresh:refreshContentArray } = await useAsyncData("contentArray",() => {
+const { data:contentArrary, status:contentArrayStatus, refresh:refreshContentArray } = await useLazyAsyncData("contentArray",() => {
   return getContent((page.value - 1) * 5, 5)
 })
 
@@ -21,8 +21,6 @@ onMounted(() => {;
   tagList.value = getAllTags(contentList.value)
   contentTags.value = getTags(contentList.value)
   pages.value = Math.ceil(contentList.value.length / 5)
-  console.log(pages.value)
-  isLoading.value = false;
 });
 
 async function getContent(start, move) {
@@ -108,7 +106,7 @@ function selectFilter(tag) {
 }
 
 watch(contentArrayStatus, () => {
-  if(contentArrayStatus.value == "pending") isLoading.value = true
+  if(contentArrayStatus.value == "pending" || tagStatus == "pending") isLoading.value = true
   else isLoading.value = false
 });
 
