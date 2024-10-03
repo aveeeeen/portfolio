@@ -112,7 +112,7 @@ watch(contentArrayStatus, () => {
 });
 
 watch(contentListStatus, () => {
-  if(contentListStatus.value == "success") isLoading.value = true
+  if(contentListStatus.value == "pending") isLoading.value = true
   else isLoading.value = false
 })
 
