@@ -1,4 +1,5 @@
 <script setup>
+const isLoading = ref(true);
 const isShowTags = ref(false);
 const isMenuShown = ref(true);
 const page = ref(1);
@@ -7,20 +8,20 @@ const tagList = ref([]);
 const selectedFilter = ref("");
 const contentTags = ref([])
 const { data:contentList, status:contentListStatus } = await useLazyAsyncData("_value", () => 
-queryContent("/")
-.only(["tags"])
-.sort({ update: -1, $numeric: true })
-.find()
+  queryContent("/")
+    .only(["tags"])
+    .sort({ update: -1, $numeric: true })
+    .find()
 )
 const { data:contentArrary, status:contentArrayStatus, refresh:refreshContentArray } = await useLazyAsyncData("contentArray",() => {
   return getContent((page.value - 1) * 5, 5)
 })
-const isLoading = computed(() => contentArrayStatus == "pending" || contentListStatus == "pending" ? true : false)
 
 onMounted(() => {;
   tagList.value = getAllTags(contentList.value)
   contentTags.value = getTags(contentList.value)
   pages.value = Math.ceil(contentList.value.length / 5)
+  if(contentArrayStatus.value == "success" || contentListStatus.value == "success") isLoading.value = false
 });
 
 async function getContent(start, move) {
@@ -105,15 +106,15 @@ function selectFilter(tag) {
   closeModal();
 }
 
-// watch(contentArrayStatus, () => {
-//   if(contentArrayStatus.value == "pending") isLoading.value = true
-//   else isLoading.value = false
-// });
+watch(contentArrayStatus, () => {
+  if(contentArrayStatus.value == "pending") isLoading.value = true
+  else isLoading.value = false
+});
 
-// watch(contentListStatus, () => {
-//   if(contentListStatus.value == "pending") isLoading.value = true
-//   else isLoading.value = false
-// })
+watch(contentListStatus, () => {
+  if(contentListStatus.value == "success") isLoading.value = true
+  else isLoading.value = false
+})
 
 watch(isMenuShown, () => {
   if (!isMenuShown.value) {
