@@ -1,32 +1,31 @@
 <script setup>
-const contentList = ref(null);
-const contentArrary = ref(null);
-const contentFiltered = ref(null);
 const isLoading = ref(true);
 const isShowTags = ref(false);
 const isMenuShown = ref(true);
-const page = ref(0);
+const page = ref(1);
 const pages = ref(0);
 const tagList = ref([]);
 const selectedFilter = ref("");
-
-onMounted(async () => {
-  contentList.value = await queryContent("/")
-    .only(["title", "_path", "update", "tags"])
+const contentTags = ref([])
+const { data:contentList, status:contentListStatus, refresh:refreshContentList } = await useAsyncData("contentList", () => 
+  queryContent("/")
+    .only(["tags"])
     .sort({ update: -1, $numeric: true })
-    .find();
-  getContent(page.value, 5);
-  pages.value =
-    contentList.value.length % 5 == 0
-      ? Math.floor(contentList.value.length / 5) - 1
-      : Math.floor(contentList.value.length / 5);
-  console.log(contentList.value.length);
-  getAllTags();
+    .find()
+)
+const { data:contentArray, status:contentArrayStatus, refresh:refreshContentArray } = await useLazyAsyncData("contentArray",() => {
+  return getContent((page.value - 1) * 5, 5)
+})
+
+onMounted(() => {
+    tagList.value = getAllTags(contentList.value)
+    contentTags.value = getTags(contentList.value)
+    pages.value = Math.ceil(contentList.value.length / 5)
 });
 
 async function getContent(start, move) {
-  isLoading.value = true;
-  contentArrary.value = await queryContent("/")
+  return await queryContent("/")
+    .where({ tags: { $containsAny: [selectedFilter.value] } })
     .only(["title", "_path", "update", "tags"])
     .sort({ update: -1, $numeric: true })
     .skip(start)
@@ -37,19 +36,19 @@ async function getContent(start, move) {
 function getNextContent() {
   if (page.value == pages.value) return;
   page.value++;
-  getContent(page.value * 5, 5);
+  refreshContentArray();
 }
 
 function getPrevContent() {
-  if (page.value == 0) return;
+  if (page.value == 1) return;
   page.value--;
-  getContent(page.value * 5, 5);
+  refreshContentArray();
 }
 
-function getAllTags() {
+function getAllTags(data) {
   const tagSet = new Set();
   let tagArr = [];
-  contentList.value.forEach((el) => tagArr.push(el.tags));
+  data.forEach((el) => tagArr.push(el.tags));
   tagArr.forEach((tags) => {
     let t = tags.split(",");
     t.forEach((tag) => {
@@ -58,26 +57,35 @@ function getAllTags() {
       }
     });
   });
-  tagList.value = Array.from(tagSet);
+  return Array.from(tagSet);
 }
 
-async function filterByTags(tag) {
-  isLoading.value = true;
-  contentFiltered.value = await queryContent("/")
-    .where({ tags: { $containsAny: [tag] } })
-    .only(["title", "_path", "update", "tags"])
-    .sort({ update: -1, $numeric: true })
-    .find();
-  console.log(contentFiltered.value);
-  isLoading.value = false;
+function getTags(data) {
+  let tagArr = [];
+  data.forEach((el) => tagArr.push(el.tags));
+  let retArr = []
+  tagArr.forEach((tags) => {
+    let t = tags.split(",");
+    t.forEach((tag) => {
+      if (tag.trim() !== "") {
+       retArr.push(tag.trim())
+      }
+    });
+  });
+  return retArr
 }
 
-watch(selectedFilter, async () => {
-  if (selectedFilter != "") {
-    filterByTags(selectedFilter.value);
+watch(selectedFilter,() => {
+  if (selectedFilter.value !== "") {
+    const pageLen = contentTags.value.filter(tag => tag == selectedFilter.value).length
+    page.value = 1
+    pages.value = Math.ceil(pageLen / 5)
+    refreshContentArray()
     isShowTags.value = false;
   } else {
-    getContent(page.value, 5);
+    page.value = 1
+    pages.value = Math.ceil(contentList.value.length / 5)
+    refreshContentArray()
   }
   console.log(selectedFilter.value);
 });
@@ -117,28 +125,12 @@ watch(isMenuShown, () => {
         </div>
 
         <Border></Border>
-        <div v-if="isLoading">
+        <div v-if="contentArrayStatus == 'pending'">
           <p>loading ...</p>
         </div>
 
         <div v-else>
-          <ul v-if="selectedFilter == ''" v-for="content in contentArrary">
-            <li>
-              <NuxtLink :to="content._path">{{ content.title }}</NuxtLink>
-              <p>
-                更新日:
-                {{
-                  content.update.toString().slice(0, 4) +
-                  "." +
-                  content.update.toString().slice(4, 6) +
-                  "." +
-                  content.update.toString().slice(6, 8)
-                }}
-              </p>
-            </li>
-          </ul>
-
-          <ul v-else v-for="content in contentFiltered">
+          <ul v-for="content in contentArray">
             <li>
               <NuxtLink :to="content._path">{{ content.title }}</NuxtLink>
               <p>
@@ -154,11 +146,11 @@ watch(isMenuShown, () => {
             </li>
           </ul>
         </div>
-        <div v-if="selectedFilter == ''" class="center--">
+        <div class="center--">
           <div class="page-selector">
             <div class="selector-flex center-">
               <a class="" @click="getPrevContent()">back</a>
-              <p class="page-num">{{ `${page + 1} / ${pages + 1}` }}</p>
+              <p class="page-num">{{ `${page} / ${pages}` }}</p>
               <a class="" @click="getNextContent()">next</a>
             </div>
           </div>
