@@ -114,7 +114,7 @@ h3 a {
   display: block;
   background-color: var(--bg-color);
   padding: 20px;
-  max-width: 800px;
+  max-width: 700px;
   margin: 30px;
   overflow-x: hidden;
   word-break: break-all;

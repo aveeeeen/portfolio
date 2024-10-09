@@ -80,7 +80,6 @@ watch(selectedFilter, async () => {
     getContent(page.value, 5);
   }
   console.log(selectedFilter.value);
-  console.log(contentFiltered.value);
 });
 
 function closeModal() {
@@ -97,14 +96,6 @@ function selectFilter(tag) {
   selectedFilter.value = tag;
   closeModal();
 }
-
-watch(contentArrary, () => {
-  if (contentArrary) isLoading.value = false;
-});
-
-watch(contentFiltered, () => {
-  if (contentArrary) isLoading.value = false;
-});
 
 watch(isMenuShown, () => {
   if (!isMenuShown.value) {
