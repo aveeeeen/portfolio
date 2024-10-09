@@ -1,5 +1,6 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap');
 
 :root {
   --html-bg-color: rgb(245, 245, 255);
@@ -15,7 +16,14 @@
   --content-radius: 0px;
 }
 
-
+code{
+  font-family: "Noto Sans Mono", monospace;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+  list-style: 110%;
+}
 
 html{
   font-size: 16px;
