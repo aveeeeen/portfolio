@@ -1,31 +1,33 @@
 <script setup>
-const isLoading = ref(true);
 const isShowTags = ref(false);
 const isMenuShown = ref(true);
 const page = ref(1);
 const pages = ref(0);
 const tagList = ref([]);
 const selectedFilter = ref("");
-const contentTags = ref([])
-const { data:contentList, status:contentListStatus, refresh:refreshContentList } = await useAsyncData("contentList", () => 
-  queryContent("/")
-    .only(["tags"])
-    .sort({ update: -1, $numeric: true })
-    .find()
-)
+const {params: {tag}} = useRoute();
+const contentList = ref({})
+const contentTags = ref([]);
 const { data:contentArray, status:contentArrayStatus, refresh:refreshContentArray } = await useLazyAsyncData("contentArray",() => {
   return getContent((page.value - 1) * 5, 5)
 })
 
-onMounted(() => {
-    tagList.value = getAllTags(contentList.value)
-    contentTags.value = getTags(contentList.value)
-    pages.value = Math.ceil(contentList.value.length / 5)
+onMounted(async () => {
+  console.log(`params: ${tag}`)
+  contentList.value = await queryContent("/")
+    .only(["tags"])
+    .sort({ update: -1, $numeric: true })
+    .find()
+  tagList.value = getAllTags(contentList.value)
+  contentTags.value = getTags(contentList.value)
+  const pageLen = contentTags.value.filter(t => t == tag.trim()).length
+  page.value = 1
+  pages.value = Math.ceil(pageLen / 5)
 });
 
 async function getContent(start, move) {
   return await queryContent("/")
-    .where({ tags: { $containsAny: [selectedFilter.value] } })
+    .where({tags : {$contains : [tag]}})
     .only(["title", "_path", "update", "tags"])
     .sort({ update: -1, $numeric: true })
     .skip(start)
@@ -75,6 +77,11 @@ function getTags(data) {
   return retArr
 }
 
+function getTagsPost(post){
+  let tags = post.split(",")
+  return tags.map(e => e.trim())
+}
+
 watch(selectedFilter,() => {
   if (selectedFilter.value !== "") {
     const pageLen = contentTags.value.filter(tag => tag == selectedFilter.value).length
@@ -82,11 +89,7 @@ watch(selectedFilter,() => {
     pages.value = Math.ceil(pageLen / 5)
     refreshContentArray()
     isShowTags.value = false;
-  } else {
-    page.value = 1
-    pages.value = Math.ceil(contentList.value.length / 5)
-    refreshContentArray()
-  }
+  } 
   console.log(selectedFilter.value);
 });
 
@@ -119,10 +122,8 @@ watch(isMenuShown, () => {
         <h1>Notes</h1>
         <Border></Border>
         <p>new → old</p>
-        <div v-if="selectedFilter != ''">
-          <p>showing: {{ selectedFilter }}</p>
-          <a @click="selectedFilter = ''"> clear filter</a>
-        </div>
+        <p>showing: {{ tag }}</p>
+        <NuxtLink to="/notes"> clear filter</NuxtLink>
 
         <Border></Border>
         <div v-if="contentArrayStatus == 'pending'">
@@ -132,17 +133,28 @@ watch(isMenuShown, () => {
         <div v-else>
           <ul v-for="content in contentArray">
             <li>
-              <NuxtLink :to="content._path">{{ content.title }}</NuxtLink>
-              <p>
-                更新日:
-                {{
-                  content.update.toString().slice(0, 4) +
-                  "." +
-                  content.update.toString().slice(4, 6) +
-                  "." +
-                  content.update.toString().slice(6, 8)
-                }}
-              </p>
+              <NotePost>
+                <template #title>
+                  <NuxtLink :to="content._path">{{ content.title }}</NuxtLink>
+                </template>
+                <template #date>
+                  <p>
+                    更新日:
+                    {{
+                      content.update.toString().slice(0, 4) +
+                      "." +
+                      content.update.toString().slice(4, 6) +
+                      "." +
+                      content.update.toString().slice(6, 8)
+                    }}
+                  </p>
+                </template>
+                <template #tags>
+                  <div v-for="tag in getTagsPost(content.tags)">
+                    <NuxtLink :to="`/notes/tags/${tag}`"> {{ tag }} </NuxtLink>
+                  </div>
+                </template>
+              </NotePost>
             </li>
           </ul>
         </div>
@@ -165,7 +177,7 @@ watch(isMenuShown, () => {
     <div>
       <div @click.stop class="ui-box tags relative" v-if="isShowTags">
         <div class="tag-list" v-for="tag in tagList">
-          <a @click.stop="selectFilter(tag)">{{ tag }}</a>
+          <NuxtLink :to="`/notes/tags/${tag}`">{{ tag }}</NuxtLink>
         </div>
       </div>
       <div v-else class="ui-box relative">
