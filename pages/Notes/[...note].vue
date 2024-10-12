@@ -140,7 +140,7 @@ h3 a {
   min-width: 50%;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 800px) {
   .article-box {
     display: block;
     background-color: var(--bg-color);
