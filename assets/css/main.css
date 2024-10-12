@@ -104,14 +104,14 @@ iframe{
   margin-bottom: 40px;
   margin-left: 10%;
   margin-right: 10%;
-  max-width: 800px;
+  max-width: 700px;
 }
 
 .content-box {
   display: block;
   background-color: var(--bg-color);
   padding: 20px;
-  max-width: 800px;
+  max-width: 700px;
   margin: 0 0px;
   overflow-x: hidden;
   word-break: break-all;
@@ -178,7 +178,7 @@ li {
   z-index: 1;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 760px) {
   html{
     font-size: 16px;
     background-color: var(--html-bg-color);
@@ -198,7 +198,7 @@ li {
     margin: 0px 0px;
     padding: 20px;
     overflow-x: hidden;
-    width: 80%;
+    min-width: 80%;
   }
 
   .menu{
