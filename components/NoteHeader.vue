@@ -16,6 +16,7 @@
   padding: 30px 20px;
   border-radius: 20px;
   border: color-mix(in srgb, slateblue 60%, white 30%) solid;
+  max-width: 700px;
 }
 
 .note-header a{
@@ -23,7 +24,6 @@
   padding: 2px 5px ;
   border-radius: 10px;
   border-color: color-mix(in srgb, slateblue 60%, white 30%);
-  max-width: 700px;
 }
 
 .note-header p, h1{
