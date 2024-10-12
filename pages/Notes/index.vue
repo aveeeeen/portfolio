@@ -231,7 +231,7 @@ button {
 }
 
 .article-list {
-  max-width: 800px;
+  max-width: 700px;
   min-height: 80svh;
 }
 </style>
