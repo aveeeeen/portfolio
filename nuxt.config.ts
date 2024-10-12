@@ -24,6 +24,13 @@ export default defineNuxtConfig({
       { rel: "icon", type: "image/png", href: "/favicon.png" }, // これを追記する
     ]
   },
+  content: {
+    highlight: {
+      // Theme used in all color schemes.
+      theme: 'github-light',
+      langs: ['haskell','hs','c','c++','python','py','json', 'js', 'ts', 'html', 'css', 'vue', 'shell', 'mdc', 'md', 'yaml']
+    }
+  },
   css: ['~/assets/css/main.css', '~/assets/css/utils.css', '~/assets/css/fmdrums.css'],
   compatibilityDate: '2024-07-12',
   contentAssets: {    

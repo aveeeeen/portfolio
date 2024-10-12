@@ -17,6 +17,7 @@
   border-radius: 20px;
   border: color-mix(in srgb, slateblue 60%, white 30%) solid;
   max-width: 700px;
+  min-width: 50%;
 }
 
 .note-header a{

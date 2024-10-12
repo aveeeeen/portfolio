@@ -4,17 +4,17 @@ const isMenuShown = ref(true);
 const route = useRoute();
 const isToCEmpty = ref(true);
 const tags = ref([])
-let contentQuery = null;
+const {data: contentQuery} = await useAsyncData('post', () => {
+  return queryContent(route.fullPath).findOne();
+})
 
 defineProps(["imgSrc"]);
 
-onMounted(async () => {
-  contentQuery = await queryContent(route.fullPath).findOne();
-  console.log(contentQuery)
-  tags.value = contentQuery.tags.split(",")
+onMounted(() => {
+  tags.value = contentQuery.value.tags.split(",")
   tags.value = tags.value.map(e => e.trim())
   console.log(tags.value)
-  isToCEmpty.value = contentQuery.body.toc.links.length == 0 ? true : false;
+  isToCEmpty.value = contentQuery.value.body.toc.links.length == 0 ? true : false;
 });
 
 
@@ -137,7 +137,6 @@ h3 a {
   margin: 30px;
   overflow-x: hidden;
   word-break: break-all;
-  min-width: 50%;
 }
 
 @media (max-width: 800px) {

@@ -306,7 +306,7 @@ const contentList = ref(null);
 const isMenuShown = ref(false);
 
 onMounted(async () => {
-  contentList.value = await queryContent("/")
+  contentList.value = await queryContent("/notes/")
     .only(["title", "_path", "update", "tags"])
     .where({ tags: { $containsAny: ["研究", "archive"] } })
     .sort({ update: -1, $numeric: true })

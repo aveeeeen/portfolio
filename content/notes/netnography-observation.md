@@ -66,8 +66,10 @@ Tidal CyclesのDiscordサーバー内では、コードの共有を通してラ�
 
 >exploring simplest possible versions, doing something like this manually does something like what I'm looking for -- need to figure out a way to space it out over the cycling of the pattern in an algorithmic way
 
->`l = [[-3,1,4],[-6,-3,2],[-6,-3,2],[-5,-1,2]]
->d1 $ note (toScale (l!!0) "0 1 2 3") #ch 12` 
+>```hs
+>l = [[-3,1,4],[-6,-3,2],[-6,-3,2],[-5,-1,2]]
+>d1 $ note (toScale (l!!0) "0 1 2 3") #ch 12 
+>```
 
 CLの提案に対してcatとweaveの関数がどのような動作をするかは知っていると答えている。加えて、初めはwithinという関数を使って手動で別々のリストをパターン化することで目的を達成しようとしていたという。その後、目的としている音階のリスト化を手動で実現した例を送っている。これのリストの項目を自動的に走査するアルゴリズムを考えようとしていることをコードの例を通して示しているというわけだ。
 
@@ -75,8 +77,10 @@ CLの提案に対してcatとweaveの関数がどのような動作をするか�
 
 >in pseudocode basically trying to figure out how to do something like this:
 
->`l = toScale <$> [[-3,1,4],[-6,-3,2],[-6,-3,2],[-5,-1,2]]
->d1 $ note (l +| "0 1 2 3") #ch 12`
+>```hs
+>l = toScale <$> [[-3,1,4],[-6,-3,2],[-6,-3,2],[-5,-1,2]]
+>d1 $ note (l +| "0 1 2 3") #ch 12
+>```
 
 >**OSFebruary 13, 2023 8:02 AM**
 
@@ -86,7 +90,9 @@ CLの提案に対してcatとweaveの関数がどのような動作をするか�
 
 >I'm sure I'll find tons of nuances and be able to tidy the logic up a lot but this seems to work as an initial attempt 
 
->`d1 $ (cat $ note <$> (`toScale` "0 1 2 3") <$> [[-3,1,4],[-6,-3,2],[-6,-3,2],[-5,-1,2]]) #ch 12`
+>```hs
+>d1 $ (cat $ note <$> (`toScale` "0 1 2 3") <$> [[-3,1,4],[-6,-3,2],[-6,-3,2],[-5,-1,2]]) #ch 12
+>```
 
 >**OS*February 13, 2023 5:54 PM***
 
@@ -108,9 +114,11 @@ CLの提案に対してcatとweaveの関数がどのような動作をするか�
 
 >you could use a do block.
 
->`do
-  let p = "0 1 2 3"
-  d1 $ n (cat [ toScale [-3,1,4] p, toScale [-6,-3,2] p, toScale [-6,-3, 2] p, toScale [-5,-1,2] p])  # ch 12` 
+>```hs
+>do
+>  let p = "0 1 2 3"
+>  d1 $ n (cat [ toScale [-3,1,4] p, toScale [-6,-3,2] p, toScale [-6,-3, 2] p, toScale [-5,-1,2] p])  # ch 12
+>``` 
 
 先ほどのOSが示した音階をパターン化することに成功したコードに対して、RTが「今まで見た中でスケールをパターン化する方法として一番近いやりかただ」と賞賛する。その上で自分ならこのように実現するという例を紹介している。それはtoScaleの関数をcatの配列の中に内包することでパターン化するという方法だ。
 
@@ -120,25 +128,31 @@ CLの提案に対してcatとweaveの関数がどのような動作をするか�
 
 >ahhh this is getting fun.  functionalizing it into  `void`, and using scale patterns instead of scale lists
 
->`--helper functions for using patterns instead of lists as scales`\
->`let patternToList pat = map value $ sortOn whole $ queryArc pat (Arc 0 1)`\ 
->`    tScale scalePat pat = toScale (patternToList scalePat) pat`\
->`-- the actual function`\
->`let void p scalePatList = cat $ note <$> (`tScale` p) <$> scalePatList`
+>```hs
+>--helper functions for using patterns instead of lists as scales
+>let patternToList pat = map value $ sortOn whole $ queryArc pat (Arc 0 1)
+>    tScale scalePat pat = toScale (patternToList scalePat) pat
+>-- the actual function
+>let void p scalePatList = cat $ note <$> (`tScale` p) <$> scalePatList
+>```
 
 >**RTFebruary 16, 2023 3:17 PM**
 
 >then it's just 
 
->`d1 $ void "0 1 2 3" ["-3 1 4", "-6 -3 2", "-6 -3 2", "-5 -1 2"] # ch 12` 
+>```hs
+>d1 $ void "0 1 2 3" ["-3 1 4", "-6 -3 2", "-6 -3 2", "-5 -1 2"] # ch 12 
+>```
 
 >**RTFebruary 16, 2023 3:24 PM**
 
 >here's a demo, getting into chris clark IDM territory
 
->`d1 $ sliceDiv 14 15 16 "<2 3>"` \
->`$  void ("[0 1 2 3 4 5 1 2 3 4 0 1 2 3 4 0 1 0 2 0 3 0 4]/4" +| "[0 5 8 11]*4") ["0 2 7 9 11", "0 4 9 11 14", "0 2 4 9 11"] \`
->`# m "[1, 2, 3, 4]"` 
+>```hs
+>d1 $ sliceDiv 14 15 16 "<2 3>"
+>$  void ("[0 1 2 3 4 5 1 2 3 4 0 1 2 3 4 0 1 0 2 0 3 0 4]/4" +| "[0 5 8 11]*4") ["0 2 7 9 11", "0 4 9 11 14", "0 2 4 9 11"] 
+># m "[1, 2, 3, 4]" 
+>```
 
 >**「音源ファイル」void_demo.mp3**　**625.51 KB　0:09/0:16**
 
@@ -164,16 +178,18 @@ RTの投稿に対してOSは素晴らしいと賞賛を述べ、これを使っ�
 
 >**GKSeptember 28, 2023 6:32 PM**
 
->`xen n p = toScale (map (\x -> x / n * 12) [0..(n-1)]) p`\
-
->`d1  $ (# rate (rand*2)) `\
->    `$ rolledBy (rand*0.2)`\
->    `$ superimpose ((degrade) . (arp "pinkyupdown") . (|+ note 36) . (# release 0.4))`\
->    `$ jux (|- note 0.018)`\
->    `$ note (xen 5 "<[-3,0,2,4] [-4,1,3,4] [-5,-2,3,5] [-5,-2,3,6]>/2")`\
->    `|+ note "[0,0.02,-0.01]" |- note 12`\
->    `# "supersaw" # legato 1.05 |* gain 0.5`\
->    `# voice 0 # lfo 1 # lpf 9000 `\
->    `# room 0.9 # size 0.9`\
+>```hs
+>xen n p = toScale (map (\x -> x / n * 12) [0..(n-1)]) p
+>
+>d1  $ (# rate (rand*2)) 
+>    $ rolledBy (rand*0.2)
+>    $ superimpose ((degrade) . (arp "pinkyupdown") . (|+ note 36) . (# release 0.4))
+>    $ jux (|- note 0.018)
+>    $ note (xen 5 "<[-3,0,2,4] [-4,1,3,4] [-5,-2,3,5] [-5,-2,3,6]>/2")
+>    |+ note "[0,0.02,-0.01]" |- note 12
+>    # "supersaw" # legato 1.05 |* gain 0.5
+>    # voice 0 # lfo 1 # lpf 9000 
+>    # room 0.9 # size 0.9
+>```
 
 スニペットの共有を通してライブコーダーは自分の見つけた面白い表現や、今その人自身が試している表現を共有することを通じて交流をとっている。ライブコーディングでは自分の環境で利用するコードは複雑な処理を短くするために、処理の一部を独自の関数に内包したりするが、ここでのスニペットはそうした自分の環境でしか動かないようなコードは共有されていなかった。つまり、#pattern-snippetsに投稿されているスニペットはTidal Cyclesのデフォルトの環境で動作するように配慮されている。このことから、明らかにライブコーダーがスニペットを共有する際は自分以外の人が使えるように意識しているといえる。そして、これらのスニペットの多くには、リアクションが付いていた（discordのようなコミュニティーチャットシステムでよく見られる、投稿に絵文字を通して、それを見た人の反応を量的に示すことができる機能）。

@@ -4,7 +4,6 @@ const isMenuShown = ref(true);
 const page = ref(1);
 const pages = ref(0);
 const tagList = ref([]);
-const selectedFilter = ref("");
 const {params: {tag}} = useRoute();
 const contentList = ref({})
 const contentTags = ref([]);
@@ -14,7 +13,7 @@ const { data:contentArray, status:contentArrayStatus, refresh:refreshContentArra
 
 onMounted(async () => {
   console.log(`params: ${tag}`)
-  contentList.value = await queryContent("/")
+  contentList.value = await queryContent("/notes/")
     .only(["tags"])
     .sort({ update: -1, $numeric: true })
     .find()
@@ -26,7 +25,7 @@ onMounted(async () => {
 });
 
 async function getContent(start, move) {
-  return await queryContent("/")
+  return await queryContent("/notes/")
     .where({tags : {$contains : [tag]}})
     .only(["title", "_path", "update", "tags"])
     .sort({ update: -1, $numeric: true })
@@ -82,16 +81,6 @@ function getTagsPost(post){
   return tags.map(e => e.trim())
 }
 
-watch(selectedFilter,() => {
-  if (selectedFilter.value !== "") {
-    const pageLen = contentTags.value.filter(tag => tag == selectedFilter.value).length
-    page.value = 1
-    pages.value = Math.ceil(pageLen / 5)
-    refreshContentArray()
-    isShowTags.value = false;
-  } 
-  console.log(selectedFilter.value);
-});
 
 function closeModal() {
   if (isShowTags.value) {
@@ -101,11 +90,6 @@ function closeModal() {
   if (isMenuShown.value) {
     isMenuShown.value = false;
   }
-}
-
-function selectFilter(tag) {
-  selectedFilter.value = tag;
-  closeModal();
 }
 
 watch(isMenuShown, () => {
