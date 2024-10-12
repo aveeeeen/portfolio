@@ -28,7 +28,7 @@ const emit = defineEmits(['isclose'])
 emit('isclose', isMenuShown.value)
 
 function checkMobile () {
-  if(window.innerWidth > 760){
+  if(window.innerWidth > 800){
       isMobile.value = false
     }else{
       isMobile.value = true

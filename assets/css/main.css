@@ -196,9 +196,9 @@ li {
     display: block;
     background-color: var(--bg-color);
     margin: 0px 0px;
-    padding: 0px 20px;
+    padding: 20px;
     overflow-x: hidden;
-    min-width: 80%;
+    width: 80%;
   }
 
   .menu{

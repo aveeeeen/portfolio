@@ -118,13 +118,23 @@ watch(isDarkmode, async () => {
 <style scoped>
 
 .bg-video {
-  width: 100vw;
-  height: 100vh;
+  width: 100svw;
+  height: 100svh;
   position: fixed;
   top: 0%;
   left: 0%;
   z-index: -1;
   object-fit: cover;
+}
+
+.page{
+  width: 100svw;
+  height: 100svh;
+  position: absolute;
+  display: block;
+  left: 0%;
+  top: 0%;
+  padding: 0;
 }
 
 .introduction {
@@ -148,7 +158,7 @@ watch(isDarkmode, async () => {
   z-index: 1;
 }
 
-@media (max-width: 786px) {
+@media (max-width: 800px) {
   .introduction {
     align-items: center;
     left: 0%;

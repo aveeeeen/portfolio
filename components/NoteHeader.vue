@@ -32,5 +32,6 @@
 
 .tags{
   flex-wrap: wrap;
+  align-items: baseline;
 }
 </style>
