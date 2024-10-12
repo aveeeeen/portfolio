@@ -106,7 +106,7 @@ watch(isMenuShown, () => {
   </Nav>
 </template>
 
-<style scoped>
+<style>
 .toc {
   max-width: 300px;
   max-height: 250px;
@@ -135,9 +135,15 @@ h3 a {
   max-width: 700px;
   margin: 30px;
   overflow-x: hidden;
-  word-break: break-all;
   min-width: 50%;
 }
+
+.shiki{
+  overflow-x: auto;
+  padding: 20px;
+  border: 1px black solid;
+  border-radius: 10px;
+} 
 
 @media (max-width: 800px) {
   .article-box {
