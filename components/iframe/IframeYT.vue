@@ -12,7 +12,7 @@ onMounted(() => {
   <div v-if="isLoading">
     <Skelton class="mock"></Skelton>
   </div>
-  <div v-else>
+  <div class="pulse mock" v-else>
     <iframe
       width="560"
       height="315"
@@ -31,5 +31,19 @@ onMounted(() => {
   width : 560px;
   height : 315px;
   border-radius: 20px;
+}
+
+.pulse {
+  animation: pulse-animation 1.8s infinite;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes pulse-animation {
+  100% {
+    background-color: rgba(240, 240, 240, 1);
+  }
+  0% {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
 }
 </style>
