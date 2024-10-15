@@ -1,6 +1,9 @@
 <script setup>
+
+import NoteSkelton from '../../components/NoteSkelton.vue';
 const isShowTags = ref(false);
 const isMenuShown = ref(true);
+const testLoading = ref(true);
 const page = ref(1);
 const pages = ref(0);
 const tagList = ref([]);
@@ -103,7 +106,12 @@ watch(isMenuShown, () => {
 
         <Border></Border>
         <div v-if="contentArrayStatus == 'pending'">
-          <p>loading ...</p>
+        <!-- <div v-if="testLoading"> -->
+          <ul v-for="i in 5">
+            <li>
+              <NoteSkelton></NoteSkelton>
+            </li>
+          </ul>
         </div>
 
         <div v-else>

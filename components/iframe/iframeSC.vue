@@ -1,0 +1,33 @@
+<script setup>
+const props = defineProps({
+  url: String,
+})
+const isLoading = ref(true);
+onMounted(() => {
+    isLoading.value = false;
+})
+</script>
+
+<template>
+  <div v-if="isLoading">
+    <Skelton class="mock"></Skelton>
+  </div>
+  <div v-else>
+    <iframe
+      width="100%"
+      height="200"
+      scrolling="no"
+      frameborder="no"
+      allow="autoplay"
+      :src="props.url"
+    ></iframe>
+  </div>
+</template>
+
+<style scoped>
+.mock{
+  width : 100%;
+  height : 200px;
+  border-radius: 20px;
+}
+</style>
