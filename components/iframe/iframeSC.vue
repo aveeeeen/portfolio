@@ -2,18 +2,11 @@
 const props = defineProps({
   url: String,
 })
-const isLoading = ref(true);
-onMounted(() => {
-    isLoading.value = false;
-})
 </script>
 
 <template>
-  <div v-if="isLoading">
-    <Skelton class="mock"></Skelton>
-  </div>
-  <div class="pulse mock" v-else>
     <iframe
+      class="pulse"
       width="100%"
       height="200"
       scrolling="no"
@@ -21,15 +14,10 @@ onMounted(() => {
       allow="autoplay"
       :src="props.url"
     ></iframe>
-  </div>
 </template>
 
 <style scoped>
-.mock{
-  width : 100%;
-  height : 200px;
-  border-radius: 20px;
-}
+
 .pulse {
   animation: pulse-animation 1.8s infinite;
   animation-timing-function: ease-in-out;
