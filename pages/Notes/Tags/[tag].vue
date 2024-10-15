@@ -111,7 +111,11 @@ watch(isMenuShown, () => {
 
         <Border></Border>
         <div v-if="contentArrayStatus == 'pending'">
-          <p>loading ...</p>
+          <ul v-for="i in 5">
+            <li>
+              <NoteSkelton></NoteSkelton>
+            </li>
+          </ul>
         </div>
 
         <div v-else>
