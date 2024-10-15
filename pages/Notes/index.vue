@@ -105,8 +105,8 @@ watch(isMenuShown, () => {
         <p>new → old</p>
 
         <Border></Border>
-        <!-- <div v-if="contentArrayStatus == 'pending'"> -->
-        <div v-if="testLoading">
+        <div v-if="contentArrayStatus == 'pending'">
+        <!-- <div v-if="testLoading"> -->
           <ul v-for="i in 5">
             <li>
               <NoteSkelton></NoteSkelton>
