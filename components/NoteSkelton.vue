@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-vert gap-10">
+  <div class="flex-vert gap-20 note-post">
     <Skelton class="post"></Skelton>
     <Skelton class="update"></Skelton>
     <div class="flex-hori gap-10 tags">
@@ -9,6 +9,13 @@
 </template>
 
 <style>
+.note-post{
+  margin: 10px 0px;
+  padding: 10px;
+  border-radius: 10px;
+  /* background-color: color-mix(in srgb, gray 10%, white 20%) */
+}
+
 .post{
   width: 80%;
   height: 1rem;
