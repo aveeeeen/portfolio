@@ -9,6 +9,7 @@ const props = defineProps({
       class="pulse"
       width="100%"
       height="200"
+      loading="lazy"
       scrolling="no"
       frameborder="no"
       allow="autoplay"

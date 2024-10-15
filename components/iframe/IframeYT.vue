@@ -9,6 +9,7 @@ const props = defineProps({
       class="pulse"
       width="560"
       height="315"
+      loading="lazy"
       :src="props.url"
       title="YouTube video player"
       frameborder="0"
