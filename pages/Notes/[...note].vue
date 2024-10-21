@@ -145,6 +145,12 @@ h3 a {
   border-radius: 10px;
 } 
 
+blockquote{
+  border-left: 3px solid black;
+  padding-left: 1rem;
+  margin: 1rem;
+}
+
 @media (max-width: 800px) {
   .article-box {
     display: block;
