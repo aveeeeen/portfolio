@@ -14,7 +14,21 @@ onMounted(async () => {
   tags.value = contentQuery.tags.split(",")
   tags.value = tags.value.map(e => e.trim())
   isToCEmpty.value = contentQuery.body.toc.links.length == 0 ? true : false;
+  useSeoMeta({
+  title: `${contentQuery.title}`,
+  ogTitle: `${contentQuery.title}`,
+  description: `${contentQuery.title}`,
+  ogDescription: `${contentQuery.title}`,
+  ogUrl: `https://braveeeeen.vercel.app${route.path}`,
+  ogImage:
+    "https://raw.githubusercontent.com/aveeeeen/portfolio/main/assets/img/ogp.png",
+  twitterCard: "summary_large_image",
+  twitterImage:
+    "https://raw.githubusercontent.com/aveeeeen/portfolio/main/assets/img/ogp.png",
+})
 });
+
+
 
 
 function closeModal() {

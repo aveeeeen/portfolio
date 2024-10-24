@@ -2,6 +2,19 @@
 import FmDrum from '~/components/fm-dumkit/FmDrum.vue';
 const isMenuShown = ref(false)
 
+useSeoMeta({
+  title: "braveeeeen",
+  ogTitle: "protfolio site of braven",
+  description: "FmDrumkit",
+  ogDescription: "FmDrumkit",
+  ogUrl: "https://braveeeeen.vercel.app/playground",
+  ogImage:
+    "https://raw.githubusercontent.com/aveeeeen/portfolio/main/assets/img/ogp.png",
+  twitterCard: "summary_large_image",
+  twitterImage:
+    "https://raw.githubusercontent.com/aveeeeen/portfolio/main/assets/img/ogp.png",
+});
+
 </script>
 
 <template>

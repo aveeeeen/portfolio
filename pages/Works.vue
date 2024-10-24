@@ -207,6 +207,19 @@ onMounted(async () => {
   console.log(contentList.value);
 });
 
+useSeoMeta({
+  title: "braveeeeen",
+  ogTitle: "protfolio site of braven",
+  description: "Works and Development",
+  ogDescription: "Works and Development",
+  ogUrl: "https://braveeeeen.vercel.app/works",
+  ogImage:
+    "https://raw.githubusercontent.com/aveeeeen/portfolio/main/assets/img/ogp.png",
+  twitterCard: "summary_large_image",
+  twitterImage:
+    "https://raw.githubusercontent.com/aveeeeen/portfolio/main/assets/img/ogp.png",
+});
+
 function closeModal() {
   if(isMenuShown.value) {
     isMenuShown.value = false;

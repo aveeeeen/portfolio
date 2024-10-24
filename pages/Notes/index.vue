@@ -23,6 +23,19 @@ onMounted(async () => {
   pages.value = Math.ceil(contentList.value.length / 5)
 });
 
+useSeoMeta({
+  title: "braveeeeen",
+  ogTitle: "protfolio site of braven",
+  description: "Published Notes and Blog",
+  ogDescription: "Published Notes and Blog",
+  ogUrl: "https://braveeeeen.vercel.app/notes",
+  ogImage:
+    "https://raw.githubusercontent.com/aveeeeen/portfolio/main/assets/img/ogp.png",
+  twitterCard: "summary_large_image",
+  twitterImage:
+    "https://raw.githubusercontent.com/aveeeeen/portfolio/main/assets/img/ogp.png",
+});
+
 async function getContent(start, move) {
   return await queryContent("/notes/")
     .only(["title", "_path", "update", "tags"])

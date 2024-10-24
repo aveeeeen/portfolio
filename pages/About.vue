@@ -148,6 +148,19 @@ import github from "~/assets/icon/github.png";
 import soundcloud from "~/assets/icon/soundcloud.png";
 import youtube from "~/assets/icon/youtube.png";
 
+useSeoMeta({
+  title: "braveeeeen",
+  ogTitle: "protfolio site of braven",
+  description: "About braven",
+  ogDescription: "About braven",
+  ogUrl: "https://braveeeeen.vercel.app/about",
+  ogImage:
+    "https://raw.githubusercontent.com/aveeeeen/portfolio/main/assets/img/ogp.png",
+  twitterCard: "summary_large_image",
+  twitterImage:
+    "https://raw.githubusercontent.com/aveeeeen/portfolio/main/assets/img/ogp.png",
+});
+
 const isMenuShown = ref(false);
 const socialMedias = ref([
   {
