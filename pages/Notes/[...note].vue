@@ -120,7 +120,7 @@ watch(isMenuShown, () => {
   </Nav>
 </template>
 
-<style scoped>
+<style>
 .toc {
   max-width: 300px;
   max-height: 250px;
@@ -128,11 +128,11 @@ watch(isMenuShown, () => {
   overflow-x: scroll;
 }
 
-h2 a {
+h2 > a {
   font-size: 1.5rem;
 }
 
-h3 a {
+h3 > a {
   font-size: 1.25rem;
 }
 
