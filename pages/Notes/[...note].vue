@@ -128,6 +128,10 @@ watch(isMenuShown, () => {
   overflow-x: scroll;
 }
 
+h2 a {
+  font-size: 1.5rem;
+}
+
 h3 a {
   font-size: 1.25rem;
 }
