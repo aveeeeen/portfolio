@@ -120,7 +120,7 @@ watch(isMenuShown, () => {
   </Nav>
 </template>
 
-<style>
+<style scoped>
 .toc {
   max-width: 300px;
   max-height: 250px;
