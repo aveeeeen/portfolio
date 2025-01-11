@@ -35,6 +35,6 @@ useSeoMeta({
 
 <style scoped>
 .playground {
-  z-index: -1;
+  z-index: 1;
 }
 </style>
