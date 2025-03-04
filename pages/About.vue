@@ -125,11 +125,16 @@ a>div>p {
 .my-metadata {
   display: flex;
   flex-direction: row;
-  margin: 0.5rem 0
+  margin: 0.25rem 0;
+  column-gap: 2rem;
 }
 
 .meta-head{
-  min-width: 100px;
+  min-width: 90px;
+}
+
+dd{
+  margin: 0;
 }
 
 @media (max-width: 786px) {
