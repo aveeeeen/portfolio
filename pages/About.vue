@@ -9,25 +9,20 @@
           
           <ContentTile>
             <div>
-            <ul>
-              <li>Taichi Matsumoto</li>
-              <li>
-                  Artist name: &nbsp;&nbsp;&nbsp;
-                  braven
-              </li>
-              <li>
-                Institution: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                IAMAS
-              </li>
-              <li>
-                Location: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                Gifu, Japan
-              </li>
-              <li>
-                Experties: Live Coding, TidalCycles, NIME, Geneaology of Live
-                Coding
-              </li>
-            </ul>
+            <h2>Taichi Matsumoto</h2>
+            <dl class="my-metadata">
+              <dt class="meta-head">Artist name</dt> <dd>braven</dd>  
+            </dl>
+            <dl class="my-metadata">
+              <dt class="meta-head">Institution </dt> <dd>IAMAS</dd>
+            </dl>
+            <dl class="my-metadata">
+              <dt class="meta-head">Location</dt> <dd>Osaka, Japan</dd>
+            </dl>
+            <dl class="my-metadata">
+              <dt class="meta-head">Experties </dt> <dd>Live Coding, TidalCycles, NIME, Geneaology of Live
+                Coding</dd>
+            </dl>
           </div>
           </ContentTile>
 
@@ -125,6 +120,16 @@
 a>div>p {
   margin: 0%;
   border: 0%;
+}
+
+.my-metadata {
+  display: flex;
+  flex-direction: row;
+  margin: 0.5rem 0
+}
+
+.meta-head{
+  min-width: 100px;
 }
 
 @media (max-width: 786px) {

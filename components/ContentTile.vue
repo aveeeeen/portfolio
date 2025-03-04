@@ -8,7 +8,7 @@
 
 <style scoped>
 .tile{
-  padding: 10px;
+  padding: 10px 20px;
   border-radius: 10px;
   background-color: var(--tile-bg-color);
   width: 2000px;
