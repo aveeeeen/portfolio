@@ -14,15 +14,15 @@ export default defineNuxtConfig({
     '/': { prerender: true }
   },
   app: {
-    baseURL: '/'
+    baseURL: '/',
+    head: {
+      link: [
+        { rel: "icon", type: "image/png", href: "/assets/icon/favicon.png" }, // これを追記する
+      ]
+    }
   },
   alias: {
     "@": resolve(__dirname, "/")
-  },
-  head: {
-    link: [
-      { rel: "icon", type: "image/png", href: "/favicon.png" }, // これを追記する
-    ]
   },
   content: {
     highlight: {
