@@ -5,16 +5,16 @@
 </script>
 
 <template>
-    <div class="flex-hori top-nav">
-      <NuxtLink to="/about"> about </NuxtLink>
-      <NuxtLink to="/works"> works </NuxtLink>
-      <NuxtLink to="/playground"> playground </NuxtLink>
-      <NuxtLink to="/notes"> notes </NuxtLink>
-    </div>
+  <div class="flex-hori top-nav">
+    <NuxtLink to="/about"> about </NuxtLink>
+    <NuxtLink to="/works"> works </NuxtLink>
+    <NuxtLink to="/playground"> playground </NuxtLink>
+    <NuxtLink to="/notes?page=1"> notes </NuxtLink>
+  </div>
 </template>
 
 <style scoped>
-.top-nav > a{
+.top-nav>a {
   display: inline;
   background-color: var(--text-bg-color-a);
   color: var(--text-color-a);
@@ -23,7 +23,7 @@
   padding: 2px 5px;
 }
 
-a:hover{
+a:hover {
   color: white;
   display: inline;
   background-color: blue;
