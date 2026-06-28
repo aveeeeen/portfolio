@@ -86,7 +86,10 @@ watch(isMenuShown, () => {
         <h1>Notes</h1>
         <Border></Border>
         <p>new → old</p>
-
+        <div v-if='route.query["tags"]'>
+          <p>showing: {{ route.query["tags"] }}</p>
+          <NuxtLink to="/notes?page=1"> clear filter</NuxtLink>
+        </div>
         <Border></Border>
         <div v-if="artilceList.status.value === 'pending'">
           <!-- <div v-if="testLoading"> -->
