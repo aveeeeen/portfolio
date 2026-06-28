@@ -13,6 +13,15 @@ const tags = ref<string[]>([]);
 const { params } = useRoute();
 const { data: article, error } = await useFetch(`/api/article/${params.id}`);
 
+useSeoMeta({
+  title: () => article.value?.title || '',
+  ogTitle: () => article.value?.title || '',
+  twitterTitle: () => article.value?.title || '',
+  description: () => article.value?.excerpt || '',
+  ogDescription: () => article.value?.excerpt || '',
+  twitterDescription: () => article.value?.excerpt || '',
+});
+
 defineProps(["imgSrc"]);
 
 const { parse, getTableOfContents } = useNotionBlockParser();
@@ -35,19 +44,6 @@ onMounted(() => {
   if (article.value) {
     tags.value = (article.value.tags || []).map((t: any) => t.name.trim());
     isToCEmpty.value = tocLinks.value.length === 0;
-
-    useSeoMeta({
-      title: `${article.value.title}`,
-      ogTitle: `${article.value.title}`,
-      description: `${article.value.title}`,
-      ogDescription: `${article.value.title}`,
-      ogUrl: `https://braveeeeen.vercel.app${route.path}`,
-      ogImage:
-        "https://raw.githubusercontent.com/aveeeeen/portfolio/main/assets/img/ogp.png",
-      twitterCard: "summary_large_image",
-      twitterImage:
-        "https://raw.githubusercontent.com/aveeeeen/portfolio/main/assets/img/ogp.png",
-    });
   }
 });
 

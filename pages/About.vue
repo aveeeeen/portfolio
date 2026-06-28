@@ -1,29 +1,33 @@
 <template>
   <div @click="closeModal()" class="page">
     <div class="center- flex-vert">
-        <div class="content-box">
-          <h1>About Me</h1>
-          <Border></Border>
-          
-          <div class="spacing">
-          
+      <div class="content-box">
+        <h1>About Me</h1>
+        <Border></Border>
+
+        <div class="spacing">
+
           <ContentTile>
             <div>
-            <h2>Taichi Matsumoto</h2>
-            <dl class="my-metadata">
-              <dt class="meta-head">Artist name</dt> <dd>braven</dd>  
-            </dl>
-            <dl class="my-metadata">
-              <dt class="meta-head">Institution </dt> <dd>IAMAS</dd>
-            </dl>
-            <dl class="my-metadata">
-              <dt class="meta-head">Location</dt> <dd>Osaka, Japan</dd>
-            </dl>
-            <dl class="my-metadata">
-              <dt class="meta-head">Experties </dt> <dd>Live Coding, TidalCycles, NIME, Geneaology of Live
-                Coding</dd>
-            </dl>
-          </div>
+              <h2>Taichi Matsumoto</h2>
+              <dl class="my-metadata">
+                <dt class="meta-head">Artist name</dt>
+                <dd>braven</dd>
+              </dl>
+              <dl class="my-metadata">
+                <dt class="meta-head">Institution </dt>
+                <dd>IAMAS</dd>
+              </dl>
+              <dl class="my-metadata">
+                <dt class="meta-head">Location</dt>
+                <dd>Osaka, Japan</dd>
+              </dl>
+              <dl class="my-metadata">
+                <dt class="meta-head">Experties </dt>
+                <dd>Live Coding, TidalCycles, NIME, Geneaology of Live
+                  Coding</dd>
+              </dl>
+            </div>
           </ContentTile>
 
           <!-- picture box -->
@@ -42,7 +46,7 @@
           </div>
 
           <ContentTile>
-              <h3>Find me on:</h3>
+            <h3>Find me on:</h3>
             <div class="grid-parent">
               <div class="grid-child" v-for="data in socialMedias" :key="data.id">
                 <a :href="data.url">
@@ -54,12 +58,12 @@
               </div>
             </div>
           </ContentTile>
-          </div>
-          
-
         </div>
+
+
       </div>
-      <div class="bottom"></div>
+    </div>
+    <div class="bottom"></div>
   </div>
 
   <!-- nav box -->
@@ -88,13 +92,13 @@
 }
 
 
-.spacing{
+.spacing {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.space{
+.space {
   height: 2rem;
 }
 
@@ -129,11 +133,11 @@ a>div>p {
   column-gap: 2rem;
 }
 
-.meta-head{
+.meta-head {
   min-width: 90px;
 }
 
-dd{
+dd {
   margin: 0;
 }
 
@@ -159,16 +163,8 @@ import soundcloud from "~/assets/icon/soundcloud.png";
 import youtube from "~/assets/icon/youtube.png";
 
 useSeoMeta({
-  title: "braveeeeen",
-  ogTitle: "protfolio site of braven",
   description: "About braven",
   ogDescription: "About braven",
-  ogUrl: "https://braveeeeen.vercel.app/about",
-  ogImage:
-    "https://raw.githubusercontent.com/aveeeeen/portfolio/main/assets/img/ogp.png",
-  twitterCard: "summary_large_image",
-  twitterImage:
-    "https://raw.githubusercontent.com/aveeeeen/portfolio/main/assets/img/ogp.png",
 });
 
 const isMenuShown = ref(false);

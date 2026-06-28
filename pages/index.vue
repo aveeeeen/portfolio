@@ -25,18 +25,6 @@ onMounted(() => {
   });
 });
 
-useSeoMeta({
-  title: "braveeeeen",
-  ogTitle: "protfolio site of braven",
-  ogUrl: "https://braveeeeen.vercel.app",
-  ogType: "website",
-  ogImage:
-    "https://raw.githubusercontent.com/aveeeeen/portfolio/main/assets/img/ogp.png",
-  twitterCard: "summary_large_image",
-  twitterImage:
-    "https://raw.githubusercontent.com/aveeeeen/portfolio/main/assets/img/ogp.png",
-});
-
 function videoPlay() {
   setTimeout(() => {
     video.value.play();
@@ -97,15 +85,7 @@ watch(isDarkmode, async () => {
 
 <template>
   <div class="page">
-    <video
-      class="bg-video"
-      src="~/assets/vid/bgVideo.mp4"
-      preload="none"
-      autoplay
-      playsinline
-      muted
-      loop
-    ></video>
+    <video class="bg-video" src="~/assets/vid/bgVideo.mp4" preload="none" autoplay playsinline muted loop></video>
   </div>
   <div class="introduction">
     <Introduction></Introduction>
@@ -116,7 +96,6 @@ watch(isDarkmode, async () => {
 </template>
 
 <style scoped>
-
 .bg-video {
   width: 100svw;
   height: 100svh;
@@ -127,7 +106,7 @@ watch(isDarkmode, async () => {
   object-fit: cover;
 }
 
-.page{
+.page {
   width: 100svw;
   height: 100svh;
   position: absolute;

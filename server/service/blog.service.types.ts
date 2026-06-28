@@ -54,6 +54,7 @@ export type ArticleBlocksResult = {
   title: string;
   tags: Tag[];
   blocks: NotionBlock[];
+  excerpt?: string;
   createdAt: string;
   updatedAt: string;
 }
