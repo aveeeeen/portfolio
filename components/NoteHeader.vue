@@ -10,29 +10,29 @@
 </template>
 
 <style>
-
-.note-header{
+.note-header {
   margin: 20px;
   padding: 30px 20px;
   border-radius: 20px;
   border: color-mix(in srgb, slateblue 60%, white 30%) solid;
+  width: 100%;
   max-width: 700px;
-  min-width: 50%;
 }
 
-.note-header a{
+.note-header a {
   border: 2px solid;
-  padding: 2px 5px ;
+  padding: 2px 5px;
   border-radius: 10px;
   border-color: color-mix(in srgb, slateblue 60%, white 30%);
 }
 
-.note-header p, h1{
+.note-header p,
+h1 {
   line-height: 100%;
   margin: 0;
 }
 
-.tags{
+.tags {
   flex-wrap: wrap;
   align-items: baseline;
 }
