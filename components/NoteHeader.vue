@@ -11,12 +11,11 @@
 
 <style>
 .note-header {
-  margin: 20px;
   padding: 30px 20px;
   border-radius: 20px;
   border: color-mix(in srgb, slateblue 60%, white 30%) solid;
-  width: 100%;
   max-width: 700px;
+  width: 90%;
 }
 
 .note-header a {
@@ -35,5 +34,15 @@ h1 {
 .tags {
   flex-wrap: wrap;
   align-items: baseline;
+}
+
+@media (max-width: 800px) {
+  .note-header {
+    padding: 30px 20px;
+    border-radius: 20px;
+    border: color-mix(in srgb, slateblue 60%, white 30%) solid;
+    max-width: 700px;
+    width: 80%;
+  }
 }
 </style>

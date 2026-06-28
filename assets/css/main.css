@@ -1,45 +1,43 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap");
 
 :root {
   --html-bg-color: rgb(245, 245, 255);
   --bg-color: rgb(245, 245, 255);
-  --tile-bg-color: rgb(230,230,230);
+  --tile-bg-color: rgb(230, 230, 230);
   --ui-bg-color: white;
   --text-color: black;
   --text-color-a: blue;
   --text-bg-color: white;
   --text-bg-color-a: white;
-  --alpha-zero: rgba(0,0,0,0);
+  --alpha-zero: rgba(0, 0, 0, 0);
   --box-radius: 10px;
   --content-radius: 0px;
 }
 
-code{
+code {
   font-family: "Noto Sans Mono", monospace;
   font-optical-sizing: auto;
   font-style: normal;
-  font-variation-settings:
-    "wdth" 100;
+  font-variation-settings: "wdth" 100;
   list-style: 110%;
   color: brown;
 }
 
-html{
+html {
   font-size: 16px;
   background-color: var(--html-bg-color);
   font-family: "Noto Sans JP", sans-serif;
   font-optical-sizing: auto;
 }
 
-img{
+img {
   width: 80svw;
   height: auto;
   max-width: 800px;
 }
 
-.border{
+.border {
   width: 2000px;
   height: 2px;
   background-color: black;
@@ -52,7 +50,7 @@ img{
   row-gap: 5px;
 }
 
-a:hover{
+a:hover {
   color: white;
   display: inline;
   background-color: blue;
@@ -68,7 +66,7 @@ ul {
   padding-left: 20px;
 }
 
-h1{
+h1 {
   font-size: 1.8rem;
   line-height: 100%;
 }
@@ -78,7 +76,7 @@ h3 {
   line-height: 100%;
 }
 
-.bottom{
+.bottom {
   display: block;
   padding-top: 20px;
 }
@@ -92,8 +90,8 @@ h3 {
   border-radius: var(--box-radius);
 }
 
-iframe{
-  max-width: 80svw; 
+iframe {
+  max-width: 80svw;
 }
 
 .box {
@@ -120,32 +118,35 @@ iframe{
   border-radius: var(--content-radius);
 }
 
-.content-box h1{
+.content-box h1 {
   font-size: 1.8rem;
 }
 
-.content-box h2 > a{
+.content-box h2 > a {
   font-size: 1.5rem;
 }
 
-.content-box h3{
+.content-box h3 {
   font-size: 1.2rem;
 }
 
-.article > p, li , ul {
+.article > p,
+li,
+ul {
   line-height: 1.75rem;
 }
 
-th, td {
-  border: solid 1px;  /* 枠線指定 */
-  padding: 10px;      /* 余白指定 */
+th,
+td {
+  border: solid 1px; /* 枠線指定 */
+  padding: 10px; /* 余白指定 */
 }
 
 table {
-  border-collapse:  collapse; /* セルの線を重ねる */
+  border-collapse: collapse; /* セルの線を重ねる */
 }
 
-.page{
+.page {
   width: 100svw;
   height: 100svh;
   position: absolute;
@@ -156,7 +157,7 @@ table {
   padding-bottom: 20px;
 }
 
-.center-hori{
+.center-hori {
   justify-items: center;
 }
 
@@ -172,7 +173,7 @@ li {
   color: var(--text-color);
 }
 
-.menu{
+.menu {
   position: fixed;
   top: 5%;
   right: 5%;
@@ -180,7 +181,7 @@ li {
 }
 
 @media (max-width: 760px) {
-  html{
+  html {
     font-size: 16px;
     background-color: var(--html-bg-color);
     font-family: "Noto Sans JP", sans-serif;
@@ -197,12 +198,12 @@ li {
     display: block;
     background-color: var(--bg-color);
     margin: 0px 0px;
-    padding: 20px;
+    padding: 20px 20px;
     overflow-x: hidden;
-    min-width: 80%;
+    width: 90%;
   }
 
-  .menu{
+  .menu {
     position: fixed;
     top: 5%;
     right: 0%;
