@@ -2,16 +2,8 @@
 const route = useRoute();
 
 useSeoMeta({
-  title: "braveeeeen",
-  ogTitle: "protfolio site of braven",
   description: "Published Notes and Blog",
   ogDescription: "Published Notes and Blog",
-  ogUrl: "https://braveeeeen.vercel.app/notes",
-  ogImage:
-    "https://raw.githubusercontent.com/aveeeeen/portfolio/main/assets/img/ogp.png",
-  twitterCard: "summary_large_image",
-  twitterImage:
-    "https://raw.githubusercontent.com/aveeeeen/portfolio/main/assets/img/ogp.png",
 });
 </script>
 

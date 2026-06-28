@@ -14,27 +14,28 @@ export default defineNuxtConfig({
   },
   app: {
     baseURL: '/',
+    head: {
+      title: "portfolio site of braven",
+      meta: [
+        { name: 'description', content: '活動履歴やブログをまとめています。'},
+        // OGP 共通設定
+        { property: 'og:site_name', content: 'braveeeeen' },
+        { property: 'og:type', content: 'website' },
+        { property: 'og:title', content: 'portfolio site of braven' },
+        { property: 'og:description', content: '活動履歴やブログをまとめています。' },
+        { property: 'og:image', content: 'https://braveeeeen.vercel.app/ogp.png' }, // 絶対パスで指定
+
+        // X (Twitter) Card 共通設定
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:title', content: 'portfolio site of braven' },
+        { name: 'twitter:description', content: '活動履歴やブログをまとめています。' },
+        { name: 'twitter:image', content: 'https://braveeeeen.vercel.app/ogp.png' },
+      ],
+    }
   },
   alias: {
     "@": resolve(__dirname, "/")
   },
-  content: {
-    highlight: {
-      // Theme used in all color schemes.
-      theme: 'github-light',
-      langs: ['haskell','hs','c','c++','python','py','json', 'js', 'ts', 'html', 'css', 'vue', 'shell', 'mdc', 'md', 'yaml']
-    }
-  },
   css: ['~/assets/css/main.css', '~/assets/css/utils.css', '~/assets/css/fmdrums.css'],
   compatibilityDate: '2024-07-12',
-  contentAssets: {    
-    // inject image size hints into the rendered html
-    imageSize: 'style attrs',
-    
-    // treat these extensions as content
-    contentExtensions: 'mdx? csv ya?ml json',
-    
-    // output debug messages
-    debug: false,
-  }
 })

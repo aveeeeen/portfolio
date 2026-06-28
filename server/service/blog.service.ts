@@ -32,9 +32,34 @@ export const getArticleById = async (id: string): Promise<ArticleResult> => {
   return article;
 }
 
+const extractExcerpt = (blocks: NotionBlock[]): string => {
+  const paragraphs: string[] = [];
+  for (const block of blocks) {
+    if (block.type === 'paragraph') {
+      const richText = (block as any).paragraph?.rich_text;
+      if (richText && Array.isArray(richText)) {
+        const text = richText
+          .map((rt: any) => rt.plain_text || '')
+          .join('')
+          .trim();
+        if (text) {
+          paragraphs.push(text);
+          if (paragraphs.length === 2) {
+            break;
+          }
+        }
+      }
+    }
+  }
+  return paragraphs.join('\n\n');
+}
+
 export const getArticleBlocksById = async (id: string): Promise<ArticleBlocksResult> => {
   const article = await BlogRepository.getArticleBlocksById(id);
-  return article;
+  return {
+    ...article,
+    excerpt: extractExcerpt(article.blocks)
+  };
 }
 
 export const getAllTags = async (): Promise<Tag[]> => {
