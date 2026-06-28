@@ -70,33 +70,31 @@ watch(isMenuShown, () => {
 <template>
   <div @click="closeModal()" class="page">
     <div class="flex-vert center-">
-      <div v-if="article">
-        <NoteHeader>
-          <template #title>
-            <h1>{{ article.title }}</h1>
-          </template>
-          <template #date>
-            <p>
-              作成日:
-              {{
-                new Date(article.createdAt).toLocaleDateString('ja-JP', {
-                  year: 'numeric',
-                  month: '2-digit',
-                  day: '2-digit'
-                }).replace(/\//g, '.')
-              }}
-            </p>
-          </template>
-          <template #tags>
-            <div v-for="tag in tags" :key="tag">
-              <NuxtLink :to="`/notes?page=1&tags=${tag}`"> {{ tag }} </NuxtLink>
-            </div>
-          </template>
-        </NoteHeader>
-        <main>
-          <div class="article-box article" v-html="parsedHtml"></div>
-        </main>
-      </div>
+      <NoteHeader v-if="article">
+        <template #title>
+          <h1>{{ article.title }}</h1>
+        </template>
+        <template #date>
+          <p>
+            作成日:
+            {{
+              new Date(article.createdAt).toLocaleDateString('ja-JP', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+              }).replace(/\//g, '.')
+            }}
+          </p>
+        </template>
+        <template #tags>
+          <div v-for="tag in tags" :key="tag">
+            <NuxtLink :to="`/notes?page=1&tags=${tag}`"> {{ tag }} </NuxtLink>
+          </div>
+        </template>
+      </NoteHeader>
+      <main class="flex-vert center-" v-if="article">
+        <div class="article-box article" v-html="parsedHtml"></div>
+      </main>
     </div>
   </div>
 
@@ -156,9 +154,14 @@ h3>a {
   background-color: var(--bg-color);
   padding: 20px;
   max-width: 700px;
-  margin: 30px;
   overflow-x: hidden;
-  min-width: 50%;
+  width: 90%;
+}
+
+main {
+  margin-top: 32px;
+  margin-bottom: 32px;
+  width: 100%;
 }
 
 .shiki {
@@ -178,10 +181,9 @@ blockquote {
   .article-box {
     display: block;
     background-color: var(--bg-color);
-    margin: 20px;
     padding: 10px;
     overflow-x: hidden;
-    min-width: 80%;
+    width: 90%;
   }
 }
 </style>

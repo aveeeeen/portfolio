@@ -7,7 +7,7 @@
   align-items: flex-start;
 }
 
-.center{
+.center {
   align-items: center;
   justify-content: center;
 }
@@ -21,25 +21,25 @@
   justify-content: center;
 }
 
-.flex-vert{
+.flex-vert {
   display: flex;
   flex-direction: column;
 }
 
-.flex-hori{
+.flex-hori {
   display: flex;
   flex-direction: row;
 }
 
-.gap-5{
+.gap-5 {
   gap: 5px;
 }
 
-.gap-10{
+.gap-10 {
   gap: 10px;
 }
 
-.gap-20{
+.gap-20 {
   gap: 20px;
 }
 
@@ -49,11 +49,4 @@
 
 .block {
   display: block;
-}
-
-@media (max-width: 760px) {
-  .center- {
-    display: block;
-  }
-
 }

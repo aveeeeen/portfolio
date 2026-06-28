@@ -4,37 +4,36 @@
 <template>
   <div class="page">
     <div class="flex-vert center-">
-      <div class="notedetail-container">
-        <NoteHeader>
-          <template #title>
-            <Skelton class="title-skeleton" />
-          </template>
-          <template #date>
-            <Skelton class="date-skeleton" />
-          </template>
-          <template #tags>
-            <Skelton class="tag-skeleton" v-for="i in 3" :key="i" />
-          </template>
-        </NoteHeader>
-        <main>
-          <div class="article-box article skeleton-body">
-            <div class="paragraph-skeleton" v-for="p in 3" :key="p">
-              <Skelton class="line-skeleton" />
-              <Skelton class="line-skeleton long" />
-              <Skelton class="line-skeleton short" />
-              <Skelton class="line-skeleton medium" />
-            </div>
+      <NoteHeader>
+        <template #title>
+          <Skelton class="title-skeleton" />
+        </template>
+        <template #date>
+          <Skelton class="date-skeleton" />
+        </template>
+        <template #tags>
+          <Skelton class="tag-skeleton" v-for="i in 3" :key="i" />
+        </template>
+      </NoteHeader>
+      <main class="flex-vert center-">
+        <div class="article-box skeleton-body">
+          <div class="paragraph-skeleton" v-for="p in 3" :key="p">
+            <Skelton class="line-skeleton" />
+            <Skelton class="line-skeleton long" />
+            <Skelton class="line-skeleton short" />
+            <Skelton class="line-skeleton medium" />
           </div>
-        </main>
-      </div>
+        </div>
+      </main>
     </div>
   </div>
 </template>
 
 <style scoped>
-.notedetail-container {
+main {
+  margin-top: 32px;
+  margin-bottom: 32px;
   width: 100%;
-  max-width: 700px;
 }
 
 .article-box {
@@ -42,11 +41,9 @@
   background-color: var(--bg-color);
   padding: 20px;
   max-width: 700px;
-  margin: 30px;
   overflow-x: hidden;
-  width: 100%;
+  width: 90%;
 }
-
 
 .title-skeleton {
   width: 70%;
@@ -74,6 +71,7 @@
 }
 
 .paragraph-skeleton {
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -101,10 +99,9 @@
   .article-box {
     display: block;
     background-color: var(--bg-color);
-    margin: 20px;
     padding: 10px;
     overflow-x: hidden;
-    min-width: 80%;
+    width: 90%;
   }
 }
 </style>
