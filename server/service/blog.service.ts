@@ -1,21 +1,23 @@
-import type { ListArticleInput, ListArticleResult, Pagination, PaginationInput } from "./blog.service.types";
+import type { ArticleBlocksResult, ArticleResult, ListArticleInput, ListArticleResult, Pagination, PaginationInput, Tag } from "./blog.service.types";
 import * as BlogRepository from "./blog.repository";
 
 export const listArticles = async (input: ListArticleInput): Promise<ListArticleResult[]> => {
+  console.log(input);
   const result = await BlogRepository.getManyArticles(input);
   const transformedResult = result.map(page => {
     return {
       id: page.id,
       title: page.properties["Name"].title[0].plain_text,
-      tag: page.properties["タグ"].multi_select.map(tag => {
+      tags: page.properties["タグ"].multi_select.map(tag => {
         return {
-        name: tag.name,
-        id: tag.id
-      }
-    })
+          name: tag.name,
+          id: tag.id
+        }
+      }),
+      createdAt: page["created_time"],
+      updatedAt: page["last_edited_time"],
     } as ListArticleResult
   })
-  
   return transformedResult
 }
 
@@ -23,4 +25,19 @@ export const listArticles = async (input: ListArticleInput): Promise<ListArticle
 export const getPaginationData = async (input: PaginationInput): Promise<Pagination> => {
   const pagination = await BlogRepository.getAllPagesAndCursors(input);
   return pagination
+}
+
+export const getArticleById = async (id: string): Promise<ArticleResult> => {
+  const article = await BlogRepository.getArticleById(id);
+  return article;
+}
+
+export const getArticleBlocksById = async (id: string): Promise<ArticleBlocksResult> => {
+  const article = await BlogRepository.getArticleBlocksById(id);
+  return article;
+}
+
+export const getAllTags = async (): Promise<Tag[]> => {
+  const tags = await BlogRepository.getAllTags();
+  return tags;
 }

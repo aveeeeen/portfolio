@@ -1,27 +1,29 @@
-<script setup>
-
+<script setup lang="ts">
 import NoteSkelton from '../../components/NoteSkelton.vue';
 const isShowTags = ref(false);
 const isMenuShown = ref(true);
-const testLoading = ref(true);
-const page = ref(1);
-const pages = ref(0);
-const tagList = ref([]);
-const contentList = ref({})
-const contentTags = ref([]);
-const { data:contentArray, status:contentArrayStatus, refresh:refreshContentArray } = await useLazyAsyncData("contentArray",() => {
-  return getContent((page.value - 1) * 5, 5)
-})
+const router = useRouter();
+const route = useRoute();
 
-onMounted(async () => {
-  contentList.value = await queryContent("/notes/")
-    .only(["tags"])
-    .sort({ update: -1, $numeric: true })
-    .find()
-  tagList.value = getAllTags(contentList.value)
-  contentTags.value = getTags(contentList.value)
-  pages.value = Math.ceil(contentList.value.length / 5)
-});
+const page = computed(() => route.query.page ? String(route.query.page) : "1");
+const tags = computed(() => route.query.tags ? route.query.tags.toString().split(",").map(tag => `&tags=${tag}`).join("") : "");
+const keyword = computed(() => route.query.keyword ? `&keyword=${route.query.keyword}` : "");
+const queryparam = computed(() => `?page=${page.value}${tags.value}${keyword.value}`);
+console.log(queryparam.value);
+
+const pagination = await useFetch(() => `/api/blog/pagination${queryparam.value}`, { method: "get" })
+const artilceList = await useFetch(() => `/api/blog/list-pages${queryparam.value}`, { method: "get" })
+const tagList = await useFetch(() => `/api/blog/list-tags`, { method: "get" })
+
+
+if (artilceList.error) {
+  console.log(artilceList.error.value)
+}
+
+if (artilceList.status.value === "error") {
+  router.push("/notes")
+}
+
 
 useSeoMeta({
   title: "braveeeeen",
@@ -36,60 +38,28 @@ useSeoMeta({
     "https://raw.githubusercontent.com/aveeeeen/portfolio/main/assets/img/ogp.png",
 });
 
-async function getContent(start, move) {
-  return await queryContent("/notes/")
-    .only(["title", "_path", "update", "tags"])
-    .sort({ update: -1, $numeric: true })
-    .skip(start)
-    .limit(move)
-    .find();
-}
+
 
 function getNextContent() {
-  if (page.value == pages.value) return;
-  page.value++;
-  refreshContentArray();
+  if (Number(page.value) >= (pagination.data.value?.totalPages ?? 1)) return;
+  router.push({
+    path: '/notes',
+    query: {
+      ...route.query,
+      page: Number(page.value) + 1
+    }
+  });
 }
 
 function getPrevContent() {
-  if (page.value == 1) return;
-  page.value--;
-  refreshContentArray();
-}
-
-function getAllTags(data) {
-  const tagSet = new Set();
-  let tagArr = [];
-  data.forEach((el) => tagArr.push(el.tags));
-  tagArr.forEach((tags) => {
-    let t = tags.split(",");
-    t.forEach((tag) => {
-      if (tag.trim() !== "") {
-        tagSet.add(tag.trim());
-      }
-    });
+  if (Number(page.value) <= 1) return;
+  router.push({
+    path: '/notes',
+    query: {
+      ...route.query,
+      page: Number(page.value) - 1
+    }
   });
-  return Array.from(tagSet);
-}
-
-function getTags(data) {
-  let tagArr = [];
-  data.forEach((el) => tagArr.push(el.tags));
-  let retArr = []
-  tagArr.forEach((tags) => {
-    let t = tags.split(",");
-    t.forEach((tag) => {
-      if (tag.trim() !== "") {
-       retArr.push(tag.trim())
-      }
-    });
-  });
-  return retArr
-}
-
-function getTagsPost(post){
-  let tags = post.split(",")
-  return tags.map(e => e.trim())
 }
 
 function closeModal() {
@@ -118,8 +88,8 @@ watch(isMenuShown, () => {
         <p>new → old</p>
 
         <Border></Border>
-        <div v-if="contentArrayStatus == 'pending'">
-        <!-- <div v-if="testLoading"> -->
+        <div v-if="artilceList.status.value === 'pending'">
+          <!-- <div v-if="testLoading"> -->
           <ul v-for="i in 5">
             <li>
               <NoteSkelton></NoteSkelton>
@@ -128,27 +98,28 @@ watch(isMenuShown, () => {
         </div>
 
         <div v-else>
-          <ul v-for="content in contentArray">
+          <ul v-for="content in artilceList.data.value">
             <li>
               <NotePost>
                 <template #title>
-                  <NuxtLink :to="content._path">{{ content.title }}</NuxtLink>
+                  <NuxtLink :to="`/notes/${content.id}`">{{ content.title }}</NuxtLink>
                 </template>
                 <template #date>
                   <p>
-                    更新日:
+                    作成日:
                     {{
-                      content.update.toString().slice(0, 4) +
-                      "." +
-                      content.update.toString().slice(4, 6) +
-                      "." +
-                      content.update.toString().slice(6, 8)
+                      new Date(content.createdAt).toLocaleDateString('ja-JP', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit'
+                      }).replace(/\//g, '.')
                     }}
                   </p>
                 </template>
                 <template #tags>
-                  <div v-for="tag in getTagsPost(content.tags)">
-                    <NuxtLink :to="`/notes/tags/${tag}`"> {{ tag }} </NuxtLink>
+                  <div v-for="tag in content.tags">
+                    <NuxtLink :to="`/notes?page=1&tags=${tag.name}`" @click="artilceList.refresh()"> {{ tag.name }}
+                    </NuxtLink>
                   </div>
                 </template>
               </NotePost>
@@ -159,7 +130,7 @@ watch(isMenuShown, () => {
           <div class="page-selector">
             <div class="selector-flex center-">
               <a class="" @click="getPrevContent()">back</a>
-              <p class="page-num">{{ `${page} / ${pages}` }}</p>
+              <p class="page-num">{{ `${page} / ${pagination.data.value?.totalPages}` }}</p>
               <a class="" @click="getNextContent()">next</a>
             </div>
           </div>
@@ -173,8 +144,9 @@ watch(isMenuShown, () => {
     <Menu></Menu>
     <div>
       <div @click.stop class="ui-box tags relative" v-if="isShowTags">
-        <div class="tag-list" v-for="tag in tagList">
-          <NuxtLink :to="`/notes/tags/${tag}`">{{ tag }}</NuxtLink>
+        <div class="tag-list" v-for="tag in tagList.data.value">
+          <NuxtLink :to="`/notes?page=1&tags=${tag.name}`" @click="artilceList.refresh()"> {{ tag.name }}
+          </NuxtLink>
         </div>
       </div>
       <div v-else class="ui-box relative">

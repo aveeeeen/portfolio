@@ -1,4 +1,4 @@
-import { defineEventHandler, getQuery, type H3Event } from 'h3'
+import { defineEventHandler, type H3Event } from 'h3'
 import * as BlogService from "../../service/blog.service"
 import z from 'zod';
 

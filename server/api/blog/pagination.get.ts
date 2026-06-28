@@ -17,6 +17,5 @@ const paginationSchema = z.object({
 export default defineEventHandler(async (event) => {
   const query = await getValidatedQuery(event, (data) => paginationSchema.parse(data))
   const pagination: Pagination = await BlogService.getPaginationData(query);
-  console.log(pagination);
   return pagination;
 })
