@@ -4,8 +4,7 @@ import { resolve } from "path";
 export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
-    'nuxt-content-assets'
-    ,'@nuxt/content'
+    '@nuxt/image'
   ],
   plugins: [
     '~/plugins/directives'
@@ -14,15 +13,10 @@ export default defineNuxtConfig({
     '/': { prerender: true }
   },
   app: {
-    baseURL: '/'
+    baseURL: '/',
   },
   alias: {
     "@": resolve(__dirname, "/")
-  },
-  head: {
-    link: [
-      { rel: "icon", type: "image/png", href: "/favicon.png" }, // これを追記する
-    ]
   },
   content: {
     highlight: {
