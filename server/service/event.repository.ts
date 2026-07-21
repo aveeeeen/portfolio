@@ -1,14 +1,14 @@
 import { Client } from "@notionhq/client";
-import type { ArticleResult, ArticleBlocksResult, NotionBlock, ListArticleInput, Pagination, PaginationInput, Tag } from "./blog.service.types";
-import type { GroupFilterOperatorArray } from "@notionhq/client/build/src/api-endpoints";
+import type { EventResult, EventBlocksResult, NotionBlock, ListEventInput, Pagination, PaginationInput, Tag } from "./event.service.types";
+import type { GroupFilterOperatorArray, PropertyFilter } from "@notionhq/client/build/src/api-endpoints";
 
 const notion = new Client({
   auth: process.env.NOTION_API_KEY
 })
 
-const dataSourceID = process.env.NOTION_DATASOURCE_ID;
+const dataSourceID = process.env.NOTION_EVENT_DATASOURCE_ID;
 
-export const getManyArticles = async (input: ListArticleInput) => {
+export const getManyEvents = async (input: ListArticleInput) => {
 
   if (!dataSourceID) throw Error("Data Source ID empty")
   const andList: GroupFilterOperatorArray = []
@@ -51,7 +51,7 @@ export const getManyArticles = async (input: ListArticleInput) => {
   return datasourceResult.results
 }
 
-export const getAllPagesAndCursors = async (input: PaginationInput): Promise<Pagination> => {
+export const getAllPageAndCursors = async (input: PaginationInput): Promise<Pagination> => {
   const cursors: Map<number, string> = new Map();
   let hasMore = true;
   let totalPages = 1;
@@ -60,33 +60,19 @@ export const getAllPagesAndCursors = async (input: PaginationInput): Promise<Pag
 
   if (!dataSourceID) throw Error("Data Source ID empty");
 
-  const andList: GroupFilterOperatorArray = []
-
-  if (input && input.keyword !== "" && input.keyword) {
-    andList.push({
-      "property": "Name",
-      "title": {
-        "contains": input.keyword
+  const filterOption: PropertyFilter = 
+    {
+      "property": "Publicity",
+      "select": {
+        "equals": "public"
       }
-    })
-  }
-
-  if (input && input.tags && input.tags.length !== 0){
-    andList.push({
-      "property": "タグ",
-      "multi_select": {
-        "contains": input.tags
-      }
-    })
-  }
+    }
 
   while (hasMore) {
     if (nextCursor === "") {
       const queryresult = await notion.dataSources.query({
         data_source_id: dataSourceID,
-        filter: andList.length !== 0 
-          ? {and: andList}
-          : undefined,
+        filter: filterOption,
         sorts: [
           {
             timestamp: "created_time",
@@ -105,9 +91,7 @@ export const getAllPagesAndCursors = async (input: PaginationInput): Promise<Pag
     } else {
       const queryresult = await notion.dataSources.query({
         data_source_id: dataSourceID,
-        filter: andList.length !== 0 
-          ? {and: andList}
-          : undefined,
+        filter: filterOption,
         sorts: [
           {
             timestamp: "created_time",
@@ -129,29 +113,6 @@ export const getAllPagesAndCursors = async (input: PaginationInput): Promise<Pag
   return {
     totalPages: totalPages,
     cursorMap: cursors
-  }
-}
-
-export const getArticleById = async (id: string): Promise<ArticleResult> => {
-  const article = await notion.pages.retrieve({
-    page_id: id
-  });
-
-  const articleContent = await notion.pages.retrieveMarkdown({
-    page_id: id
-  })
-  return {
-    id: id,
-    title: article.properties["Name"].title[0].plain_text,
-    tags: article.properties["タグ"].multi_select.map(tag => {
-      return {
-        name: tag.name,
-        id: tag.id
-      }
-    }),
-    content: articleContent.markdown,
-    createdAt: article["created_time"],
-    updatedAt: article["last_edited_time"],
   }
 }
 
@@ -201,7 +162,7 @@ const getBlockChildren = async (blockId: string): Promise<NotionBlock[]> => {
 /**
  * Fetch an article by ID with block objects instead of markdown.
  */
-export const getArticleBlocksById = async (id: string): Promise<ArticleBlocksResult> => {
+export const getEventBlocksById = async (id: string): Promise<ArticleBlocksResult> => {
   const article = await notion.pages.retrieve({
     page_id: id
   });
@@ -221,18 +182,4 @@ export const getArticleBlocksById = async (id: string): Promise<ArticleBlocksRes
     createdAt: article["created_time"],
     updatedAt: article["last_edited_time"],
   }
-}
-
-export const getAllTags = async (): Promise<Tag[]> => {
-  if (!dataSourceID) throw Error("Data Source ID empty");
-  const dataSourceMeta = await notion.dataSources.retrieve({
-    data_source_id: dataSourceID
-  })
-
-  return dataSourceMeta.properties["タグ"].multi_select.options.map(tag => {
-    return {
-      id: tag.id,
-      name: tag.name
-    }
-  })
 }

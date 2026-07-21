@@ -1,15 +1,13 @@
 import type { BlockObjectResponse } from "@notionhq/client";
 
-export type ListArticleInput = {
+export type ListEventInput = {
   cursor?: string;
-  tags?: string[];
-  keyword?: string;
 }
 
-export type ListArticleResult = {
+export type ListEventResult = {
   id: string;
   title: string;
-  tags: Tag[];
+  date: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -24,15 +22,10 @@ export type Pagination = {
   cursorMap: Map<number, string>
 }
 
-export type Tag = {
-  id: string;
-  name: string;
-}
-
-export type ArticleResult = {
+export type EventResult = {
   id: string;
   title: string;
-  tags: Tag[];
+  data: string;
   content: string;
   createdAt: string;
   updatedAt: string;
@@ -52,9 +45,8 @@ export type NotionBlock = BlockObjectResponse & {
 export type ArticleBlocksResult = {
   id: string;
   title: string;
-  tags: Tag[];
+  date: string;
   blocks: NotionBlock[];
-  excerpt?: string;
   createdAt: string;
   updatedAt: string;
 }
