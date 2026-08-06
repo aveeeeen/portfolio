@@ -137,6 +137,8 @@ const getBlockChildren = async (blockId: string): Promise<NotionBlock[]> => {
       page_size: 100,
     });
 
+    const childrenPromises: Promise<void>[] = [];
+
     for (const block of response.results) {
       // Skip partial block objects (they only have object + id)
       if (!("type" in block)) {
@@ -148,12 +150,20 @@ const getBlockChildren = async (blockId: string): Promise<NotionBlock[]> => {
         children: [],
       };
 
-      // Recursively fetch children if the block has nested content
-      if (block.has_children) {
-        notionBlock.children = await getBlockChildren(block.id);
-      }
-
       blocks.push(notionBlock);
+
+      // Recursively fetch children in parallel if the block has nested content
+      if (block.has_children) {
+        childrenPromises.push(
+          getBlockChildren(block.id).then(children => {
+            notionBlock.children = children;
+          })
+        );
+      }
+    }
+
+    if (childrenPromises.length > 0) {
+      await Promise.all(childrenPromises);
     }
 
     hasMore = response.has_more;
@@ -168,21 +178,22 @@ const getBlockChildren = async (blockId: string): Promise<NotionBlock[]> => {
  */
 export const getEventBlocksById = defineCachedFunction(
   async (id: string): Promise<EventBlocksResult> => {
-    const event = await notion.pages.retrieve({
-      page_id: id
-    });
-
-    const blocks = await getBlockChildren(id);
+    const [event, blocks] = await Promise.all([
+      notion.pages.retrieve({
+        page_id: id
+      }),
+      getBlockChildren(id)
+    ]);
 
     return {
       id: id,
-      title: event.properties["Name"].title[0].plain_text,
-      venue: event.properties["Venue"].rich_text[0].plain_text,
-      imageUrl: event.properties["Image"].files[0].file.url,
-      date: event.properties["Date"].date.start,
+      title: (event as any).properties["Name"].title[0].plain_text,
+      venue: (event as any).properties["Venue"].rich_text[0].plain_text,
+      imageUrl: (event as any).properties["Image"].files[0].file.url,
+      date: (event as any).properties["Date"].date.start,
       blocks,
-      createdAt: event["created_time"],
-      updatedAt: event["last_edited_time"],
+      createdAt: (event as any)["created_time"],
+      updatedAt: (event as any)["last_edited_time"],
     } as EventBlocksResult;
   },
   {

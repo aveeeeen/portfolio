@@ -177,6 +177,8 @@ const getBlockChildren = async (blockId: string): Promise<NotionBlock[]> => {
       page_size: 100,
     });
 
+    const childrenPromises: Promise<void>[] = [];
+
     for (const block of response.results) {
       // Skip partial block objects (they only have object + id)
       if (!("type" in block)) {
@@ -188,12 +190,20 @@ const getBlockChildren = async (blockId: string): Promise<NotionBlock[]> => {
         children: [],
       };
 
-      // Recursively fetch children if the block has nested content
-      if (block.has_children) {
-        notionBlock.children = await getBlockChildren(block.id);
-      }
-
       blocks.push(notionBlock);
+
+      // Recursively fetch children in parallel if the block has nested content
+      if (block.has_children) {
+        childrenPromises.push(
+          getBlockChildren(block.id).then(children => {
+            notionBlock.children = children;
+          })
+        );
+      }
+    }
+
+    if (childrenPromises.length > 0) {
+      await Promise.all(childrenPromises);
     }
 
     hasMore = response.has_more;
@@ -208,24 +218,25 @@ const getBlockChildren = async (blockId: string): Promise<NotionBlock[]> => {
  */
 export const getArticleBlocksById = defineCachedFunction(
   async (id: string): Promise<ArticleBlocksResult> => {
-    const article = await notion.pages.retrieve({
-      page_id: id
-    });
-
-    const blocks = await getBlockChildren(id);
+    const [article, blocks] = await Promise.all([
+      notion.pages.retrieve({
+        page_id: id
+      }),
+      getBlockChildren(id)
+    ]);
 
     return {
       id: id,
-      title: article.properties["Name"].title[0].plain_text,
-      tags: article.properties["タグ"].multi_select.map(tag => {
+      title: (article as any).properties["Name"].title[0].plain_text,
+      tags: (article as any).properties["タグ"].multi_select.map((tag: any) => {
         return {
           name: tag.name,
           id: tag.id
         };
       }),
       blocks,
-      createdAt: article["created_time"],
-      updatedAt: article["last_edited_time"],
+      createdAt: (article as any)["created_time"],
+      updatedAt: (article as any)["last_edited_time"],
     };
   },
   {
