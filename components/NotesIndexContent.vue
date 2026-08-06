@@ -78,28 +78,7 @@ watch(isMenuShown, () => {
         <div>
           <ul v-for="content in artilceList.data.value">
             <li :key="content.id">
-              <NotePost>
-                <template #title>
-                  <NuxtLink :to="`/notes/${content.id}`">{{ content.title }}</NuxtLink>
-                </template>
-                <template #date>
-                  <p>
-                    作成日:
-                    {{
-                      new Date(content.createdAt).toLocaleDateString('ja-JP', {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit'
-                      }).replace(/\//g, '.')
-                    }}
-                  </p>
-                </template>
-                <template #tags>
-                  <div v-for="tag in content.tags" :key="tag.name">
-                    <NuxtLink :to="`/notes?page=1&tags=${tag.name}`" @click="artilceList.refresh()"> {{ tag.name }}
-                    </NuxtLink>
-                  </div>
-                </template>
+              <NotePost :id="content.id" :title="content.title" :tags="content.tags" :created-at="content.createdAt">
               </NotePost>
             </li>
           </ul>
