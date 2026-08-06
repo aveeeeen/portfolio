@@ -73,9 +73,9 @@ watch(isMenuShown, () => {
         <p>new → old</p>
         <Border></Border>
 
-        <div class="flex-vert gap-10" v-for="event in events">
-          <EventCard :id="event.id" :title="event.title" :date="event.date" :image-url="event.imageUrl"
-            :venue="event.venue">
+        <div class="flex-vert gap-20">
+          <EventCard v-for="event in events" :key="event.id" :id="event.id" :title="event.title" :date="event.date"
+            :image-url="event.imageUrl" :venue="event.venue">
           </EventCard>
         </div>
         <div class="center--">

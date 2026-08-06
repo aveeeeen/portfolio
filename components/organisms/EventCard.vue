@@ -1,6 +1,22 @@
 <script setup lang="ts">
 import type { ListEventResult } from "../../server/service/event.service.types"
 const props = defineProps<ListEventResult>()
+
+const isPortrait = ref(false);
+const imgRef = ref<HTMLImageElement | null>(null);
+
+function handleImageLoad(event?: Event) {
+  const img = (event?.target as HTMLImageElement) || imgRef.value;
+  if (img && img.naturalWidth && img.naturalHeight) {
+    isPortrait.value = img.naturalHeight > img.naturalWidth;
+  }
+}
+
+onMounted(() => {
+  if (imgRef.value && imgRef.value.complete) {
+    handleImageLoad();
+  }
+});
 </script>
 
 <template>
@@ -24,7 +40,7 @@ const props = defineProps<ListEventResult>()
         </h3>
       </div>
     </div>
-    <img :src="props.imageUrl"></img>
+    <img ref="imgRef" :src="props.imageUrl" :class="{ portrait: isPortrait }" @load="handleImageLoad" />
   </NuxtLink>
 </template>
 
@@ -32,12 +48,17 @@ const props = defineProps<ListEventResult>()
 img {
   width: 100%;
   height: auto;
-  max-height: 80vh;
   box-sizing: border-box;
+}
+
+img.portrait {
+  height: 50vh;
+  width: auto;
 }
 
 .event-post {
   width: 100%;
+  max-width: 1200px;
   height: auto;
   display: flex;
   flex-direction: column;
