@@ -107,9 +107,9 @@ watch(isMenuShown, () => {
         <div class="center--">
           <div class="page-selector">
             <div class="selector-flex center-">
-              <a class="" @click="getPrevContent()">back</a>
+              <button class="" @click="getPrevContent()">back</button>
               <p class="page-num">{{ `${page} / ${pagination.data.value?.totalPages}` }}</p>
-              <a class="" @click="getNextContent()">next</a>
+              <button class="" @click="getNextContent()">next</button>
             </div>
           </div>
         </div>
@@ -156,10 +156,20 @@ h2 {
   margin: 5px;
 }
 
+button:hover {
+  color: white;
+  display: inline;
+  background-color: blue;
+}
+
 button {
-  width: 100px;
-  background-color: gray;
-  z-index: 3;
+  font-size: 1rem;
+  display: inline;
+  color: var(--text-color-a);
+  text-decoration: none;
+  background: none;
+  background-color: transparent;
+  border: none;
 }
 
 .selector-flex {
