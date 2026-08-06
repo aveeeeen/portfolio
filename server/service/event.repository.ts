@@ -1,5 +1,5 @@
 import { Client } from "@notionhq/client";
-import type { EventResult, EventBlocksResult, NotionBlock, ListEventInput, Pagination, PaginationInput, Tag } from "./event.service.types";
+import type { EventBlocksResult, NotionBlock, ListEventResult, ListEventInput, Pagination, PaginationInput } from "./event.service.types";
 import type { GroupFilterOperatorArray, PropertyFilter } from "@notionhq/client/build/src/api-endpoints";
 
 const notion = new Client({
@@ -8,38 +8,22 @@ const notion = new Client({
 
 const dataSourceID = process.env.NOTION_EVENT_DATASOURCE_ID;
 
-export const getManyEvents = async (input: ListArticleInput) => {
+export const getManyEvents = async (input: ListEventInput): Promise<ListEventResult[]> => {
 
   if (!dataSourceID) throw Error("Data Source ID empty")
-  const andList: GroupFilterOperatorArray = []
-
-  if (input.keyword !== "" && input.keyword) {
-    andList.push({
-      "property": "Name",
-      "title": {
-        "contains": input.keyword
-      }
-    })
-  }
-
-  if (input.tags && input.tags.length !== 0){
-    andList.push({
-      "property": "タグ",
-      "multi_select": {
-        "contains": input.tags
-      }
-    })
-  }
 
   const datasourceResult = await notion.dataSources.query(
     {
       data_source_id: dataSourceID,
-      filter: andList.length !== 0 
-        ? {and: andList}
-        : undefined,
+      filter: {
+        property: "Publicity",
+        select: {
+          equals: "public"
+        }
+      },
       sorts: [
         {
-          timestamp: "created_time",
+          property: "Date",
           direction: "descending"
         }
       ],
@@ -48,10 +32,20 @@ export const getManyEvents = async (input: ListArticleInput) => {
     }
   )
 
-  return datasourceResult.results
+  return datasourceResult.results.map(result => {
+    return {
+      id: result.id,
+      title: result.properties["Name"].title[0].plain_text,
+      date: result.properties["Date"].date.start,
+      venue: result.properties["Venue"].rich_text[0].plain_text,
+      imageUrl: result.properties["Image"].files[0].file.url,
+      createdAt: result["created_time"],
+      updatedAt: result["last_edited_time"],
+    } as ListEventResult
+  });
 }
 
-export const getAllPageAndCursors = async (input: PaginationInput): Promise<Pagination> => {
+export const getAllPagesAndCursors = async (input: PaginationInput): Promise<Pagination> => {
   const cursors: Map<number, string> = new Map();
   let hasMore = true;
   let totalPages = 1;
@@ -75,7 +69,7 @@ export const getAllPageAndCursors = async (input: PaginationInput): Promise<Pagi
         filter: filterOption,
         sorts: [
           {
-            timestamp: "created_time",
+            property: "Date",
             direction: "descending"
           }
         ],
@@ -94,7 +88,7 @@ export const getAllPageAndCursors = async (input: PaginationInput): Promise<Pagi
         filter: filterOption,
         sorts: [
           {
-            timestamp: "created_time",
+            property: "Date",
             direction: "descending"
           }
         ],
@@ -162,8 +156,8 @@ const getBlockChildren = async (blockId: string): Promise<NotionBlock[]> => {
 /**
  * Fetch an article by ID with block objects instead of markdown.
  */
-export const getEventBlocksById = async (id: string): Promise<ArticleBlocksResult> => {
-  const article = await notion.pages.retrieve({
+export const getEventBlocksById = async (id: string): Promise<EventBlocksResult> => {
+  const event = await notion.pages.retrieve({
     page_id: id
   });
 
@@ -171,15 +165,12 @@ export const getEventBlocksById = async (id: string): Promise<ArticleBlocksResul
 
   return {
     id: id,
-    title: article.properties["Name"].title[0].plain_text,
-    tags: article.properties["タグ"].multi_select.map(tag => {
-      return {
-        name: tag.name,
-        id: tag.id
-      }
-    }),
+    title: event.properties["Name"].title[0].plain_text,
+    venue: event.properties["Venue"].rich_text[0].plain_text,
+    imageUrl: event.properties["Image"].files[0].file.url,
+    date: event.properties["Date"].date.start,
     blocks,
-    createdAt: article["created_time"],
-    updatedAt: article["last_edited_time"],
-  }
+    createdAt: event["created_time"],
+    updatedAt: event["last_edited_time"],
+  } as EventBlocksResult
 }

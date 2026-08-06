@@ -8,27 +8,18 @@ export type ListEventResult = {
   id: string;
   title: string;
   date: string;
+  venue: string;
+  imageUrl: string;
   createdAt: string;
   updatedAt: string;
 }
 
 export type PaginationInput = {
-  tags?: string[];
-  keyword?: string;
 } | undefined
 
 export type Pagination = {
   totalPages: number;
   cursorMap: Map<number, string>
-}
-
-export type EventResult = {
-  id: string;
-  title: string;
-  data: string;
-  content: string;
-  createdAt: string;
-  updatedAt: string;
 }
 
 /**
@@ -42,11 +33,6 @@ export type NotionBlock = BlockObjectResponse & {
 /**
  * Article result with Notion block objects instead of markdown.
  */
-export type ArticleBlocksResult = {
-  id: string;
-  title: string;
-  date: string;
+export type EventBlocksResult = ListEventResult & {
   blocks: NotionBlock[];
-  createdAt: string;
-  updatedAt: string;
 }

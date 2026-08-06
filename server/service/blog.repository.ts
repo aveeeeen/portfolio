@@ -6,7 +6,7 @@ const notion = new Client({
   auth: process.env.NOTION_API_KEY
 })
 
-const dataSourceID = process.env.NOTION_DATASOURCE_ID;
+const dataSourceID = process.env.NOTION_BLOG_DATASOURCE_ID;
 
 export const getManyArticles = async (input: ListArticleInput) => {
 

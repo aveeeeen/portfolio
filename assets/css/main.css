@@ -29,12 +29,12 @@ html {
   background-color: var(--html-bg-color);
   font-family: "Noto Sans JP", sans-serif;
   font-optical-sizing: auto;
+  box-sizing: border-box;
 }
 
 img {
   width: 80svw;
   height: auto;
-  max-width: 800px;
 }
 
 .border {
@@ -58,6 +58,7 @@ a:hover {
 
 a {
   font-size: 1rem;
+  display: inline;
   color: var(--text-color-a);
   text-decoration: none;
 }

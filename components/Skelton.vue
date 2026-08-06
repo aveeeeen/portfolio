@@ -9,6 +9,7 @@ import type { HTMLAttributes } from 'vue'
 <style scoped>
 
 .pulse {
+  background-color: rgba(150, 150, 150, 0.3);
   animation: pulse-animation 1.5s infinite;
   animation-timing-function: ease-in;
 }

@@ -4,14 +4,14 @@
     <br>
     <span class="spacing"></span>
     <br>
-    <h3>Live Coder, Musician, Researcher</h3>
+    <h3>Live Coder, Musician, Programmer</h3>
   </div>
-  
-  
+
+
 </template>
 
 <style scoped>
-h1{
+h1 {
   background-color: var(--bg-color);
   line-height: normal;
   text-align: right;
@@ -19,15 +19,15 @@ h1{
   padding: 2px 10px;
 }
 
-h3{
+h3 {
   background-color: var(--bg-color);
   line-height: normal;
   text-align: right;
   display: inline;
-  padding: 2px 10px ;
+  padding: 2px 10px;
 }
 
-.spacing{
+.spacing {
   margin-bottom: 40px;
 }
 </style>

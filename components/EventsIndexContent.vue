@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import EventCard from './organisms/EventCard.vue';
+import { type ListEventResult } from "../server/service/event.service.types"
+
 const isShowTags = ref(false);
 const isMenuShown = ref(true);
 const router = useRouter();
@@ -9,24 +12,23 @@ const tags = computed(() => route.query.tags ? route.query.tags.toString().split
 const keyword = computed(() => route.query.keyword ? `&keyword=${route.query.keyword}` : "");
 const queryparam = computed(() => `?page=${page.value}${tags.value}${keyword.value}`);
 
-const pagination = await useFetch(() => `/api/blog/pagination${queryparam.value}`, { method: "get" })
-const artilceList = await useFetch(() => `/api/blog/list-pages${queryparam.value}`, { method: "get" })
-const tagList = await useFetch(() => `/api/blog/list-tags`, { method: "get" })
+const pagination = await useFetch(() => `/api/event/pagination`, { method: "get" })
+const eventList = await useFetch<ListEventResult[]>(() => `/api/event/list-events${queryparam.value}`, { method: "get" })
 
-if (artilceList.error) {
-  console.error(artilceList.error.value)
+const events = computed(() => eventList.data.value ?? [])
+
+if (eventList.error) {
+  console.error(eventList.error.value)
 }
 
-if (artilceList.status.value === "error") {
-  router.push("/notes")
+if (eventList.status.value === "error") {
+  router.push("/events")
 }
-
-
 
 function getNextContent() {
   if (Number(page.value) >= (pagination.data.value?.totalPages ?? 1)) return;
   router.push({
-    path: '/notes',
+    path: '/events',
     query: {
       ...route.query,
       page: Number(page.value) + 1
@@ -37,7 +39,7 @@ function getNextContent() {
 function getPrevContent() {
   if (Number(page.value) <= 1) return;
   router.push({
-    path: '/notes',
+    path: '/events',
     query: {
       ...route.query,
       page: Number(page.value) - 1
@@ -66,43 +68,15 @@ watch(isMenuShown, () => {
   <div @click="closeModal()" class="page">
     <div class="center- flex-vert gap-10">
       <div class="content-box article-list">
-        <h1>Notes</h1>
+        <h1>Events</h1>
         <Border></Border>
         <p>new → old</p>
-        <div v-if='route.query["tags"]'>
-          <p>showing: {{ route.query["tags"] }}</p>
-          <NuxtLink to="/notes?page=1"> clear filter</NuxtLink>
-        </div>
         <Border></Border>
 
-        <div>
-          <ul v-for="content in artilceList.data.value">
-            <li :key="content.id">
-              <NotePost>
-                <template #title>
-                  <NuxtLink :to="`/notes/${content.id}`">{{ content.title }}</NuxtLink>
-                </template>
-                <template #date>
-                  <p>
-                    作成日:
-                    {{
-                      new Date(content.createdAt).toLocaleDateString('ja-JP', {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit'
-                      }).replace(/\//g, '.')
-                    }}
-                  </p>
-                </template>
-                <template #tags>
-                  <div v-for="tag in content.tags" :key="tag.name">
-                    <NuxtLink :to="`/notes?page=1&tags=${tag.name}`" @click="artilceList.refresh()"> {{ tag.name }}
-                    </NuxtLink>
-                  </div>
-                </template>
-              </NotePost>
-            </li>
-          </ul>
+        <div class="flex-vert gap-10" v-for="event in events">
+          <EventCard :id="event.id" :title="event.title" :date="event.date" :image-url="event.imageUrl"
+            :venue="event.venue">
+          </EventCard>
         </div>
         <div class="center--">
           <div class="page-selector">
@@ -120,20 +94,6 @@ watch(isMenuShown, () => {
 
   <Nav @click.stop="isMenuShown = !isMenuShown" :close="isMenuShown" @isclose="(e) => (isMenuShown = e)">
     <Menu></Menu>
-    <div>
-      <div @click.stop class="ui-box tags relative" v-if="isShowTags">
-        <div class="tag-list" v-for="tag in tagList.data.value" :key="tag.name">
-          <NuxtLink :to="`/notes?page=1&tags=${tag.name}`" @click="artilceList.refresh()"> {{ tag.name }}
-          </NuxtLink>
-        </div>
-      </div>
-      <div v-else class="ui-box relative">
-        <a @click.stop="isShowTags = !isShowTags">Tags</a>
-      </div>
-    </div>
-    <div v-if="isShowTags" class="ui-box">
-      <a @click.stop="isShowTags = !isShowTags">Close</a>
-    </div>
   </Nav>
 </template>
 
