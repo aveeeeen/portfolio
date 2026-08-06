@@ -32,6 +32,7 @@ const props = defineProps<ListEventResult>()
 img {
   width: 100%;
   height: auto;
+  max-height: 80vh;
   box-sizing: border-box;
 }
 
