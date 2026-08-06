@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-vert note-post gap-20">
+  <div class="flex-vert note-post">
     <slot name="title"></slot>
     <slot name="date"></slot>
     <div class="flex-hori gap-10 tags">
@@ -9,29 +9,29 @@
   </div>
 </template>
 
-<style>
-
-.note-post{
+<style scoped>
+.note-post {
   margin: 10px 0px;
   padding: 10px;
   border-radius: 10px;
   /* background-color: color-mix(in srgb, gray 10%, white 20%) */
 }
 
-.note-post .tags a{
+.note-post .tags :deep(a) {
   border: 2px solid;
-  padding: 2px 5px ;
+  padding: 2px 4px;
   border-radius: 10px;
   border-color: color-mix(in srgb, slateblue 60%, white 30%);
   font-size: 0.8rem;
 }
 
-.note-post p, a{
+.note-post p,
+a {
   line-height: 120%;
   margin: 0;
 }
 
-.tags{
+.tags {
   flex-wrap: wrap;
   align-items: baseline
 }

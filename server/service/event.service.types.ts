@@ -1,41 +1,25 @@
 import type { BlockObjectResponse } from "@notionhq/client";
 
-export type ListArticleInput = {
+export type ListEventInput = {
   cursor?: string;
-  tags?: string[];
-  keyword?: string;
 }
 
-export type ListArticleResult = {
+export type ListEventResult = {
   id: string;
   title: string;
-  tags: Tag[];
+  date: string;
+  venue: string;
+  imageUrl: string;
   createdAt: string;
   updatedAt: string;
 }
 
 export type PaginationInput = {
-  tags?: string[];
-  keyword?: string;
 } | undefined
 
 export type Pagination = {
   totalPages: number;
   cursorMap: Map<number, string>
-}
-
-export type Tag = {
-  id: string;
-  name: string;
-}
-
-export type ArticleResult = {
-  id: string;
-  title: string;
-  tags: Tag[];
-  content: string;
-  createdAt: string;
-  updatedAt: string;
 }
 
 /**
@@ -49,12 +33,6 @@ export type NotionBlock = BlockObjectResponse & {
 /**
  * Article result with Notion block objects instead of markdown.
  */
-export type ArticleBlocksResult = {
-  id: string;
-  title: string;
-  tags: Tag[];
+export type EventBlocksResult = ListEventResult & {
   blocks: NotionBlock[];
-  excerpt?: string;
-  createdAt: string;
-  updatedAt: string;
 }

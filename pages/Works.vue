@@ -168,4 +168,8 @@ h1 a {
 .burger {
   top: 5%;
 }
+
+img {
+  max-width: 800px;
+}
 </style>

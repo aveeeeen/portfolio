@@ -9,6 +9,7 @@
       <NuxtLink to="/"> home</NuxtLink>
       <NuxtLink to="/about"> about</NuxtLink>
       <NuxtLink to="/works"> works</NuxtLink>
+      <NuxtLink to="/events"> events</NuxtLink>
       <NuxtLink to="/playground"> playground </NuxtLink>
       <NuxtLink to="/notes?page=1"> notes</NuxtLink>
     </div>

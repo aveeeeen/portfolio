@@ -1,20 +1,25 @@
 <script setup lang="ts">
+import EventDetailHeader from './EventDetailHeader.vue';
+
 </script>
 
 <template>
   <div class="page">
     <div class="flex-vert center-">
-      <NoteHeader>
+      <EventDetailHeader>
         <template #title>
           <Skelton class="title-skeleton" />
         </template>
         <template #date>
           <Skelton class="date-skeleton" />
         </template>
-        <template #tags>
-          <Skelton class="tag-skeleton" v-for="i in 3" :key="i" />
+        <template #venue>
+          <Skelton class="tag-skeleton" />
         </template>
-      </NoteHeader>
+        <template #img>
+          <Skelton class="img-skeleton" />
+        </template>
+      </EventDetailHeader>
       <main class="flex-vert center-">
         <div class="article-box skeleton-body">
           <div class="paragraph-skeleton" v-for="p in 3" :key="p">
@@ -61,6 +66,12 @@ main {
 .tag-skeleton {
   width: 60px;
   height: 1.5rem;
+  border-radius: 10px;
+}
+
+.img-skeleton {
+  width: 100%;
+  height: 25svh;
   border-radius: 10px;
 }
 

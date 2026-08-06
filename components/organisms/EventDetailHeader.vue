@@ -1,0 +1,51 @@
+<template>
+  <div class="flex-vert note-header gap-20">
+    <slot name="title"></slot>
+    <slot name="date"></slot>
+    <slot name="venue"></slot>
+    <slot name="img"></slot>
+  </div>
+</template>
+
+<style>
+.note-header {
+  padding: 30px 20px;
+  border-radius: 20px;
+  border: color-mix(in srgb, slateblue 60%, white 30%) solid;
+  max-width: 700px;
+  width: 90%;
+}
+
+.note-header a {
+  border: 2px solid;
+  padding: 2px 5px;
+  border-radius: 10px;
+  border-color: color-mix(in srgb, slateblue 60%, white 30%);
+}
+
+.note-header p,
+h1 {
+  line-height: 100%;
+  margin: 0;
+}
+
+.tags {
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+@media (max-width: 800px) {
+  .note-header {
+    padding: 30px 20px;
+    border-radius: 20px;
+    border: color-mix(in srgb, slateblue 60%, white 30%) solid;
+    max-width: 700px;
+    width: 80%;
+  }
+}
+</style>

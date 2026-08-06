@@ -19,7 +19,7 @@ export default defineNuxtConfig({
       meta: [
         { name: 'description', content: '活動履歴やブログをまとめています。'},
         // OGP 共通設定
-        { property: 'og:site_name', content: 'braveeeeen' },
+        { property: 'og:site_name', content: 'portfolio site of braven' },
         { property: 'og:type', content: 'website' },
         { property: 'og:title', content: 'portfolio site of braven' },
         { property: 'og:description', content: '活動履歴やブログをまとめています。' },
