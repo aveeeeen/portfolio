@@ -8,12 +8,11 @@ const notion = new Client({
 
 const dataSourceID = process.env.NOTION_EVENT_DATASOURCE_ID;
 
-export const getManyEvents = async (input: ListEventInput): Promise<ListEventResult[]> => {
+export const getManyEvents = defineCachedFunction(
+  async (input: ListEventInput): Promise<ListEventResult[]> => {
+    if (!dataSourceID) throw Error("Data Source ID empty");
 
-  if (!dataSourceID) throw Error("Data Source ID empty")
-
-  const datasourceResult = await notion.dataSources.query(
-    {
+    const datasourceResult = await notion.dataSources.query({
       data_source_id: dataSourceID,
       filter: {
         property: "Publicity",
@@ -29,86 +28,97 @@ export const getManyEvents = async (input: ListEventInput): Promise<ListEventRes
       ],
       page_size: 10,
       start_cursor: !input.cursor || input.cursor === "" ? undefined : input.cursor
-    }
-  )
+    });
 
-  return datasourceResult.results.map(result => {
-    return {
-      id: result.id,
-      title: result.properties["Name"].title[0].plain_text,
-      date: result.properties["Date"].date.start,
-      venue: result.properties["Venue"].rich_text[0].plain_text,
-      imageUrl: result.properties["Image"].files[0].file.url,
-      createdAt: result["created_time"],
-      updatedAt: result["last_edited_time"],
-    } as ListEventResult
-  });
-}
+    return datasourceResult.results.map(result => {
+      return {
+        id: result.id,
+        title: result.properties["Name"].title[0].plain_text,
+        date: result.properties["Date"].date.start,
+        venue: result.properties["Venue"].rich_text[0].plain_text,
+        imageUrl: result.properties["Image"].files[0].file.url,
+        createdAt: result["created_time"],
+        updatedAt: result["last_edited_time"],
+      } as ListEventResult;
+    });
+  },
+  {
+    maxAge: 60,
+    name: "event-getManyEvents",
+    getKey: (input: ListEventInput) => JSON.stringify(input ?? {})
+  }
+);
 
-export const getAllPagesAndCursors = async (input: PaginationInput): Promise<Pagination> => {
-  const cursors: Map<number, string> = new Map();
-  let hasMore = true;
-  let totalPages = 1;
-  let nextCursor = "";
-  cursors.set(totalPages, nextCursor);
+export const getAllPagesAndCursors = defineCachedFunction(
+  async (input: PaginationInput): Promise<Pagination> => {
+    const cursors: Record<number, string> = {};
+    let hasMore = true;
+    let totalPages = 1;
+    let nextCursor = "";
+    cursors[totalPages] = nextCursor;
 
-  if (!dataSourceID) throw Error("Data Source ID empty");
+    if (!dataSourceID) throw Error("Data Source ID empty");
 
-  const filterOption: PropertyFilter = 
-    {
+    const filterOption: PropertyFilter = {
       "property": "Publicity",
       "select": {
         "equals": "public"
       }
-    }
+    };
 
-  while (hasMore) {
-    if (nextCursor === "") {
-      const queryresult = await notion.dataSources.query({
-        data_source_id: dataSourceID,
-        filter: filterOption,
-        sorts: [
-          {
-            property: "Date",
-            direction: "descending"
-          }
-        ],
-        page_size: 10,
-      })
-      if (queryresult.next_cursor){
-        nextCursor = queryresult.next_cursor;
-        totalPages++;
-        cursors.set(totalPages, queryresult.next_cursor)
+    while (hasMore) {
+      if (nextCursor === "") {
+        const queryresult = await notion.dataSources.query({
+          data_source_id: dataSourceID,
+          filter: filterOption,
+          sorts: [
+            {
+              property: "Date",
+              direction: "descending"
+            }
+          ],
+          page_size: 10,
+        });
+        if (queryresult.next_cursor) {
+          nextCursor = queryresult.next_cursor;
+          totalPages++;
+          cursors[totalPages] = queryresult.next_cursor;
+        } else {
+          hasMore = false;
+        }
       } else {
-        hasMore = false;
-      }
-    } else {
-      const queryresult = await notion.dataSources.query({
-        data_source_id: dataSourceID,
-        filter: filterOption,
-        sorts: [
-          {
-            property: "Date",
-            direction: "descending"
-          }
-        ],
-        page_size: 10,
-        start_cursor: nextCursor
-      })
-      if (queryresult.next_cursor){
-        nextCursor = queryresult.next_cursor;
-        totalPages++;
-        cursors.set(totalPages, queryresult.next_cursor)
-      } else {
-        hasMore = false;
+        const queryresult = await notion.dataSources.query({
+          data_source_id: dataSourceID,
+          filter: filterOption,
+          sorts: [
+            {
+              property: "Date",
+              direction: "descending"
+            }
+          ],
+          page_size: 10,
+          start_cursor: nextCursor
+        });
+        if (queryresult.next_cursor) {
+          nextCursor = queryresult.next_cursor;
+          totalPages++;
+          cursors[totalPages] = queryresult.next_cursor;
+        } else {
+          hasMore = false;
+        }
       }
     }
+    return {
+      totalPages: totalPages,
+      cursorMap: cursors
+    };
+  },
+  {
+    maxAge: 300,
+    name: "event-getAllPagesAndCursors",
+    getKey: (input: PaginationInput) => JSON.stringify(input ?? {})
   }
-  return {
-    totalPages: totalPages,
-    cursorMap: cursors
-  }
-}
+);
 
 /**
  * Recursively fetch all block children for a given block ID.
@@ -151,26 +161,33 @@ const getBlockChildren = async (blockId: string): Promise<NotionBlock[]> => {
   }
 
   return blocks;
-}
+};
 
 /**
  * Fetch an article by ID with block objects instead of markdown.
  */
-export const getEventBlocksById = async (id: string): Promise<EventBlocksResult> => {
-  const event = await notion.pages.retrieve({
-    page_id: id
-  });
+export const getEventBlocksById = defineCachedFunction(
+  async (id: string): Promise<EventBlocksResult> => {
+    const event = await notion.pages.retrieve({
+      page_id: id
+    });
 
-  const blocks = await getBlockChildren(id);
+    const blocks = await getBlockChildren(id);
 
-  return {
-    id: id,
-    title: event.properties["Name"].title[0].plain_text,
-    venue: event.properties["Venue"].rich_text[0].plain_text,
-    imageUrl: event.properties["Image"].files[0].file.url,
-    date: event.properties["Date"].date.start,
-    blocks,
-    createdAt: event["created_time"],
-    updatedAt: event["last_edited_time"],
-  } as EventBlocksResult
-}
+    return {
+      id: id,
+      title: event.properties["Name"].title[0].plain_text,
+      venue: event.properties["Venue"].rich_text[0].plain_text,
+      imageUrl: event.properties["Image"].files[0].file.url,
+      date: event.properties["Date"].date.start,
+      blocks,
+      createdAt: event["created_time"],
+      updatedAt: event["last_edited_time"],
+    } as EventBlocksResult;
+  },
+  {
+    maxAge: 300,
+    name: "event-getEventBlocksById",
+    getKey: (id: string) => id
+  }
+);

@@ -8,35 +8,32 @@ const notion = new Client({
 
 const dataSourceID = process.env.NOTION_BLOG_DATASOURCE_ID;
 
-export const getManyArticles = async (input: ListArticleInput) => {
+export const getManyArticles = defineCachedFunction(
+  async (input: ListArticleInput) => {
+    if (!dataSourceID) throw Error("Data Source ID empty");
+    const andList: GroupFilterOperatorArray = [];
 
-  if (!dataSourceID) throw Error("Data Source ID empty")
-  const andList: GroupFilterOperatorArray = []
+    if (input.keyword !== "" && input.keyword) {
+      andList.push({
+        "property": "Name",
+        "title": {
+          "contains": input.keyword
+        }
+      });
+    }
 
-  if (input.keyword !== "" && input.keyword) {
-    andList.push({
-      "property": "Name",
-      "title": {
-        "contains": input.keyword
-      }
-    })
-  }
+    if (input.tags && input.tags.length !== 0) {
+      andList.push({
+        "property": "タグ",
+        "multi_select": {
+          "contains": input.tags
+        }
+      });
+    }
 
-  if (input.tags && input.tags.length !== 0){
-    andList.push({
-      "property": "タグ",
-      "multi_select": {
-        "contains": input.tags
-      }
-    })
-  }
-
-  const datasourceResult = await notion.dataSources.query(
-    {
+    const datasourceResult = await notion.dataSources.query({
       data_source_id: dataSourceID,
-      filter: andList.length !== 0 
-        ? {and: andList}
-        : undefined,
+      filter: andList.length !== 0 ? { and: andList } : undefined,
       sorts: [
         {
           timestamp: "created_time",
@@ -45,92 +42,100 @@ export const getManyArticles = async (input: ListArticleInput) => {
       ],
       page_size: 10,
       start_cursor: !input.cursor || input.cursor === "" ? undefined : input.cursor
+    });
+
+    return datasourceResult.results;
+  },
+  {
+    maxAge: 60,
+    name: "blog-getManyArticles",
+    getKey: (input: ListArticleInput) => JSON.stringify(input ?? {})
+  }
+);
+
+export const getAllPagesAndCursors = defineCachedFunction(
+  async (input: PaginationInput): Promise<Pagination> => {
+    const cursors: Record<number, string> = {};
+    let hasMore = true;
+    let totalPages = 1;
+    let nextCursor = "";
+    cursors[totalPages] = nextCursor;
+
+    if (!dataSourceID) throw Error("Data Source ID empty");
+
+    const andList: GroupFilterOperatorArray = [];
+
+    if (input && input.keyword !== "" && input.keyword) {
+      andList.push({
+        "property": "Name",
+        "title": {
+          "contains": input.keyword
+        }
+      });
     }
-  )
 
-  return datasourceResult.results
-}
+    if (input && input.tags && input.tags.length !== 0) {
+      andList.push({
+        "property": "タグ",
+        "multi_select": {
+          "contains": input.tags
+        }
+      });
+    }
 
-export const getAllPagesAndCursors = async (input: PaginationInput): Promise<Pagination> => {
-  const cursors: Map<number, string> = new Map();
-  let hasMore = true;
-  let totalPages = 1;
-  let nextCursor = "";
-  cursors.set(totalPages, nextCursor);
-
-  if (!dataSourceID) throw Error("Data Source ID empty");
-
-  const andList: GroupFilterOperatorArray = []
-
-  if (input && input.keyword !== "" && input.keyword) {
-    andList.push({
-      "property": "Name",
-      "title": {
-        "contains": input.keyword
-      }
-    })
-  }
-
-  if (input && input.tags && input.tags.length !== 0){
-    andList.push({
-      "property": "タグ",
-      "multi_select": {
-        "contains": input.tags
-      }
-    })
-  }
-
-  while (hasMore) {
-    if (nextCursor === "") {
-      const queryresult = await notion.dataSources.query({
-        data_source_id: dataSourceID,
-        filter: andList.length !== 0 
-          ? {and: andList}
-          : undefined,
-        sorts: [
-          {
-            timestamp: "created_time",
-            direction: "descending"
-          }
-        ],
-        page_size: 10,
-      })
-      if (queryresult.next_cursor){
-        nextCursor = queryresult.next_cursor;
-        totalPages++;
-        cursors.set(totalPages, queryresult.next_cursor)
+    while (hasMore) {
+      if (nextCursor === "") {
+        const queryresult = await notion.dataSources.query({
+          data_source_id: dataSourceID,
+          filter: andList.length !== 0 ? { and: andList } : undefined,
+          sorts: [
+            {
+              timestamp: "created_time",
+              direction: "descending"
+            }
+          ],
+          page_size: 10,
+        });
+        if (queryresult.next_cursor) {
+          nextCursor = queryresult.next_cursor;
+          totalPages++;
+          cursors[totalPages] = queryresult.next_cursor;
+        } else {
+          hasMore = false;
+        }
       } else {
-        hasMore = false;
-      }
-    } else {
-      const queryresult = await notion.dataSources.query({
-        data_source_id: dataSourceID,
-        filter: andList.length !== 0 
-          ? {and: andList}
-          : undefined,
-        sorts: [
-          {
-            timestamp: "created_time",
-            direction: "descending"
-          }
-        ],
-        page_size: 10,
-        start_cursor: nextCursor
-      })
-      if (queryresult.next_cursor){
-        nextCursor = queryresult.next_cursor;
-        totalPages++;
-        cursors.set(totalPages, queryresult.next_cursor)
-      } else {
-        hasMore = false;
+        const queryresult = await notion.dataSources.query({
+          data_source_id: dataSourceID,
+          filter: andList.length !== 0 ? { and: andList } : undefined,
+          sorts: [
+            {
+              timestamp: "created_time",
+              direction: "descending"
+            }
+          ],
+          page_size: 10,
+          start_cursor: nextCursor
+        });
+        if (queryresult.next_cursor) {
+          nextCursor = queryresult.next_cursor;
+          totalPages++;
+          cursors[totalPages] = queryresult.next_cursor;
+        } else {
+          hasMore = false;
+        }
       }
     }
+    return {
+      totalPages: totalPages,
+      cursorMap: cursors
+    };
+  },
+  {
+    maxAge: 300,
+    name: "blog-getAllPagesAndCursors",
+    getKey: (input: PaginationInput) => JSON.stringify(input ?? {})
   }
-  return {
-    totalPages: totalPages,
-    cursorMap: cursors
-  }
-}
+);
 
 export const getArticleById = async (id: string): Promise<ArticleResult> => {
   const article = await notion.pages.retrieve({
@@ -139,7 +144,7 @@ export const getArticleById = async (id: string): Promise<ArticleResult> => {
 
   const articleContent = await notion.pages.retrieveMarkdown({
     page_id: id
-  })
+  });
   return {
     id: id,
     title: article.properties["Name"].title[0].plain_text,
@@ -147,13 +152,13 @@ export const getArticleById = async (id: string): Promise<ArticleResult> => {
       return {
         name: tag.name,
         id: tag.id
-      }
+      };
     }),
     content: articleContent.markdown,
     createdAt: article["created_time"],
     updatedAt: article["last_edited_time"],
-  }
-}
+  };
+};
 
 /**
  * Recursively fetch all block children for a given block ID.
@@ -196,43 +201,57 @@ const getBlockChildren = async (blockId: string): Promise<NotionBlock[]> => {
   }
 
   return blocks;
-}
+};
 
 /**
  * Fetch an article by ID with block objects instead of markdown.
  */
-export const getArticleBlocksById = async (id: string): Promise<ArticleBlocksResult> => {
-  const article = await notion.pages.retrieve({
-    page_id: id
-  });
+export const getArticleBlocksById = defineCachedFunction(
+  async (id: string): Promise<ArticleBlocksResult> => {
+    const article = await notion.pages.retrieve({
+      page_id: id
+    });
 
-  const blocks = await getBlockChildren(id);
+    const blocks = await getBlockChildren(id);
 
-  return {
-    id: id,
-    title: article.properties["Name"].title[0].plain_text,
-    tags: article.properties["タグ"].multi_select.map(tag => {
-      return {
-        name: tag.name,
-        id: tag.id
-      }
-    }),
-    blocks,
-    createdAt: article["created_time"],
-    updatedAt: article["last_edited_time"],
-  }
-}
-
-export const getAllTags = async (): Promise<Tag[]> => {
-  if (!dataSourceID) throw Error("Data Source ID empty");
-  const dataSourceMeta = await notion.dataSources.retrieve({
-    data_source_id: dataSourceID
-  })
-
-  return dataSourceMeta.properties["タグ"].multi_select.options.map(tag => {
     return {
-      id: tag.id,
-      name: tag.name
-    }
-  })
-}
+      id: id,
+      title: article.properties["Name"].title[0].plain_text,
+      tags: article.properties["タグ"].multi_select.map(tag => {
+        return {
+          name: tag.name,
+          id: tag.id
+        };
+      }),
+      blocks,
+      createdAt: article["created_time"],
+      updatedAt: article["last_edited_time"],
+    };
+  },
+  {
+    maxAge: 300,
+    name: "blog-getArticleBlocksById",
+    getKey: (id: string) => id
+  }
+);
+
+export const getAllTags = defineCachedFunction(
+  async (): Promise<Tag[]> => {
+    if (!dataSourceID) throw Error("Data Source ID empty");
+    const dataSourceMeta = await notion.dataSources.retrieve({
+      data_source_id: dataSourceID
+    });
+
+    return dataSourceMeta.properties["タグ"].multi_select.options.map(tag => {
+      return {
+        id: tag.id,
+        name: tag.name
+      };
+    });
+  },
+  {
+    maxAge: 600,
+    name: "blog-getAllTags",
+    getKey: () => "all-tags"
+  }
+);

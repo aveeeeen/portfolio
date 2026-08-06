@@ -8,16 +8,21 @@ const pageListSchema = z.object({
 
 export default defineEventHandler(async (event) => {
   const query = await getValidatedQuery(event, (data) => pageListSchema.parse(data));
-  const pagination = await EventService.getPaginationData({})
-
   const page = query.page ? Number(query.page) : 1;
-  if (page > pagination.totalPages || page < 1) {
-    return setResponseStatus(event, 400, "Out of Bound")
+  let cursor: string | undefined = undefined;
+
+  if (page > 1) {
+    const pagination = await EventService.getPaginationData({});
+
+    if (page > pagination.totalPages || page < 1) {
+      return setResponseStatus(event, 400, "Out of Bound");
+    }
+
+    cursor = pagination.cursorMap[page];
   }
 
-  const cursor = pagination.cursorMap.get(page);
   const result = await EventService.listEvents({
     cursor: cursor,
-  })
-  return result
-})
+  });
+  return result;
+});

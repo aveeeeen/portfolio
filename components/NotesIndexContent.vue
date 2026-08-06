@@ -9,9 +9,11 @@ const tags = computed(() => route.query.tags ? route.query.tags.toString().split
 const keyword = computed(() => route.query.keyword ? `&keyword=${route.query.keyword}` : "");
 const queryparam = computed(() => `?page=${page.value}${tags.value}${keyword.value}`);
 
-const pagination = await useFetch(() => `/api/blog/pagination${queryparam.value}`, { method: "get" })
-const artilceList = await useFetch(() => `/api/blog/list-pages${queryparam.value}`, { method: "get" })
-const tagList = await useFetch(() => `/api/blog/list-tags`, { method: "get" })
+const [pagination, artilceList, tagList] = await Promise.all([
+  useFetch(() => `/api/blog/pagination${queryparam.value}`, { method: "get" }),
+  useFetch(() => `/api/blog/list-pages${queryparam.value}`, { method: "get" }),
+  useFetch(() => `/api/blog/list-tags`, { method: "get" })
+]);
 
 if (artilceList.error) {
   console.error(artilceList.error.value)

@@ -19,7 +19,7 @@ export type PaginationInput = {
 
 export type Pagination = {
   totalPages: number;
-  cursorMap: Map<number, string>
+  cursorMap: Record<number, string>;
 }
 
 /**

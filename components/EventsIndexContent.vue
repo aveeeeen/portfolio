@@ -12,8 +12,10 @@ const tags = computed(() => route.query.tags ? route.query.tags.toString().split
 const keyword = computed(() => route.query.keyword ? `&keyword=${route.query.keyword}` : "");
 const queryparam = computed(() => `?page=${page.value}${tags.value}${keyword.value}`);
 
-const pagination = await useFetch(() => `/api/event/pagination`, { method: "get" })
-const eventList = await useFetch<ListEventResult[]>(() => `/api/event/list-events${queryparam.value}`, { method: "get" })
+const [pagination, eventList] = await Promise.all([
+  useFetch(() => `/api/event/pagination`, { method: "get" }),
+  useFetch<ListEventResult[]>(() => `/api/event/list-events${queryparam.value}`, { method: "get" })
+]);
 
 const events = computed(() => eventList.data.value ?? [])
 
