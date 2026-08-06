@@ -488,9 +488,73 @@ export function useNotionBlockParser() {
     return `<div style="margin: 8px 0; padding: 12px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;"><a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #0b6e99; text-decoration: underline; word-break: break-all;">${escapeHtml(url)}</a>${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}</div>\n`;
   };
 
+  const formatEmbedUrl = (url: string): string => {
+    if (!url) return "";
+
+    // YouTube: watch?v=ID, youtu.be/ID, or shorts/ID
+    const youtubeMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+    if (youtubeMatch) {
+      return `https://www.youtube.com/embed/${youtubeMatch[1]}`;
+    }
+
+    // Spotify: open.spotify.com/track/ID -> open.spotify.com/embed/track/ID
+    const spotifyMatch = url.match(/open\.spotify\.com\/(track|album|playlist|episode|artist)\/([a-zA-Z0-9]+)/);
+    if (spotifyMatch) {
+      return `https://open.spotify.com/embed/${spotifyMatch[1]}/${spotifyMatch[2]}`;
+    }
+
+    // Figma: figma.com/file/... or /design/... -> figma.com/embed?embed_host=share&url=...
+    if (url.includes("figma.com/")) {
+      return `https://www.figma.com/embed?embed_host=share&url=${encodeURIComponent(url)}`;
+    }
+
+    // CodePen: codepen.io/user/pen/id -> codepen.io/user/embed/id
+    const codepenMatch = url.match(/codepen\.io\/([^/]+)\/(?:pen|embed)\/([a-zA-Z0-9]+)/);
+    if (codepenMatch) {
+      return `https://codepen.io/${codepenMatch[1]}/embed/${codepenMatch[2]}?default-tab=result`;
+    }
+
+    // Vimeo: vimeo.com/id -> player.vimeo.com/video/id
+    const vimeoMatch = url.match(/vimeo\.com\/(?:video\/)?([0-9]+)/);
+    if (vimeoMatch) {
+      return `https://player.vimeo.com/video/${vimeoMatch[1]}`;
+    }
+
+    // Loom: loom.com/share/id -> loom.com/embed/id
+    const loomMatch = url.match(/loom\.com\/(?:share|embed)\/([a-zA-Z0-9]+)/);
+    if (loomMatch) {
+      return `https://www.loom.com/embed/${loomMatch[1]}`;
+    }
+
+    // SoundCloud
+    if (url.includes("soundcloud.com/")) {
+      return `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}`;
+    }
+
+    // Google Maps
+    if (url.includes("google.com/maps")) {
+      if (!url.includes("output=embed") && !url.includes("/embed")) {
+        const joinChar = url.includes("?") ? "&" : "?";
+        return `${url}${joinChar}output=embed`;
+      }
+    }
+
+    // CodeSandbox: codesandbox.io/s/id -> codesandbox.io/embed/id
+    const csbMatch = url.match(/codesandbox\.io\/s\/([a-zA-Z0-9_-]+)/);
+    if (csbMatch) {
+      return `https://codesandbox.io/embed/${csbMatch[1]}`;
+    }
+
+    return url;
+  };
+
   const renderEmbed = (data: any): string => {
     const url = data?.url || "";
-    return `<div style="margin: 12px 0;"><iframe src="${url}" style="width: 100%; min-height: 300px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;" allowfullscreen></iframe></div>\n`;
+    if (!url) return "";
+    const embedUrl = formatEmbedUrl(url);
+    const caption = renderRichText(data?.caption || []);
+
+    return `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${embedUrl}" style="width: 100%; min-height: 360px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}\n</div>\n`;
   };
 
   const renderEquation = (data: any): string => {
