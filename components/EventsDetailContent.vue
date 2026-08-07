@@ -87,7 +87,7 @@ watch(isMenuShown, () => {
           </p>
         </template>
         <template #img>
-          <img :src="event.imageUrl">
+          <NuxtImg :src="event.imageUrl" format="webp" />
         </template>
       </EventDetailHeader>
       <main class="flex-vert center-" v-if="event">

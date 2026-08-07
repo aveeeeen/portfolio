@@ -40,7 +40,7 @@ onMounted(() => {
         </h3>
       </div>
     </div>
-    <img ref="imgRef" :src="props.imageUrl" :class="{ portrait: isPortrait }" @load="handleImageLoad" />
+    <NuxtImg ref="imgRef" :src="props.imageUrl" format="webp" :class="{ portrait: isPortrait }" @load="handleImageLoad" />
   </NuxtLink>
 </template>
 
