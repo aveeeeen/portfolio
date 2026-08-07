@@ -84,7 +84,7 @@ function closeModal() {
 
           <!-- picture box -->
           <div class="img-box center-vert margin-left">
-            <img class="about-img" src="~/assets/img/matsumoto.png" />
+            <NuxtImg class="about-img" src="~/assets/img/matsumoto.png" format="webp" />
           </div>
 
           <!-- description -->
