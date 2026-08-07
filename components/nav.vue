@@ -36,10 +36,10 @@ onUnmounted(() => {
 
 <template>
   <div v-if="isMobile" class="menu show-right flex-vert gap-10">
-    <div class="ui-box">
-      <NuxtLink class="page-title" to="/">Portfolio site of braven</NuxtLink>
+    <div class="ui-box" @click.stop>
+      <NuxtLink class="page-title" to="/" @click.stop>Portfolio site of braven</NuxtLink>
     </div>
-    <Burger @click="isMenuShown = !isMenuShown" class="burger" :isClose="isMenuShown"></Burger>
+    <Burger @click.stop="isMenuShown = !isMenuShown" class="burger" :isClose="isMenuShown"></Burger>
     <div v-if="isMenuShown" class="show-right flex-vert gap-10">
       <slot></slot>
       <ThemeToggle />
@@ -48,8 +48,8 @@ onUnmounted(() => {
   </div>
 
   <div v-else class="menu show-right flex-vert gap-10">
-    <div class="ui-box">
-      <NuxtLink class="page-title" to="/">Portfolio site of braven</NuxtLink>
+    <div class="ui-box" @click.stop>
+      <NuxtLink class="page-title" to="/" @click.stop>Portfolio site of braven</NuxtLink>
     </div>
     <slot></slot>
     <ThemeToggle />
