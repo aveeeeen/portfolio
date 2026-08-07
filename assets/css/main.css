@@ -15,6 +15,17 @@
   --content-radius: 0px;
 }
 
+html.dark {
+  --html-bg-color: rgb(18, 18, 24);
+  --bg-color: rgb(24, 24, 32);
+  --tile-bg-color: rgb(38, 38, 50);
+  --ui-bg-color: rgb(32, 32, 44);
+  --text-color: rgb(240, 240, 255);
+  --text-color-a: rgb(96, 165, 250);
+  --text-bg-color: rgb(32, 32, 44);
+  --text-bg-color-a: rgb(32, 32, 44);
+}
+
 code {
   font-family: "Noto Sans Mono", monospace;
   font-optical-sizing: auto;
@@ -40,7 +51,7 @@ img {
 .border {
   width: 2000px;
   height: 2px;
-  background-color: black;
+  background-color: var(--text-color);
   margin: 20px 0px;
 }
 
