@@ -1,8 +1,12 @@
 <script setup lang="ts">
-import type { ListEventResult } from "../../server/service/event.service.types"
-const props = defineProps<ListEventResult>()
+import { ref, onMounted } from 'vue';
+import type { ListEventResult } from "../../server/service/event.service.types";
+import EvnetCardSkelton from './EvnetCardSkelton.vue';
+
+const props = defineProps<ListEventResult>();
 
 const isPortrait = ref(false);
+const isLoaded = ref(false);
 const imgRef = ref<HTMLImageElement | null>(null);
 
 function handleImageLoad(event?: Event) {
@@ -10,9 +14,18 @@ function handleImageLoad(event?: Event) {
   if (img && img.naturalWidth && img.naturalHeight) {
     isPortrait.value = img.naturalHeight > img.naturalWidth;
   }
+  isLoaded.value = true;
+}
+
+function handleImageError() {
+  isLoaded.value = true;
 }
 
 onMounted(() => {
+  if (!props.imageUrl) {
+    isLoaded.value = true;
+    return;
+  }
   if (imgRef.value && imgRef.value.complete) {
     handleImageLoad();
   }
@@ -20,7 +33,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <NuxtLink class="event-post" :to="'events/' + props.id">
+  <div v-if="!isLoaded" class="skeleton-container">
+    <EvnetCardSkelton />
+  </div>
+  <NuxtLink v-show="isLoaded" class="event-post" :to="'events/' + props.id">
     <div class="event-content">
       <h2>
         {{ props.title }}
@@ -40,11 +56,22 @@ onMounted(() => {
         </h3>
       </div>
     </div>
-    <NuxtImg ref="imgRef" :src="props.imageUrl" format="webp" :class="{ portrait: isPortrait }" @load="handleImageLoad" />
+    <NuxtImg
+      ref="imgRef"
+      :src="props.imageUrl"
+      format="webp"
+      :class="{ portrait: isPortrait }"
+      @load="handleImageLoad"
+      @error="handleImageError"
+    />
   </NuxtLink>
 </template>
 
 <style scoped>
+.skeleton-container {
+  width: 100%;
+}
+
 img {
   width: 100%;
   height: auto;
