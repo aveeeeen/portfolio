@@ -32,7 +32,7 @@ onMounted(() => {
     </slot>
     <slot name="date">
       <p v-if="props.date">
-        作成日:
+        開催日:
         {{
           new Date(props.date).toLocaleDateString('ja-JP', {
             year: 'numeric',
