@@ -1,13 +1,66 @@
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
+
+const props = defineProps<{
+  title?: string;
+  date?: string;
+  venue?: string;
+  imageUrl?: string;
+}>();
+
+const isPortrait = ref(false);
+const imgRef = ref<HTMLImageElement | null>(null);
+
+function handleImageLoad(event?: Event) {
+  const img = (event?.target as HTMLImageElement) || imgRef.value;
+  if (img && img.naturalWidth && img.naturalHeight) {
+    isPortrait.value = img.naturalHeight > img.naturalWidth;
+  }
+}
+
+onMounted(() => {
+  if (imgRef.value && imgRef.value.complete) {
+    handleImageLoad();
+  }
+});
+</script>
+
 <template>
   <div class="flex-vert note-header gap-20">
-    <slot name="title"></slot>
-    <slot name="date"></slot>
-    <slot name="venue"></slot>
-    <slot name="img"></slot>
+    <slot name="title">
+      <h1 v-if="props.title">{{ props.title }}</h1>
+    </slot>
+    <slot name="date">
+      <p v-if="props.date">
+        作成日:
+        {{
+          new Date(props.date).toLocaleDateString('ja-JP', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+          }).replace(/\//g, '.')
+        }}
+      </p>
+    </slot>
+    <slot name="venue">
+      <p v-if="props.venue">
+        会場： {{ props.venue }}
+      </p>
+    </slot>
+    <slot name="img">
+      <NuxtImg
+        v-if="props.imageUrl"
+        ref="imgRef"
+        :src="props.imageUrl"
+        format="webp"
+        :class="{ portrait: isPortrait }"
+        @load="handleImageLoad"
+      />
+    </slot>
   </div>
 </template>
 
-<style>
+<style scoped>
 .note-header {
   padding: 30px 20px;
   border-radius: 20px;
@@ -35,8 +88,14 @@ h1 {
 }
 
 img {
-  max-width: 100%;
+  width: 100%;
   height: auto;
+  box-sizing: border-box;
+}
+
+img.portrait {
+  height: 50vh;
+  width: auto;
 }
 
 @media (max-width: 800px) {
