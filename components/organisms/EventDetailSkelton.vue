@@ -6,28 +6,32 @@ import EventDetailHeader from './EventDetailHeader.vue';
 <template>
   <div class="page">
     <div class="flex-vert center-">
-      <EventDetailHeader>
-        <template #title>
-          <Skelton class="title-skeleton" />
-        </template>
-        <div class="flex-vert gap-10">
-          <Skelton class="date-skeleton" />
-          <Skelton class="tag-skeleton" />
+      <div class="content-box">
+        <div class="flex-vert center-">
+          <EventDetailHeader>
+            <template #title>
+              <Skelton class="title-skeleton" />
+            </template>
+            <div class="flex-vert gap-10">
+              <Skelton class="date-skeleton" />
+              <Skelton class="tag-skeleton" />
+            </div>
+            <template #img>
+              <Skelton class="img-skeleton" />
+            </template>
+          </EventDetailHeader>
+          <main class="flex-vert center-">
+            <div class="event-box skeleton-body">
+              <div class="paragraph-skeleton" v-for="p in 3" :key="p">
+                <Skelton class="line-skeleton" />
+                <Skelton class="line-skeleton long" />
+                <Skelton class="line-skeleton short" />
+                <Skelton class="line-skeleton medium" />
+              </div>
+            </div>
+          </main>
         </div>
-        <template #img>
-          <Skelton class="img-skeleton" />
-        </template>
-      </EventDetailHeader>
-      <main class="flex-vert center-">
-        <div class="article-box skeleton-body">
-          <div class="paragraph-skeleton" v-for="p in 3" :key="p">
-            <Skelton class="line-skeleton" />
-            <Skelton class="line-skeleton long" />
-            <Skelton class="line-skeleton short" />
-            <Skelton class="line-skeleton medium" />
-          </div>
-        </div>
-      </main>
+      </div>
     </div>
   </div>
 </template>
@@ -37,15 +41,6 @@ main {
   margin-top: 32px;
   margin-bottom: 32px;
   width: 100%;
-}
-
-.article-box {
-  display: block;
-  background-color: var(--bg-color);
-  padding: 20px;
-  max-width: 700px;
-  overflow-x: hidden;
-  width: 90%;
 }
 
 .title-skeleton {

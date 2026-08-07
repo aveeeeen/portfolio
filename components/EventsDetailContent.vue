@@ -138,10 +138,4 @@ main {
   border: 1px black solid;
   border-radius: 10px;
 }
-
-blockquote {
-  border-left: 3px solid black;
-  padding-left: 1rem;
-  margin: 1rem;
-}
 </style>

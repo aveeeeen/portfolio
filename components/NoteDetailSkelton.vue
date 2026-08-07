@@ -4,27 +4,31 @@
 <template>
   <div class="page">
     <div class="flex-vert center-">
-      <NoteHeader>
-        <template #title>
-          <Skelton class="title-skeleton" />
-        </template>
-        <template #date>
-          <Skelton class="date-skeleton" />
-        </template>
-        <template #tags>
-          <Skelton class="tag-skeleton" v-for="i in 3" :key="i" />
-        </template>
-      </NoteHeader>
-      <main class="flex-vert center-">
-        <div class="article-box skeleton-body">
-          <div class="paragraph-skeleton" v-for="p in 3" :key="p">
-            <Skelton class="line-skeleton" />
-            <Skelton class="line-skeleton long" />
-            <Skelton class="line-skeleton short" />
-            <Skelton class="line-skeleton medium" />
-          </div>
+      <div class="content-box">
+        <div class="flex-vert center-">
+          <NoteHeader>
+            <template #title>
+              <Skelton class="title-skeleton" />
+            </template>
+            <template #date>
+              <Skelton class="date-skeleton" />
+            </template>
+            <template #tags>
+              <Skelton class="tag-skeleton" v-for="i in 3" :key="i" />
+            </template>
+          </NoteHeader>
+          <main class="flex-vert center-">
+            <div class="article-box skeleton-body">
+              <div class="paragraph-skeleton" v-for="p in 3" :key="p">
+                <Skelton class="line-skeleton" />
+                <Skelton class="line-skeleton long" />
+                <Skelton class="line-skeleton short" />
+                <Skelton class="line-skeleton medium" />
+              </div>
+            </div>
+          </main>
         </div>
-      </main>
+      </div>
     </div>
   </div>
 </template>

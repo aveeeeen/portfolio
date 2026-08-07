@@ -37,6 +37,8 @@ code {
 
 blockquote {
   color: var(--text-color);
+  padding-left: 1rem;
+  margin: 1rem;
 }
 
 html {
