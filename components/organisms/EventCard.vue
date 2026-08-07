@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue';
 import type { ListEventResult } from "../../server/service/event.service.types";
 import EvnetCardSkelton from './EvnetCardSkelton.vue';
 
+const dateToLocal = useDate;
 const props = defineProps<ListEventResult>();
 
 const isPortrait = ref(false);
@@ -43,12 +44,9 @@ onMounted(() => {
       </h2>
       <div class="event-details">
         <h3>
-          開催日: {{
-            new Date(props.date).toLocaleDateString('ja-JP', {
-              year: 'numeric',
-              month: '2-digit',
-              day: '2-digit'
-            }).replace(/\//g, '.')
+          開催日時:
+          {{
+            dateToLocal(new Date(props.date))
           }}
         </h3>
         <h3>

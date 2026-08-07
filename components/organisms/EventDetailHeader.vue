@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 
+const dateToLocal = useDate;
 const props = defineProps<{
   title?: string;
   date?: string;
@@ -32,13 +33,9 @@ onMounted(() => {
     </slot>
     <slot name="date">
       <p v-if="props.date">
-        開催日:
+        開催日時:
         {{
-          new Date(props.date).toLocaleDateString('ja-JP', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit'
-          }).replace(/\//g, '.')
+          dateToLocal(new Date(props.date))
         }}
       </p>
     </slot>
