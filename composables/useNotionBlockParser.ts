@@ -46,6 +46,7 @@ interface NotionBlock {
 }
 
 export function useNotionBlockParser() {
+  const $img = useImage();
 
   // ─── Color helpers ───
 
@@ -448,8 +449,14 @@ export function useNotionBlockParser() {
   const renderImage = (data: any): string => {
     const url = getFileUrl(data);
     const caption = renderRichText(data?.caption || []);
+    let imgUrl = url;
+    try {
+      imgUrl = $img(url, { format: 'webp' });
+    } catch {
+      imgUrl = url;
+    }
 
-    return `<figure style="margin: 16px 0; text-align: center;" class="notion-image-figure">\n  <img src="${url}" alt="${caption ? caption.replace(/<[^>]*>/g, "") : ""}" style="max-width: 100%; border-radius: 6px; display: block; margin: 0 auto;">\n  ${caption ? `<figcaption style="font-size: 0.85em; opacity: 0.6; margin-top: 6px;">${caption}</figcaption>` : ""}\n</figure>\n`;
+    return `<figure style="margin: 16px 0; text-align: center;" class="notion-image-figure">\n  <img src="${imgUrl}" alt="${caption ? caption.replace(/<[^>]*>/g, "") : ""}" loading="lazy" decoding="async" style="max-width: 100%; border-radius: 6px; display: block; margin: 0 auto;">\n  ${caption ? `<figcaption style="font-size: 0.85em; opacity: 0.6; margin-top: 6px;">${caption}</figcaption>` : ""}\n</figure>\n`;
   };
 
   const renderVideo = (data: any): string => {

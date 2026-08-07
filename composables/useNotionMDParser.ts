@@ -7,6 +7,7 @@ export interface NotionNode {
 }
 
 export function useNotionMDParser() {
+  const $img = useImage();
   const getColorStyle = (color: string): string => {
     const textColors: Record<string, string> = {
       gray: 'color: #787774',
@@ -621,7 +622,13 @@ export function useNotionMDParser() {
       }
       case 'image': {
         const defaultImgStyle = `max-width: 100%; border-radius: 6px; display: block; margin: 0 auto;`;
-        return `<figure${mergeStyles(style, 'margin: 16px 0; text-align: center;')} class="notion-image-figure">\n  <img src="${node.attributes.src}" alt="${node.attributes.alt || ''}" style="${defaultImgStyle}">\n  ${node.content ? '<figcaption style="font-size: 0.85em; opacity: 0.6; margin-top: 6px;">' + parseInline(node.content) + '</figcaption>' : ''}\n</figure>\n`;
+        let imgUrl = node.attributes.src || '';
+        try {
+          imgUrl = $img(node.attributes.src, { format: 'webp' });
+        } catch {
+          imgUrl = node.attributes.src || '';
+        }
+        return `<figure${mergeStyles(style, 'margin: 16px 0; text-align: center;')} class="notion-image-figure">\n  <img src="${imgUrl}" alt="${node.attributes.alt || ''}" loading="lazy" decoding="async" style="${defaultImgStyle}">\n  ${node.content ? '<figcaption style="font-size: 0.85em; opacity: 0.6; margin-top: 6px;">' + parseInline(node.content) + '</figcaption>' : ''}\n</figure>\n`;
       }
       case 'summary':
         return '';
