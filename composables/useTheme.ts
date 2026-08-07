@@ -11,6 +11,7 @@ export function useTheme() {
     theme.value = t;
     if (import.meta.client) {
       localStorage.setItem('theme', t);
+      document.documentElement.style.removeProperty('background-color');
       if (t === 'dark') {
         document.documentElement.classList.add('dark');
       } else {

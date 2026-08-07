@@ -3,6 +3,8 @@ export default defineNuxtPlugin(() => {
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   const isDark = savedTheme ? savedTheme === 'dark' : prefersDark;
 
+  document.documentElement.style.removeProperty('background-color');
+
   if (isDark) {
     document.documentElement.classList.add('dark');
   } else {

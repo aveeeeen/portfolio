@@ -4,15 +4,15 @@ const isVideoLoad = ref(false);
 const isDarkmode = ref(false);
 
 onBeforeMount(() => {
-  let bgC = getComputedStyle(document.body).getPropertyValue("--bg-color");
   let html = document.querySelector("html");
   html.style.backgroundColor = "blue";
 });
 
 onUnmounted(() => {
   let html = document.querySelector("html");
-  let contetnBox = document.querySelector("content-box");
-  html.style.backgroundColor = getComputedStyle(document.body).getPropertyValue("--bg-color")
+  if (html) {
+    html.style.removeProperty("background-color");
+  }
 });
 
 onMounted(() => {
