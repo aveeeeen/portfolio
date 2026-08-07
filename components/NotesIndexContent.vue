@@ -66,8 +66,8 @@ watch(isMenuShown, () => {
 
 <template>
   <div @click="closeModal()" class="page">
-    <div class="center- flex-vert gap-10">
-      <div class="content-box article-list">
+    <div class="center- flex-vert gap-20">
+      <div class="content-box">
         <h1>Notes</h1>
         <Border></Border>
         <p>new → old</p>
@@ -77,7 +77,7 @@ watch(isMenuShown, () => {
         </div>
         <Border></Border>
 
-        <div>
+        <div class="article-list">
           <ul v-for="content in artilceList.data.value">
             <li :key="content.id">
               <NotePost :id="content.id" :title="content.title" :tags="content.tags" :created-at="content.createdAt">

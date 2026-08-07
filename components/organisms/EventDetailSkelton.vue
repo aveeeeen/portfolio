@@ -10,12 +10,10 @@ import EventDetailHeader from './EventDetailHeader.vue';
         <template #title>
           <Skelton class="title-skeleton" />
         </template>
-        <template #date>
+        <div class="flex-vert gap-10">
           <Skelton class="date-skeleton" />
-        </template>
-        <template #venue>
           <Skelton class="tag-skeleton" />
-        </template>
+        </div>
         <template #img>
           <Skelton class="img-skeleton" />
         </template>

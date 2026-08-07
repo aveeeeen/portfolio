@@ -28,26 +28,20 @@ onMounted(() => {
 
 <template>
   <div class="flex-vert note-header gap-20">
-    <slot name="title">
-      <h1 v-if="props.title">{{ props.title }}</h1>
-    </slot>
-    <slot name="date">
+    <h1 v-if="props.title">{{ props.title }}</h1>
+    <div class="flex-vert gap-10">
       <p v-if="props.date">
         開催日時:
         {{
           dateToLocal(new Date(props.date))
         }}
       </p>
-    </slot>
-    <slot name="venue">
       <p v-if="props.venue">
-        会場： {{ props.venue }}
+        会場: {{ props.venue }}
       </p>
-    </slot>
-    <slot name="img">
-      <NuxtImg v-if="props.imageUrl" ref="imgRef" :src="props.imageUrl" format="webp" :class="{ portrait: isPortrait }"
-        @load="handleImageLoad" />
-    </slot>
+    </div>
+    <NuxtImg v-if="props.imageUrl" ref="imgRef" :src="props.imageUrl" format="webp" :class="{ portrait: isPortrait }"
+      @load="handleImageLoad" />
   </div>
 </template>
 
@@ -86,7 +80,7 @@ img {
 }
 
 img.portrait {
-  height: 50vh;
+  height: 40vh;
   width: fit-content;
   align-self: center;
 }
@@ -97,7 +91,6 @@ img.portrait {
     border-radius: 20px;
     border: color-mix(in srgb, slateblue 60%, white 30%) solid;
     max-width: 700px;
-    width: 80%;
   }
 }
 </style>

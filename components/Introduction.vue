@@ -1,33 +1,35 @@
 <template>
   <div>
     <h1>Taichi Matsumoto (braven)</h1>
-    <br>
     <span class="spacing"></span>
-    <br>
     <h3>Live Coder, Musician, Programmer</h3>
   </div>
-
-
 </template>
 
 <style scoped>
 h1 {
   background-color: var(--bg-color);
-  line-height: normal;
+  line-height: 240%;
   text-align: right;
-  display: inline;
-  padding: 2px 10px;
+  display: block;
+  width: fit-content;
+  height: fit-content;
+  padding: 0px 8px;
 }
 
 h3 {
   background-color: var(--bg-color);
-  line-height: normal;
+  line-height: 260%;
   text-align: right;
-  display: inline;
-  padding: 2px 10px;
+  display: block;
+  width: fit-content;
+  height: fit-content;
+  padding: 0px 8px;
+  margin: 0;
+  margin-left: 64px;
 }
 
 .spacing {
-  margin-bottom: 40px;
+  margin-bottom: 0px;
 }
 </style>

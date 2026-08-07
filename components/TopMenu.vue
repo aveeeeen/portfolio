@@ -16,31 +16,43 @@
 
 <style scoped>
 .top-nav {
-  flex-direction: row;
+  position: absolute;
+  bottom: 10vh;
+  left: 10vw;
+  display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
+  align-items: flex-start;
+  max-width: 400px;
 }
 
-.top-nav>a {
-  display: inline;
+a {
+  display: block;
   width: fit-content;
-  background-color: var(--text-bg-color-a);
+  height: fit-content;
+  background-color: var(--bg-color);
   color: var(--text-color-a);
   font-size: 1.25rem;
   min-width: 64px;
   line-height: 1.5;
   padding: 2px 8px;
+  text-decoration: underline;
 }
 
 a:hover {
   color: white;
-  display: inline;
   background-color: blue;
 }
 
 @media (max-width: 800px) {
   .top-nav {
+    position: absolute;
+    left: auto;
+    bottom: 0%;
+    right: 0%;
     flex-direction: column;
     flex-wrap: wrap;
+    align-items: flex-end;
     max-width: 400px;
   }
 }

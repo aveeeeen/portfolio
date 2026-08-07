@@ -68,14 +68,14 @@ watch(isMenuShown, () => {
 
 <template>
   <div @click="closeModal()" class="page">
-    <div class="center- flex-vert gap-10">
-      <div class="content-box article-list">
+    <div class="center- flex-vert gap-20">
+      <div class="content-box">
         <h1>Events</h1>
         <Border></Border>
         <p>new → old</p>
         <Border></Border>
 
-        <div class="flex-vert gap-20">
+        <div class="flex-vert gap-20 article-list">
           <EventCard v-for="event in events" :key="event.id" :id="event.id" :title="event.title" :date="event.date"
             :image-url="event.imageUrl" :venue="event.venue">
           </EventCard>

@@ -62,16 +62,15 @@ watch(isMenuShown, () => {
 <template>
   <div @click="closeModal()" class="page">
     <div class="flex-vert center-">
-      <EventDetailHeader
-        v-if="event"
-        :title="event.title"
-        :date="event.date"
-        :venue="event.venue"
-        :image-url="event.imageUrl"
-      />
-      <main class="flex-vert center-" v-if="event">
-        <div class="event-box event" v-html="parsedHtml"></div>
-      </main>
+      <div class="content-box">
+        <div class="flex-vert center-">
+          <EventDetailHeader v-if="event" :title="event.title" :date="event.date" :venue="event.venue"
+            :image-url="event.imageUrl" />
+          <main class="flex-vert center-" v-if="event">
+            <div class="event-box event" v-html="parsedHtml"></div>
+          </main>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -126,15 +125,6 @@ h3>a {
   padding-bottom: 5px;
 }
 
-.event-box {
-  display: block;
-  background-color: var(--bg-color);
-  padding: 20px;
-  max-width: 700px;
-  overflow-x: hidden;
-  width: 90%;
-}
-
 main {
   margin-top: 32px;
   margin-bottom: 32px;
@@ -152,15 +142,5 @@ blockquote {
   border-left: 3px solid black;
   padding-left: 1rem;
   margin: 1rem;
-}
-
-@media (max-width: 800px) {
-  .event-box {
-    display: block;
-    background-color: var(--bg-color);
-    padding: 10px;
-    overflow-x: hidden;
-    width: 90%;
-  }
 }
 </style>

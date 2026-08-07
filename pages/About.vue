@@ -134,16 +134,6 @@ function closeModal() {
   padding: 32px;
 }
 
-.spacing {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.space {
-  height: 2rem;
-}
-
 .icon {
   width: 40px;
   height: 40px;

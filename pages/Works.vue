@@ -18,7 +18,13 @@ function closeModal() {
   <div @click="closeModal()" class="page">
     <div class="center- flex-vert">
       <div id="projects" class="content-box">
-        <h1><a>Projects / Reserch</a></h1>
+        <h1>Works</h1>
+        <Border></Border>
+        <div class="space"></div>
+        <div></div>
+        <a>
+          <h1>Projects / Reserch</h1>
+        </a>
         <Border></Border>
         <h3>
           図形楽譜を用いた音楽インタフェースのデザインと演奏：画像、GUIを図形楽譜として捉える
@@ -31,7 +37,9 @@ function closeModal() {
       </div>
 
       <div id="live-performance" class="content-box">
-        <h1><a>Live Performance</a></h1>
+        <a>
+          <h1>Live Performance</h1>
+        </a>
         <Border></Border>
         <h2>Live Coding</h2>
 
@@ -53,7 +61,9 @@ function closeModal() {
       </div>
 
       <div id="music" class="content-box">
-        <h1><a>Music</a></h1>
+        <a>
+          <h1>Music</h1>
+        </a>
         <Border></Border>
         <h2>MEGAREX releases</h2>
         <h3>It's Gonna Be All Right (feat.shully)</h3>
@@ -115,7 +125,9 @@ function closeModal() {
       </div>
 
       <div id="devs" class="content-box">
-        <h1><a>Devs</a></h1>
+        <a>
+          <h1>Devs</h1>
+        </a>
         <Border></Border>
         <h3>NxPC.Live vol.63</h3>
         <NuxtImg src="/img/web-devs/hardpia.png" format="webp" />
@@ -160,8 +172,7 @@ function closeModal() {
 </template>
 
 <style scoped>
-h1 a {
-  font-size: 2rem;
+a>h1 {
   color: var(--text-color);
 }
 

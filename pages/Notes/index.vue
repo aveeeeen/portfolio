@@ -14,13 +14,13 @@ useSeoMeta({
     </template>
     <template #fallback>
       <div class="page">
-        <div class="center- flex-vert gap-10">
-          <div class="content-box article-list">
+        <div class="center- flex-vert gap-20">
+          <div class="content-box">
             <h1>Notes</h1>
             <Border></Border>
             <p>new → old</p>
             <Border></Border>
-            <div>
+            <div class="article-list">
               <ul v-for="i in 5" :key="i">
                 <li>
                   <NoteSkelton></NoteSkelton>

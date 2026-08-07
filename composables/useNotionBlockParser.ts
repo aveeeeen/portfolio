@@ -355,10 +355,10 @@ export function useNotionBlockParser() {
     const isEmpty = !richText && !childrenHtml;
 
     if (isEmpty) {
-      return `<div style="height: 1em;"></div>\n`;
+      return `<div style="height: 32px;"></div>\n`;
     }
 
-    return `<p${colorStyle || ` style="margin-top: 4px; margin-bottom: 4px; min-height: 1em; line-height: 1.6;"`}>${richText}${childrenHtml ? "\n" + childrenHtml : ""}</p>\n`;
+    return `<p${colorStyle || ` style="margin-top: 4px; margin-bottom: 4px; min-height: 1em;"`}>${richText}${childrenHtml ? "\n" + childrenHtml : ""}</p>\n`;
   };
 
   const renderHeading = (data: any, level: number, childrenHtml: string, blockId: string): string => {
@@ -414,7 +414,7 @@ export function useNotionBlockParser() {
   const renderQuote = (data: any, childrenHtml: string): string => {
     const richText = renderRichText(data?.rich_text || []);
     const colorStyle = getBlockColorStyle(data?.color || "default");
-    return `<blockquote${colorStyle || ` style="border-left: 3px solid #37352f; padding-left: 14px; margin: 12px 0; color: inherit;"`}>${richText}${childrenHtml ? "\n" + childrenHtml : ""}</blockquote>\n`;
+    return `<blockquote${colorStyle || ` style="border-left: 3px solid #888; padding-left: 14px; margin: 12px 0;"`}>${richText}${childrenHtml ? "\n" + childrenHtml : ""}</blockquote>\n`;
   };
 
   const renderCallout = (data: any, childrenHtml: string): string => {

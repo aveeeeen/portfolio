@@ -1,10 +1,12 @@
 <template>
   <div class="flex-vert note-header gap-20">
     <slot name="title"></slot>
-    <slot name="date"></slot>
-    <div class="flex-hori gap-10 tags">
-      <p>Tags:</p>
-      <slot name="tags"></slot>
+    <div class="flex-vert gap-10">
+      <slot name="date"></slot>
+      <div class="flex-hori gap-10 tags">
+        <p>Tags:</p>
+        <slot name="tags"></slot>
+      </div>
     </div>
   </div>
 </template>
@@ -42,7 +44,6 @@ h1 {
     border-radius: 20px;
     border: color-mix(in srgb, slateblue 60%, white 30%) solid;
     max-width: 700px;
-    width: 80%;
   }
 }
 </style>
