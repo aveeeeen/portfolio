@@ -3,15 +3,20 @@
     <Burger @click="isMenuShown = !isMenuShown" class="burger" :isClose="isMenuShown"></Burger>
     <div v-if="isMenuShown" class="show-right flex-vert gap-10">
       <slot></slot>
+      <ThemeToggle />
     </div>
+    <ThemeToggle v-else />
   </div>
 
   <div v-else class="menu show-right flex-vert gap-10">
     <slot></slot>
+    <ThemeToggle />
   </div>
 </template>
 
 <script setup>
+import ThemeToggle from './ThemeToggle.vue';
+
 const isMobile = ref(false);
 const isMenuShown = ref(false);
 
@@ -28,11 +33,11 @@ const emit = defineEmits(['isclose'])
 emit('isclose', isMenuShown.value)
 
 function checkMobile () {
-  if(window.innerWidth > 800){
-      isMobile.value = false
-    }else{
-      isMobile.value = true
-    }
+  if (window.innerWidth > 800) {
+    isMobile.value = false
+  } else {
+    isMobile.value = true
+  }
 }
 
 onMounted(() => {
@@ -43,9 +48,7 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('resize', () => checkMobile())
 })
-
 </script>
 
 <style scoped>
-
 </style>
