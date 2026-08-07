@@ -62,34 +62,13 @@ watch(isMenuShown, () => {
 <template>
   <div @click="closeModal()" class="page">
     <div class="flex-vert center-">
-      <EventDetailHeader v-if="event">
-        <template #title>
-          <h1>{{ event.title }}</h1>
-        </template>
-        <template #date>
-          <p>
-            作成日:
-            {{
-              new Date(event.date).toLocaleDateString('ja-JP', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit'
-              }).replace(/\//g, '.')
-            }}
-          </p>
-        </template>
-        <template #venue>
-          <p>
-            会場：
-            {{
-              event.venue
-            }}
-          </p>
-        </template>
-        <template #img>
-          <NuxtImg :src="event.imageUrl" format="webp" />
-        </template>
-      </EventDetailHeader>
+      <EventDetailHeader
+        v-if="event"
+        :title="event.title"
+        :date="event.date"
+        :venue="event.venue"
+        :image-url="event.imageUrl"
+      />
       <main class="flex-vert center-" v-if="event">
         <div class="event-box event" v-html="parsedHtml"></div>
       </main>
