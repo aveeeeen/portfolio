@@ -34,6 +34,7 @@
 
 .event-post {
   width: 100%;
+  max-width: 1000px;
   height: auto;
   display: flex;
   flex-direction: column;
