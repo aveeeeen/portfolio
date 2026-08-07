@@ -127,6 +127,7 @@ function closeModal() {
   overflow-wrap: anywhere;
   overflow-x: hidden;
   border-radius: 16px;
+  max-width: 800px;
 }
 
 .code-padding {

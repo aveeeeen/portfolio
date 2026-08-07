@@ -111,6 +111,7 @@ iframe {
   display: block;
   background-color: var(--bg-color);
   padding: 20px;
+  width: 100%;
   max-width: 700px;
   margin: 0 0px;
   overflow-x: hidden;
