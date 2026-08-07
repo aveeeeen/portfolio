@@ -1,45 +1,52 @@
 <script setup>
 import ThemeToggle from './ThemeToggle.vue';
 
+defineOptions({
+  inheritAttrs: false,
+});
+
 const isMobile = ref(false);
 const isMenuShown = ref(false);
 
 const props = defineProps({
-  close: Boolean
-})
-
-watch(() => props.close, () => {
-  isMenuShown.value = props.close;
-  console.log("from nav:" + isMenuShown.value)
+  close: Boolean,
 });
 
-const emit = defineEmits(['isclose'])
-emit('isclose', isMenuShown.value)
+watch(() => props.close, (newVal) => {
+  isMenuShown.value = newVal;
+});
+
+const emit = defineEmits(['isclose']);
+
+function toggleMenu() {
+  isMenuShown.value = !isMenuShown.value;
+  emit('isclose', isMenuShown.value);
+}
 
 function checkMobile() {
   if (window.innerWidth > 800) {
-    isMobile.value = false
+    isMobile.value = false;
   } else {
-    isMobile.value = true
+    isMobile.value = true;
   }
 }
 
 onMounted(() => {
   checkMobile();
-  window.addEventListener('resize', () => checkMobile())
-})
+  window.addEventListener('resize', checkMobile);
+});
 
 onUnmounted(() => {
-  window.removeEventListener('resize', () => checkMobile())
-})
+  window.removeEventListener('resize', checkMobile);
+});
 </script>
 
 <template>
   <div v-if="isMobile" class="menu show-right flex-vert gap-10">
-    <div class="ui-box" @click.stop>
-      <NuxtLink class="page-title" to="/" @click.stop>Portfolio site of braven</NuxtLink>
+    <div class="ui-box">
+      <NuxtLink class="page-title" to="/">Portfolio site of braven</NuxtLink>
     </div>
-    <Burger @click.stop="isMenuShown = !isMenuShown" class="burger" :isClose="isMenuShown"></Burger>
+    <Burger @click.stop="toggleMenu" class="burger" :isClose="isMenuShown"></Burger>
     <div v-if="isMenuShown" class="show-right flex-vert gap-10">
       <slot></slot>
       <ThemeToggle />
@@ -48,8 +55,8 @@ onUnmounted(() => {
   </div>
 
   <div v-else class="menu show-right flex-vert gap-10">
-    <div class="ui-box" @click.stop>
-      <NuxtLink class="page-title" to="/" @click.stop>Portfolio site of braven</NuxtLink>
+    <div class="ui-box">
+      <NuxtLink class="page-title" to="/">Portfolio site of braven</NuxtLink>
     </div>
     <slot></slot>
     <ThemeToggle />

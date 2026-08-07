@@ -1,5 +1,5 @@
 <template>
-  <div @click="isMenuShown = !isMenuShown" class="burger-circle">
+  <div class="burger-circle">
     <div>
       <svg v-if="!isClose" id="burger" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
         <path class="icon-fill"
@@ -18,8 +18,6 @@
 defineProps({
   isClose: Boolean,
 });
-
-defineEmits('isMenuShown')
 </script>
 
 <style scoped>
@@ -36,7 +34,7 @@ defineEmits('isMenuShown')
 }
 
 .icon-fill {
-  fill: var(--text-color-a)
+  fill: var(--text-color-a);
 }
 
 .burger-circle {
@@ -47,5 +45,6 @@ defineEmits('isMenuShown')
   align-items: center;
   justify-content: center;
   border-radius: var(--box-radius);
+  cursor: pointer;
 }
 </style>

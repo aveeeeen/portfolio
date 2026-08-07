@@ -97,7 +97,7 @@ function closeModal() {
   </div>
 
   <!-- nav box -->
-  <Nav @click="isMenuShown = !isMenuShown" :close="isMenuShown" @isclose="(e) => (isMenuShown = e)">
+  <Nav :close="isMenuShown" @isclose="(e) => (isMenuShown = e)">
     <Menu></Menu>
   </Nav>
 </template>
