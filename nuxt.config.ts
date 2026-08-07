@@ -15,7 +15,10 @@ export default defineNuxtConfig({
       'www.notion.so',
       'notion.so',
       'images.unsplash.com'
-    ]
+    ],
+    vercel: {
+      minimunCacheTTL: 6000
+    }
   },
   plugins: [
     '~/plugins/directives'
