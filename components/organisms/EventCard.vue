@@ -1,43 +1,40 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import type { ListEventResult } from "../../server/service/event.service.types";
-import EvnetCardSkelton from './EvnetCardSkelton.vue';
 
 const dateToLocal = useDate;
 const props = defineProps<Omit<ListEventResult, "createdAt" | "updatedAt">>();
 
 const isPortrait = ref(false);
-const isLoaded = ref(false);
+const isImageLoaded = ref(false);
 const imgRef = ref<HTMLImageElement | null>(null);
 
 function handleImageLoad(event?: Event) {
-  const img = (event?.target as HTMLImageElement) || imgRef.value;
+  const img = (event?.target as HTMLImageElement) || ((imgRef.value as any)?.$el ?? imgRef.value);
   if (img && img.naturalWidth && img.naturalHeight) {
     isPortrait.value = img.naturalHeight > img.naturalWidth;
   }
-  isLoaded.value = true;
+  isImageLoaded.value = true;
 }
 
 function handleImageError() {
-  isLoaded.value = true;
+  isImageLoaded.value = true;
 }
 
 onMounted(() => {
   if (!props.imageUrl) {
-    isLoaded.value = true;
+    isImageLoaded.value = true;
     return;
   }
-  if (imgRef.value && imgRef.value.complete) {
-    handleImageLoad();
+  const imgEl = (imgRef.value as any)?.$el || imgRef.value;
+  if (imgEl && imgEl.complete && imgEl.naturalWidth) {
+    handleImageLoad({ target: imgEl } as any);
   }
 });
 </script>
 
 <template>
-  <div v-if="!isLoaded" class="skeleton-container">
-    <EvnetCardSkelton />
-  </div>
-  <NuxtLink v-show="isLoaded" class="event-post" :to="'events/' + props.id">
+  <NuxtLink class="event-post" :to="'events/' + props.id">
     <div class="event-content">
       <h2>
         {{ props.title }}
@@ -54,13 +51,35 @@ onMounted(() => {
         </h3>
       </div>
     </div>
-    <NuxtImg ref="imgRef" :src="props.imageUrl" format="webp" :class="{ portrait: isPortrait }" @load="handleImageLoad"
-      @error="handleImageError" />
+    <div class="img-wrapper">
+      <Skelton v-if="!isImageLoaded" class="img-skelton" :class="{ portrait: isPortrait }" />
+      <NuxtImg
+        v-show="isImageLoaded"
+        ref="imgRef"
+        :src="props.imageUrl"
+        format="webp"
+        :class="{ portrait: isPortrait }"
+        @load="handleImageLoad"
+        @error="handleImageError"
+      />
+    </div>
   </NuxtLink>
 </template>
 
 <style scoped>
-.skeleton-container {
+.img-wrapper {
+  width: 100%;
+}
+
+.img-skelton {
+  width: 100%;
+  height: 25svh;
+  box-sizing: border-box;
+  border-radius: 20px;
+}
+
+.img-skelton.portrait {
+  height: 40vh;
   width: 100%;
 }
 
