@@ -67,10 +67,11 @@ watch(isMenuShown, () => {
           <EventDetailHeader v-if="event" :title="event.title" :date="event.date" :venue="event.venue"
             :image-url="event.imageUrl" />
           <main class="flex-vert center-" v-if="event">
-            <div class="event-box event" v-html="parsedHtml"></div>
+            <div class="event-box article" v-html="parsedHtml"></div>
           </main>
         </div>
       </div>
+      <div class="bottom"></div>
     </div>
   </div>
 

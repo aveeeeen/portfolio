@@ -95,6 +95,7 @@ watch(isMenuShown, () => {
           </main>
         </div>
       </div>
+      <div class="bottom"></div>
     </div>
   </div>
 
