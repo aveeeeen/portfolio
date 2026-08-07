@@ -437,10 +437,10 @@ export function useNotionBlockParser() {
     const language = data?.language || "";
     const caption = renderRichText(data?.caption || []);
 
-    let html = `<pre style="background-color: #f7f6f3; padding: 16px; border-radius: 8px; font-family: monospace; font-size: 0.9em; overflow-x: auto; border: 1px solid rgba(15, 15, 15, 0.05); margin: 12px 0;"><code class="language-${language}">${escaped}</code></pre>\n`;
+    let html = `<pre style="background-color: var(--ui-bg-color); color: var(--text-color); padding: 16px; border-radius: 8px; font-family: monospace; font-size: 0.9em; overflow-x: auto; border: 1px solid rgba(15, 15, 15, 0.05); margin: 12px 0;"><code class="language-${language}">${escaped}</code></pre>\n`;
 
     if (caption) {
-      html += `<div style="font-size: 0.85em; opacity: 0.6; margin-top: -8px; margin-bottom: 12px;">${caption}</div>\n`;
+      html += `<div style="font-size: 0.85em; opacity: 0.7; color: var(--text-color); margin-top: -8px; margin-bottom: 12px;">${caption}</div>\n`;
     }
 
     return html;
@@ -456,7 +456,7 @@ export function useNotionBlockParser() {
       imgUrl = url;
     }
 
-    return `<figure style="margin: 16px 0; text-align: center;" class="notion-image-figure">\n  <img src="${imgUrl}" alt="${caption ? caption.replace(/<[^>]*>/g, "") : ""}" loading="lazy" decoding="async" style="max-width: 100%; border-radius: 6px; display: block; margin: 0 auto;">\n  ${caption ? `<figcaption style="font-size: 0.85em; opacity: 0.6; margin-top: 6px;">${caption}</figcaption>` : ""}\n</figure>\n`;
+    return `<figure style="margin: 16px 0; text-align: center;" class="notion-image-figure">\n  <img src="${imgUrl}" alt="${caption ? caption.replace(/<[^>]*>/g, "") : ""}" loading="lazy" decoding="async" style="max-width: 100%; border-radius: 6px; display: block; margin: 0 auto;">\n  ${caption ? `<figcaption style="font-size: 0.85em; opacity: 0.7; color: var(--text-color); margin-top: 6px;">${caption}</figcaption>` : ""}\n</figure>\n`;
   };
 
   const renderVideo = (data: any): string => {
@@ -466,16 +466,16 @@ export function useNotionBlockParser() {
     // YouTube embed support
     const youtubeMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]+)/);
     if (youtubeMatch) {
-      return `<div style="margin: 12px 0; display: flex; flex-direction: column; gap: 6px;" class="notion-media notion-video"><iframe src="https://www.youtube.com/embed/${youtubeMatch[1]}" style="width: 100%; aspect-ratio: 16/9; border: none; border-radius: 4px;" allowfullscreen></iframe>${caption ? `<div style="font-size: 0.85em; opacity: 0.6;">${caption}</div>` : ""}</div>\n`;
+      return `<div style="margin: 12px 0; display: flex; flex-direction: column; gap: 6px;" class="notion-media notion-video"><iframe src="https://www.youtube.com/embed/${youtubeMatch[1]}" style="width: 100%; aspect-ratio: 16/9; border: none; border-radius: 4px;" allowfullscreen></iframe>${caption ? `<div style="font-size: 0.85em; opacity: 0.7; color: var(--text-color);">${caption}</div>` : ""}</div>\n`;
     }
 
-    return `<div style="margin: 12px 0; display: flex; flex-direction: column; gap: 6px;" class="notion-media notion-video"><video src="${url}" controls style="max-width: 100%; border-radius: 4px;"></video>${caption ? `<div style="font-size: 0.85em; opacity: 0.6;">${caption}</div>` : ""}</div>\n`;
+    return `<div style="margin: 12px 0; display: flex; flex-direction: column; gap: 6px;" class="notion-media notion-video"><video src="${url}" controls style="max-width: 100%; border-radius: 4px;"></video>${caption ? `<div style="font-size: 0.85em; opacity: 0.7; color: var(--text-color);">${caption}</div>` : ""}</div>\n`;
   };
 
   const renderAudio = (data: any): string => {
     const url = getFileUrl(data);
     const caption = renderRichText(data?.caption || []);
-    return `<div style="margin: 12px 0; display: flex; flex-direction: column; gap: 6px;" class="notion-media notion-audio"><audio src="${url}" controls style="width: 100%;"></audio>${caption ? `<div style="font-size: 0.85em; opacity: 0.6;">${caption}</div>` : ""}</div>\n`;
+    return `<div style="margin: 12px 0; display: flex; flex-direction: column; gap: 6px;" class="notion-media notion-audio"><audio src="${url}" controls style="width: 100%;"></audio>${caption ? `<div style="font-size: 0.85em; opacity: 0.7; color: var(--text-color);">${caption}</div>` : ""}</div>\n`;
   };
 
   const renderFile = (data: any): string => {
