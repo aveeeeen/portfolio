@@ -628,7 +628,7 @@ export function useNotionMDParser() {
         } catch {
           imgUrl = node.attributes.src || '';
         }
-        return `<figure${mergeStyles(style, 'margin: 16px 0; text-align: center;')} class="notion-image-figure">\n  <img src="${imgUrl}" alt="${node.attributes.alt || ''}" loading="lazy" decoding="async" style="${defaultImgStyle}">\n  ${node.content ? '<figcaption style="font-size: 0.85em; opacity: 0.6; margin-top: 6px;">' + parseInline(node.content) + '</figcaption>' : ''}\n</figure>\n`;
+        return `<figure${mergeStyles(style, 'margin: 16px 0; text-align: center;')} class="notion-image-figure">\n  <img src="${imgUrl}" alt="${node.attributes.alt || ''}" loading="lazy" decoding="async" style="${defaultImgStyle}">\n  ${node.content ? '<figcaption style="font-size: 0.85em; opacity: 0.7; color: var(--text-color); margin-top: 6px;">' + parseInline(node.content) + '</figcaption>' : ''}\n</figure>\n`;
       }
       case 'summary':
         return '';
