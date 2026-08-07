@@ -1,19 +1,3 @@
-<template>
-  <div v-if="isMobile" class="menu show-right flex-vert gap-10">
-    <Burger @click="isMenuShown = !isMenuShown" class="burger" :isClose="isMenuShown"></Burger>
-    <div v-if="isMenuShown" class="show-right flex-vert gap-10">
-      <slot></slot>
-      <ThemeToggle />
-    </div>
-    <ThemeToggle v-else />
-  </div>
-
-  <div v-else class="menu show-right flex-vert gap-10">
-    <slot></slot>
-    <ThemeToggle />
-  </div>
-</template>
-
 <script setup>
 import ThemeToggle from './ThemeToggle.vue';
 
@@ -32,7 +16,7 @@ watch(() => props.close, () => {
 const emit = defineEmits(['isclose'])
 emit('isclose', isMenuShown.value)
 
-function checkMobile () {
+function checkMobile() {
   if (window.innerWidth > 800) {
     isMobile.value = false
   } else {
@@ -50,5 +34,30 @@ onUnmounted(() => {
 })
 </script>
 
+<template>
+  <div v-if="isMobile" class="menu show-right flex-vert gap-10">
+    <div class="ui-box">
+      <NuxtLink class="page-title" to="/">Portfolio site of braven</NuxtLink>
+    </div>
+    <Burger @click="isMenuShown = !isMenuShown" class="burger" :isClose="isMenuShown"></Burger>
+    <div v-if="isMenuShown" class="show-right flex-vert gap-10">
+      <slot></slot>
+      <ThemeToggle />
+    </div>
+    <ThemeToggle v-else />
+  </div>
+
+  <div v-else class="menu show-right flex-vert gap-10">
+    <div class="ui-box">
+      <NuxtLink class="page-title" to="/">Portfolio site of braven</NuxtLink>
+    </div>
+    <slot></slot>
+    <ThemeToggle />
+  </div>
+</template>
+
 <style scoped>
+.page-title {
+  margin: 0 4px;
+}
 </style>

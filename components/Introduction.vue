@@ -32,4 +32,14 @@ h3 {
 .spacing {
   margin-bottom: 0px;
 }
+
+@media (max-width: 800px) {
+  h1 {
+    line-height: 150%;
+  }
+
+  h3 {
+    line-height: 150%;
+  }
+}
 </style>
