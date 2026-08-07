@@ -66,31 +66,35 @@ watch(isMenuShown, () => {
 <template>
   <div @click="closeModal()" class="page">
     <div class="flex-vert center-">
-      <NoteHeader v-if="article">
-        <template #title>
-          <h1>{{ article.title }}</h1>
-        </template>
-        <template #date>
-          <p>
-            作成日:
-            {{
-              new Date(article.createdAt).toLocaleDateString('ja-JP', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit'
-              }).replace(/\//g, '.')
-            }}
-          </p>
-        </template>
-        <template #tags>
-          <div v-for="tag in tags" :key="tag">
-            <NuxtLink :to="`/notes?page=1&tags=${tag}`"> {{ tag }} </NuxtLink>
-          </div>
-        </template>
-      </NoteHeader>
-      <main class="flex-vert center-" v-if="article">
-        <div class="article-box article" v-html="parsedHtml"></div>
-      </main>
+      <div class="content-box">
+        <div class="flex-vert center-">
+          <NoteHeader v-if="article">
+            <template #title>
+              <h1>{{ article.title }}</h1>
+            </template>
+            <template #date>
+              <p>
+                作成日:
+                {{
+                  new Date(article.createdAt).toLocaleDateString('ja-JP', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit'
+                  }).replace(/\//g, '.')
+                }}
+              </p>
+            </template>
+            <template #tags>
+              <div v-for="tag in tags" :key="tag">
+                <NuxtLink :to="`/notes?page=1&tags=${tag}`"> {{ tag }} </NuxtLink>
+              </div>
+            </template>
+          </NoteHeader>
+          <main class="flex-vert center-" v-if="article">
+            <div class="article-box article" v-html="parsedHtml"></div>
+          </main>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -117,6 +121,7 @@ watch(isMenuShown, () => {
       <a @click.stop="isShowToC = !isShowToC">Close</a>
     </div>
   </Nav>
+
 </template>
 
 <style>
@@ -145,15 +150,6 @@ h3>a {
   padding-bottom: 5px;
 }
 
-.article-box {
-  display: block;
-  background-color: var(--bg-color);
-  padding: 20px;
-  max-width: 700px;
-  overflow-x: hidden;
-  width: 90%;
-}
-
 main {
   margin-top: 32px;
   margin-bottom: 32px;
@@ -171,15 +167,5 @@ blockquote {
   border-left: 3px solid black;
   padding-left: 1rem;
   margin: 1rem;
-}
-
-@media (max-width: 800px) {
-  .article-box {
-    display: block;
-    background-color: var(--bg-color);
-    padding: 10px;
-    overflow-x: hidden;
-    width: 90%;
-  }
 }
 </style>

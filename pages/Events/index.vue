@@ -17,13 +17,13 @@ useSeoMeta({
     </template>
     <template #fallback>
       <div class="page">
-        <div class="center- flex-vert gap-10">
-          <div class="content-box article-list">
+        <div class="center- flex-vert gap-20">
+          <div class="content-box">
             <h1>Events</h1>
             <Border></Border>
             <p>new → old</p>
             <Border></Border>
-            <div v-for="i in 5">
+            <div class="article-list flex-vert gap-20" v-for="i in 5">
               <EvnetCardSkelton></EvnetCardSkelton>
             </div>
           </div>

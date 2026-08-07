@@ -4,7 +4,7 @@ import type { ListEventResult } from "../../server/service/event.service.types";
 import EvnetCardSkelton from './EvnetCardSkelton.vue';
 
 const dateToLocal = useDate;
-const props = defineProps<ListEventResult>();
+const props = defineProps<Omit<ListEventResult, "createdAt" | "updatedAt">>();
 
 const isPortrait = ref(false);
 const isLoaded = ref(false);
@@ -50,7 +50,7 @@ onMounted(() => {
           }}
         </h3>
         <h3>
-          場所: {{ props.venue }}
+          会場: {{ props.venue }}
         </h3>
       </div>
     </div>
@@ -71,7 +71,7 @@ img {
 }
 
 img.portrait {
-  height: 50vh;
+  height: 40vh;
   width: auto;
 }
 
