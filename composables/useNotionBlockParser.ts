@@ -304,7 +304,7 @@ export function useNotionBlockParser() {
       case "code":
         return renderCode(typeData);
       case "divider":
-        return `<hr style="border: none; border-top: 1px solid rgba(55, 53, 47, 0.09); margin: 16px 0;">\n`;
+        return `<hr style="border: none; border-top: 1px solid #ccc; margin: 16px 0;">\n`;
       case "image":
         return renderImage(typeData);
       case "video":
@@ -456,7 +456,7 @@ export function useNotionBlockParser() {
       imgUrl = url;
     }
 
-    return `<figure style="margin: 16px 0; text-align: center;" class="notion-image-figure">\n  <img src="${imgUrl}" alt="${caption ? caption.replace(/<[^>]*>/g, "") : ""}" loading="lazy" decoding="async" style="max-width: 100%; border-radius: 6px; display: block; margin: 0 auto;">\n  ${caption ? `<figcaption style="font-size: 0.85em; opacity: 0.6; margin-top: 6px;">${caption}</figcaption>` : ""}\n</figure>\n`;
+    return `<figure style="margin: 16px 0; text-align: center;" class="notion-image-figure">\n  <img src="${imgUrl}" alt="${caption ? caption.replace(/<[^>]*>/g, "") : ""}" loading="lazy" decoding="async" style="max-width: 100%; border-radius: 6px; display: block; margin: 0 auto;">\n  ${caption ? `<figcaption style="font-size: 0.85em; opacity: 0.6; margin-top: 6px; color: #ccc">${caption}</figcaption>` : ""}\n</figure>\n`;
   };
 
   const renderVideo = (data: any): string => {
