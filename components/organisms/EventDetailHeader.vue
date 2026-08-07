@@ -48,14 +48,8 @@ onMounted(() => {
       </p>
     </slot>
     <slot name="img">
-      <NuxtImg
-        v-if="props.imageUrl"
-        ref="imgRef"
-        :src="props.imageUrl"
-        format="webp"
-        :class="{ portrait: isPortrait }"
-        @load="handleImageLoad"
-      />
+      <NuxtImg v-if="props.imageUrl" ref="imgRef" :src="props.imageUrl" format="webp" :class="{ portrait: isPortrait }"
+        @load="handleImageLoad" />
     </slot>
   </div>
 </template>
@@ -91,11 +85,13 @@ img {
   width: 100%;
   height: auto;
   box-sizing: border-box;
+  align-self: center;
 }
 
 img.portrait {
   height: 50vh;
-  width: auto;
+  width: fit-content;
+  align-self: center;
 }
 
 @media (max-width: 800px) {
