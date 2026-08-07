@@ -99,7 +99,7 @@ watch(isMenuShown, () => {
     </div>
   </div>
 
-  <Nav @click.stop="isMenuShown = !isMenuShown" :close="isMenuShown" @isclose="(e) => (isMenuShown = e)">
+  <Nav :close="isMenuShown" @isclose="(e) => (isMenuShown = e)">
     <Menu></Menu>
     <div>
       <div @click.stop class="ui-box tags relative" v-if="isShowTags">

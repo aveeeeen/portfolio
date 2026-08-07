@@ -94,7 +94,7 @@ watch(isMenuShown, () => {
     </div>
   </div>
 
-  <Nav @click.stop="isMenuShown = !isMenuShown" :close="isMenuShown" @isclose="(e) => (isMenuShown = e)">
+  <Nav :close="isMenuShown" @isclose="(e) => (isMenuShown = e)">
     <Menu></Menu>
   </Nav>
 </template>

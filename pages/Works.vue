@@ -157,7 +157,7 @@ function closeModal() {
     </div>
     <div class="bottom"></div>
   </div>
-  <Nav @click.stop="isMenuShown = !isMenuShown" :close="isMenuShown" @isclose="(e) => isMenuShown = e">
+  <Nav :close="isMenuShown" @isclose="(e) => isMenuShown = e">
     <Menu></Menu>
     <div class="ui-box" style="padding-left: 10px">
       <div class="flex-vert gap-5">
