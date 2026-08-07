@@ -14,7 +14,9 @@ export default defineNuxtConfig({
       'prod-files-secure.s3.us-west-2.amazonaws.com',
       'www.notion.so',
       'notion.so',
-      'images.unsplash.com'
+      'images.unsplash.com',
+      'localhost:3000',
+      'braveeeeen.vercel.app'
     ],
     vercel: {
       minimunCacheTTL: 6000

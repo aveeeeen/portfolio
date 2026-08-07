@@ -56,14 +56,8 @@ onMounted(() => {
         </h3>
       </div>
     </div>
-    <NuxtImg
-      ref="imgRef"
-      :src="props.imageUrl"
-      format="webp"
-      :class="{ portrait: isPortrait }"
-      @load="handleImageLoad"
-      @error="handleImageError"
-    />
+    <NuxtImg ref="imgRef" :src="props.imageUrl" format="webp" :class="{ portrait: isPortrait }" @load="handleImageLoad"
+      @error="handleImageError" />
   </NuxtLink>
 </template>
 
@@ -85,7 +79,7 @@ img.portrait {
 
 .event-post {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1000px;
   height: auto;
   display: flex;
   flex-direction: column;
