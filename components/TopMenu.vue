@@ -32,7 +32,7 @@ a {
   height: fit-content;
   background-color: var(--bg-color);
   color: var(--text-color-a);
-  font-size: 1.25rem;
+  font-size: 1rem;
   min-width: 64px;
   line-height: 1.5;
   padding: 2px 8px;
