@@ -30,31 +30,70 @@ async function retryNotionApi<T>(fn: () => Promise<T>, retries = numberOfRetry):
   }
 }
 
-export const getManyEvents = defineCachedFunction(
-  async (input: ListEventInput): Promise<ListEventResult[]> => {
+/**
+ * Fetch all public raw event page objects from Notion in batches of 100.
+ * Cached in Nitro memory to avoid redundant Notion API roundtrips.
+ */
+const getAllRawEvents = defineCachedFunction(
+  async () => {
     if (!dataSourceID) throw Error("Data Source ID empty");
 
-    const datasourceResult = await retryNotionApi(() =>
-      notion.dataSources.query({
-        data_source_id: dataSourceID,
-        filter: {
-          property: "Publicity",
-          select: {
-            equals: "public"
-          }
-        },
-        sorts: [
-          {
-            property: "Date",
-            direction: "descending"
-          }
-        ],
-        page_size: 10,
-        start_cursor: !input.cursor || input.cursor === "" ? undefined : input.cursor
-      })
-    );
+    const filterOption: PropertyFilter = {
+      property: "isPublic",
+      checkbox: {
+        equals: true
+      }
+    };
 
-    return datasourceResult.results.map(result => {
+    let results: any[] = [];
+    let hasMore = true;
+    let nextCursor: string | undefined = undefined;
+
+    while (hasMore) {
+      const queryresult = await retryNotionApi(() =>
+        notion.dataSources.query({
+          data_source_id: dataSourceID,
+          filter: filterOption,
+          sorts: [
+            {
+              property: "Date",
+              direction: "descending"
+            }
+          ],
+          page_size: 100,
+          start_cursor: nextCursor
+        })
+      );
+
+      results = results.concat(queryresult.results);
+      hasMore = queryresult.has_more;
+      nextCursor = queryresult.next_cursor ?? undefined;
+    }
+
+    return results;
+  },
+  {
+    maxAge: 60,
+    name: "event-getAllRawEvents",
+    getKey: () => "all-raw-events"
+  }
+);
+
+export const getManyEvents = defineCachedFunction(
+  async (input: ListEventInput): Promise<ListEventResult[]> => {
+    const rawEvents = await getAllRawEvents();
+
+    let startIndex = 0;
+    if (input.cursor && input.cursor !== "") {
+      const foundIndex = rawEvents.findIndex(item => item.id === input.cursor);
+      if (foundIndex !== -1) {
+        startIndex = foundIndex;
+      }
+    }
+
+    const sliced = rawEvents.slice(startIndex, startIndex + 10);
+
+    return sliced.map(result => {
       return {
         id: result.id,
         title: (result as any).properties["Name"].title[0].plain_text,
@@ -75,48 +114,20 @@ export const getManyEvents = defineCachedFunction(
 
 export const getAllPagesAndCursors = defineCachedFunction(
   async (input: PaginationInput): Promise<Pagination> => {
+    const rawEvents = await getAllRawEvents();
+    const totalItems = rawEvents.length;
+    const totalPages = Math.ceil(totalItems / 10) || 1;
+
     const cursors: Record<number, string> = {};
-    let hasMore = true;
-    let totalPages = 1;
-    let nextCursor: string | undefined = undefined;
-    cursors[totalPages] = "";
+    cursors[1] = "";
 
-    if (!dataSourceID) throw Error("Data Source ID empty");
-
-    const filterOption: PropertyFilter = {
-      property: "Publicity",
-      select: {
-        equals: "public"
-      }
-    };
-
-    while (hasMore) {
-      const queryresult = await retryNotionApi(() =>
-        notion.dataSources.query({
-          data_source_id: dataSourceID,
-          filter: filterOption,
-          sorts: [
-            {
-              property: "Date",
-              direction: "descending"
-            }
-          ],
-          page_size: 10,
-          start_cursor: nextCursor
-        })
-      );
-
-      if (queryresult.has_more && queryresult.next_cursor) {
-        nextCursor = queryresult.next_cursor;
-        totalPages++;
-        cursors[totalPages] = queryresult.next_cursor;
-      } else {
-        hasMore = false;
-      }
+    for (let p = 2; p <= totalPages; p++) {
+      const item = rawEvents[(p - 1) * 10];
+      cursors[p] = item ? item.id : "";
     }
 
     return {
-      totalPages: totalPages,
+      totalPages,
       cursorMap: cursors
     };
   },
@@ -149,7 +160,6 @@ const getBlockChildren = async (blockId: string): Promise<NotionBlock[]> => {
     const childrenPromises: Promise<void>[] = [];
 
     for (const block of response.results) {
-      // Skip partial block objects (they only have object + id)
       if (!("type" in block)) {
         continue;
       }
@@ -161,7 +171,6 @@ const getBlockChildren = async (blockId: string): Promise<NotionBlock[]> => {
 
       blocks.push(notionBlock);
 
-      // Recursively fetch children in parallel if the block has nested content
       if (block.has_children) {
         childrenPromises.push(
           getBlockChildren(block.id).then(children => {
