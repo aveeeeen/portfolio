@@ -51,26 +51,13 @@ onMounted(() => {
         </h3>
       </div>
     </div>
-    <div class="img-wrapper">
-      <Skelton v-if="!isImageLoaded" class="img-skelton" :class="{ portrait: isPortrait }" />
-      <NuxtImg
-        v-show="isImageLoaded"
-        ref="imgRef"
-        :src="props.imageUrl"
-        format="webp"
-        :class="{ portrait: isPortrait }"
-        @load="handleImageLoad"
-        @error="handleImageError"
-      />
-    </div>
+    <Skelton v-if="!isImageLoaded" class="img-skelton" :class="{ portrait: isPortrait }" />
+    <NuxtImg v-show="isImageLoaded" ref="imgRef" :src="props.imageUrl" format="webp" :class="{ portrait: isPortrait }"
+      @load="handleImageLoad" @error="handleImageError" />
   </NuxtLink>
 </template>
 
 <style scoped>
-.img-wrapper {
-  width: 100%;
-}
-
 .img-skelton {
   width: 100%;
   height: 25svh;
