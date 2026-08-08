@@ -30,12 +30,23 @@ async function retryNotionApi<T>(fn: () => Promise<T>, retries = numberOfRetry):
   }
 }
 
-export const getManyArticles = defineCachedFunction(
-  async (input: ListArticleInput) => {
+/**
+ * Fetch all raw article page objects matching keyword and tags in batches of 100.
+ * Cached in Nitro memory to avoid redundant Notion API roundtrips.
+ */
+const getAllRawArticles = defineCachedFunction(
+  async (input?: { tags?: string[]; keyword?: string }) => {
     if (!dataSourceID) throw Error("Data Source ID empty");
     const andList: GroupFilterOperatorArray = [];
 
-    if (input.keyword !== "" && input.keyword) {
+    andList.push({
+      property: "isPublic",
+      checkbox: {
+        equals: true
+      }
+    })
+
+    if (input?.keyword !== "" && input?.keyword) {
       andList.push({
         property: "Name",
         title: {
@@ -44,7 +55,7 @@ export const getManyArticles = defineCachedFunction(
       });
     }
 
-    if (input.tags && input.tags.length !== 0) {
+    if (input?.tags && input.tags.length !== 0) {
       andList.push({
         property: "タグ",
         multi_select: {
@@ -53,59 +64,9 @@ export const getManyArticles = defineCachedFunction(
       });
     }
 
-    const datasourceResult = await retryNotionApi(() =>
-      notion.dataSources.query({
-        data_source_id: dataSourceID,
-        filter: andList.length !== 0 ? { and: andList } : undefined,
-        sorts: [
-          {
-            timestamp: "created_time",
-            direction: "descending"
-          }
-        ],
-        page_size: 10,
-        start_cursor: !input.cursor || input.cursor === "" ? undefined : input.cursor
-      })
-    );
-
-    return datasourceResult.results;
-  },
-  {
-    maxAge: 60,
-    name: "blog-getManyArticles",
-    getKey: (input: ListArticleInput) => JSON.stringify(input ?? {})
-  }
-);
-
-export const getAllPagesAndCursors = defineCachedFunction(
-  async (input: PaginationInput): Promise<Pagination> => {
-    const cursors: Record<number, string> = {};
+    let results: any[] = [];
     let hasMore = true;
-    let totalPages = 1;
     let nextCursor: string | undefined = undefined;
-    cursors[totalPages] = "";
-
-    if (!dataSourceID) throw Error("Data Source ID empty");
-
-    const andList: GroupFilterOperatorArray = [];
-
-    if (input && input.keyword !== "" && input.keyword) {
-      andList.push({
-        property: "Name",
-        title: {
-          contains: input.keyword
-        }
-      });
-    }
-
-    if (input && input.tags && input.tags.length !== 0) {
-      andList.push({
-        property: "タグ",
-        multi_select: {
-          contains: input.tags
-        }
-      });
-    }
 
     while (hasMore) {
       const queryresult = await retryNotionApi(() =>
@@ -118,22 +79,68 @@ export const getAllPagesAndCursors = defineCachedFunction(
               direction: "descending"
             }
           ],
-          page_size: 10,
+          page_size: 100,
           start_cursor: nextCursor
         })
       );
 
-      if (queryresult.has_more && queryresult.next_cursor) {
-        nextCursor = queryresult.next_cursor;
-        totalPages++;
-        cursors[totalPages] = queryresult.next_cursor;
-      } else {
-        hasMore = false;
+      results = results.concat(queryresult.results);
+      hasMore = queryresult.has_more;
+      nextCursor = queryresult.next_cursor ?? undefined;
+    }
+
+    return results;
+  },
+  {
+    maxAge: 60,
+    name: "blog-getAllRawArticles",
+    getKey: (input) => JSON.stringify(input ?? {})
+  }
+);
+
+export const getManyArticles = defineCachedFunction(
+  async (input: ListArticleInput) => {
+    const rawArticles = await getAllRawArticles({
+      tags: input.tags,
+      keyword: input.keyword
+    });
+
+    let startIndex = 0;
+    if (input.cursor && input.cursor !== "") {
+      const foundIndex = rawArticles.findIndex(item => item.id === input.cursor);
+      if (foundIndex !== -1) {
+        startIndex = foundIndex;
       }
     }
 
+    return rawArticles.slice(startIndex, startIndex + 10);
+  },
+  {
+    maxAge: 60,
+    name: "blog-getManyArticles",
+    getKey: (input: ListArticleInput) => JSON.stringify(input ?? {})
+  }
+);
+
+export const getAllPagesAndCursors = defineCachedFunction(
+  async (input: PaginationInput): Promise<Pagination> => {
+    const rawArticles = await getAllRawArticles({
+      tags: input?.tags,
+      keyword: input?.keyword
+    });
+    const totalItems = rawArticles.length;
+    const totalPages = Math.ceil(totalItems / 10) || 1;
+
+    const cursors: Record<number, string> = {};
+    cursors[1] = "";
+
+    for (let p = 2; p <= totalPages; p++) {
+      const item = rawArticles[(p - 1) * 10];
+      cursors[p] = item ? item.id : "";
+    }
+
     return {
-      totalPages: totalPages,
+      totalPages,
       cursorMap: cursors
     };
   },
@@ -195,7 +202,6 @@ const getBlockChildren = async (blockId: string): Promise<NotionBlock[]> => {
     const childrenPromises: Promise<void>[] = [];
 
     for (const block of response.results) {
-      // Skip partial block objects (they only have object + id)
       if (!("type" in block)) {
         continue;
       }
@@ -207,7 +213,6 @@ const getBlockChildren = async (blockId: string): Promise<NotionBlock[]> => {
 
       blocks.push(notionBlock);
 
-      // Recursively fetch children in parallel if the block has nested content
       if (block.has_children) {
         childrenPromises.push(
           getBlockChildren(block.id).then(children => {
