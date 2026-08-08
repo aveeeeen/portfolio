@@ -1,44 +1,68 @@
-import { Client } from "@notionhq/client";
+import { APIResponseError, Client } from "@notionhq/client";
 import type { EventBlocksResult, NotionBlock, ListEventResult, ListEventInput, Pagination, PaginationInput } from "./event.service.types";
-import type { GroupFilterOperatorArray, PropertyFilter } from "@notionhq/client/build/src/api-endpoints";
+import type { PropertyFilter } from "@notionhq/client/build/src/api-endpoints";
 
 const notion = new Client({
   auth: process.env.NOTION_API_KEY
-})
+});
 
 const dataSourceID = process.env.NOTION_EVENT_DATASOURCE_ID;
+
+const numberOfRetry = 2;
+
+async function retryNotionApi<T>(fn: () => Promise<T>, retries = numberOfRetry): Promise<T> {
+  let attempt = 0;
+  while (true) {
+    try {
+      return await fn();
+    } catch (error: unknown) {
+      if (error instanceof APIResponseError) {
+        if (error.status && error.status >= 400 && error.status < 500) {
+          throw error;
+        }
+      }
+      if (attempt >= retries) {
+        throw error;
+      }
+      attempt++;
+      await new Promise((resolve) => setTimeout(resolve, 300 * Math.pow(2, attempt)));
+    }
+  }
+}
 
 export const getManyEvents = defineCachedFunction(
   async (input: ListEventInput): Promise<ListEventResult[]> => {
     if (!dataSourceID) throw Error("Data Source ID empty");
 
-    const datasourceResult = await notion.dataSources.query({
-      data_source_id: dataSourceID,
-      filter: {
-        property: "Publicity",
-        select: {
-          equals: "public"
-        }
-      },
-      sorts: [
-        {
-          property: "Date",
-          direction: "descending"
-        }
-      ],
-      page_size: 10,
-      start_cursor: !input.cursor || input.cursor === "" ? undefined : input.cursor
-    });
+    const datasourceResult = await retryNotionApi(() =>
+      notion.dataSources.query({
+        data_source_id: dataSourceID,
+        filter: {
+          property: "Publicity",
+          select: {
+            equals: "public"
+          }
+        },
+        sorts: [
+          {
+            property: "Date",
+            direction: "descending"
+          }
+        ],
+        page_size: 10,
+        start_cursor: !input.cursor || input.cursor === "" ? undefined : input.cursor
+      })
+    );
 
     return datasourceResult.results.map(result => {
       return {
         id: result.id,
-        title: result.properties["Name"].title[0].plain_text,
-        date: result.properties["Date"].date.start,
-        venue: result.properties["Venue"].rich_text[0].plain_text,
-        imageUrl: result.properties["Image"].files[0].file.url,
-        createdAt: result["created_time"],
-        updatedAt: result["last_edited_time"],
+        title: (result as any).properties["Name"].title[0].plain_text,
+        date: (result as any).properties["Date"].date.start,
+        venue: (result as any).properties["Venue"].rich_text[0].plain_text,
+        imageUrl: (result as any).properties["Image"].files[0].file.url,
+        createdAt: (result as any)["created_time"],
+        updatedAt: (result as any)["last_edited_time"],
       } as ListEventResult;
     });
   },
@@ -54,40 +78,21 @@ export const getAllPagesAndCursors = defineCachedFunction(
     const cursors: Record<number, string> = {};
     let hasMore = true;
     let totalPages = 1;
-    let nextCursor = "";
-    cursors[totalPages] = nextCursor;
+    let nextCursor: string | undefined = undefined;
+    cursors[totalPages] = "";
 
     if (!dataSourceID) throw Error("Data Source ID empty");
 
     const filterOption: PropertyFilter = {
-      "property": "Publicity",
-      "select": {
-        "equals": "public"
+      property: "Publicity",
+      select: {
+        equals: "public"
       }
     };
 
     while (hasMore) {
-      if (nextCursor === "") {
-        const queryresult = await notion.dataSources.query({
-          data_source_id: dataSourceID,
-          filter: filterOption,
-          sorts: [
-            {
-              property: "Date",
-              direction: "descending"
-            }
-          ],
-          page_size: 10,
-        });
-        if (queryresult.next_cursor) {
-          nextCursor = queryresult.next_cursor;
-          totalPages++;
-          cursors[totalPages] = queryresult.next_cursor;
-        } else {
-          hasMore = false;
-        }
-      } else {
-        const queryresult = await notion.dataSources.query({
+      const queryresult = await retryNotionApi(() =>
+        notion.dataSources.query({
           data_source_id: dataSourceID,
           filter: filterOption,
           sorts: [
@@ -98,16 +103,18 @@ export const getAllPagesAndCursors = defineCachedFunction(
           ],
           page_size: 10,
           start_cursor: nextCursor
-        });
-        if (queryresult.next_cursor) {
-          nextCursor = queryresult.next_cursor;
-          totalPages++;
-          cursors[totalPages] = queryresult.next_cursor;
-        } else {
-          hasMore = false;
-        }
+        })
+      );
+
+      if (queryresult.has_more && queryresult.next_cursor) {
+        nextCursor = queryresult.next_cursor;
+        totalPages++;
+        cursors[totalPages] = queryresult.next_cursor;
+      } else {
+        hasMore = false;
       }
     }
+
     return {
       totalPages: totalPages,
       cursorMap: cursors
@@ -131,11 +138,13 @@ const getBlockChildren = async (blockId: string): Promise<NotionBlock[]> => {
   let startCursor: string | undefined = undefined;
 
   while (hasMore) {
-    const response = await notion.blocks.children.list({
-      block_id: blockId,
-      start_cursor: startCursor,
-      page_size: 100,
-    });
+    const response = await retryNotionApi(() =>
+      notion.blocks.children.list({
+        block_id: blockId,
+        start_cursor: startCursor,
+        page_size: 100,
+      })
+    );
 
     const childrenPromises: Promise<void>[] = [];
 
@@ -179,9 +188,11 @@ const getBlockChildren = async (blockId: string): Promise<NotionBlock[]> => {
 export const getEventBlocksById = defineCachedFunction(
   async (id: string): Promise<EventBlocksResult> => {
     const [event, blocks] = await Promise.all([
-      notion.pages.retrieve({
-        page_id: id
-      }),
+      retryNotionApi(() =>
+        notion.pages.retrieve({
+          page_id: id
+        })
+      ),
       getBlockChildren(id)
     ]);
 
