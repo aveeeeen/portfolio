@@ -10,18 +10,29 @@ const props = defineProps<{
 }>();
 
 const isPortrait = ref(false);
+const isImageLoaded = ref(false);
 const imgRef = ref<HTMLImageElement | null>(null);
 
 function handleImageLoad(event?: Event) {
-  const img = (event?.target as HTMLImageElement) || imgRef.value;
+  const img = (event?.target as HTMLImageElement) || ((imgRef.value as any)?.$el ?? imgRef.value);
   if (img && img.naturalWidth && img.naturalHeight) {
     isPortrait.value = img.naturalHeight > img.naturalWidth;
   }
+  isImageLoaded.value = true;
+}
+
+function handleImageError() {
+  isImageLoaded.value = true;
 }
 
 onMounted(() => {
-  if (imgRef.value && imgRef.value.complete) {
-    handleImageLoad();
+  if (!props.imageUrl) {
+    isImageLoaded.value = true;
+    return;
+  }
+  const imgEl = (imgRef.value as any)?.$el || imgRef.value;
+  if (imgEl && imgEl.complete && imgEl.naturalWidth) {
+    handleImageLoad({ target: imgEl } as any);
   }
 });
 </script>
@@ -40,12 +51,29 @@ onMounted(() => {
         会場: {{ props.venue }}
       </p>
     </div>
-    <NuxtImg v-if="props.imageUrl" ref="imgRef" :src="props.imageUrl" format="webp" :class="{ portrait: isPortrait }"
-      @load="handleImageLoad" />
+    <template v-if="props.imageUrl">
+      <Skelton v-if="!isImageLoaded" class="img-skelton" :class="{ portrait: isPortrait }" />
+      <NuxtImg v-show="isImageLoaded" ref="imgRef" :src="props.imageUrl" format="webp" :class="{ portrait: isPortrait }"
+        @load="handleImageLoad" @error="handleImageError" />
+    </template>
   </div>
 </template>
 
 <style scoped>
+.img-skelton {
+  width: 100%;
+  height: 35svh;
+  box-sizing: border-box;
+  border-radius: 12px;
+  align-self: center;
+}
+
+.img-skelton.portrait {
+  height: 40vh;
+  width: fit-content;
+  align-self: center;
+}
+
 .note-header {
   padding: 30px 20px;
   border-radius: 20px;

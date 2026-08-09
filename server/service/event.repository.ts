@@ -61,6 +61,7 @@ const getAllRawEvents = defineCachedFunction(
               direction: "descending"
             }
           ],
+          filter_properties: ["isPublic", "Date", "Name", "Venue", "Image"],
           page_size: 100,
           start_cursor: nextCursor
         })
@@ -203,7 +204,8 @@ export const getEventBlocksById = defineCachedFunction(
     const [event, blocks] = await Promise.all([
       retryNotionApi(() =>
         notion.pages.retrieve({
-          page_id: id
+          page_id: id,
+          filter_properties: ["isPublic", "Date", "Name", "Venue", "Image"]
         })
       ),
       getBlockChildren(id)
