@@ -1,15 +1,15 @@
 import { URL } from "url";
 
 export type EmbedResult =
-  | { type: "oembed"; html: string; provider?: string; title?: string }
-  | { type: "iframe"; iframeUrl: string; provider?: string }
-  | { type: "bookmark"; title: string; description?: string; image?: string; siteName?: string; favicon?: string; url: string }
-  | { type: "fallback"; url: string };
+  | { type: "oembed"; html: string; provider?: string; title?: string; resolvedUrl?: string }
+  | { type: "iframe"; iframeUrl: string; provider?: string; resolvedUrl?: string }
+  | { type: "bookmark"; title: string; description?: string; image?: string; siteName?: string; favicon?: string; url: string; resolvedUrl?: string }
+  | { type: "fallback"; url: string; resolvedUrl?: string };
 
 /**
  * Extract location/query from a Google Maps URL, resolving shortlinks if necessary.
  */
-async function extractGoogleMapsInfo(urlStr: string): Promise<{ query?: string; zoom?: string; embedUrl?: string } | null> {
+async function extractGoogleMapsInfo(urlStr: string): Promise<{ query?: string; zoom?: string; embedUrl?: string; resolvedUrl?: string } | null> {
   let targetUrl = urlStr;
 
   // 1. Resolve shortened URLs (maps.app.goo.gl or goo.gl/maps) via HTTP GET request
@@ -62,16 +62,18 @@ async function extractGoogleMapsInfo(urlStr: string): Promise<{ query?: string; 
     }
   }
 
+  const resolvedUrl = targetUrl !== urlStr ? targetUrl : undefined;
+
   // 2. Already an iframe embed URL (e.g. google.com/maps/embed?pb=...)
   if (targetUrl.includes("/maps/embed")) {
-    return { embedUrl: targetUrl };
+    return { embedUrl: targetUrl, resolvedUrl };
   }
 
   try {
     // 3. Priority 1: Check 3d/4d exact location coordinates in data parameter (!3d34.7120857!4d135.5082373)
     const dataMatch = targetUrl.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/);
     if (dataMatch) {
-      return { query: `${dataMatch[1]},${dataMatch[2]}`, zoom: "15" };
+      return { query: `${dataMatch[1]},${dataMatch[2]}`, zoom: "15", resolvedUrl };
     }
 
     // 4. Priority 2: Check @lat,lng coordinates in URL
@@ -79,7 +81,7 @@ async function extractGoogleMapsInfo(urlStr: string): Promise<{ query?: string; 
     if (coordMatch) {
       const coords = `${coordMatch[1]},${coordMatch[2]}`;
       const zoom = coordMatch[3] ? coordMatch[3].replace("z", "") : "15";
-      return { query: coords, zoom };
+      return { query: coords, zoom, resolvedUrl };
     }
 
     const parsed = new URL(targetUrl);
@@ -89,7 +91,7 @@ async function extractGoogleMapsInfo(urlStr: string): Promise<{ query?: string; 
     if (qParam) {
       qParam = qParam.replace(/^@/, "").replace(/,\d+z$/, "").trim();
       if (qParam) {
-        return { query: qParam };
+        return { query: qParam, resolvedUrl };
       }
     }
 
@@ -98,7 +100,7 @@ async function extractGoogleMapsInfo(urlStr: string): Promise<{ query?: string; 
     if (placeMatch && placeMatch[1]) {
       const placeName = decodeURIComponent(placeMatch[1].replace(/\+/g, " ")).trim();
       if (placeName && placeName !== "@") {
-        return { query: placeName };
+        return { query: placeName, resolvedUrl };
       }
     }
 
@@ -107,13 +109,13 @@ async function extractGoogleMapsInfo(urlStr: string): Promise<{ query?: string; 
     if (searchMatch && searchMatch[1]) {
       const searchQuery = decodeURIComponent(searchMatch[1].replace(/\+/g, " ")).trim();
       if (searchQuery) {
-        return { query: searchQuery };
+        return { query: searchQuery, resolvedUrl };
       }
     }
 
-    return null;
+    return { resolvedUrl };
   } catch {
-    return null;
+    return { resolvedUrl };
   }
 }
 
@@ -253,7 +255,7 @@ export async function resolveEmbed(url: string): Promise<EmbedResult> {
     const info = await extractGoogleMapsInfo(cleanUrl);
 
     if (info?.embedUrl) {
-      return { type: "iframe", iframeUrl: info.embedUrl, provider: "Google Maps" };
+      return { type: "iframe", iframeUrl: info.embedUrl, provider: "Google Maps", resolvedUrl: info.resolvedUrl };
     }
 
     if (info?.query) {
@@ -268,7 +270,8 @@ export async function resolveEmbed(url: string): Promise<EmbedResult> {
         return {
           type: "iframe",
           iframeUrl,
-          provider: "Google Maps"
+          provider: "Google Maps",
+          resolvedUrl: info.resolvedUrl
         };
       }
 
@@ -279,7 +282,8 @@ export async function resolveEmbed(url: string): Promise<EmbedResult> {
       return {
         type: "iframe",
         iframeUrl: fallbackEmbedUrl,
-        provider: "Google Maps"
+        provider: "Google Maps",
+        resolvedUrl: info.resolvedUrl
       };
     }
 
@@ -288,7 +292,8 @@ export async function resolveEmbed(url: string): Promise<EmbedResult> {
       title: "Google Maps",
       description: "Google マップで場所を表示します",
       siteName: "Google Maps",
-      url: cleanUrl
+      url: info?.resolvedUrl || cleanUrl,
+      resolvedUrl: info?.resolvedUrl
     };
   }
 

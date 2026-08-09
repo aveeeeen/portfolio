@@ -24,6 +24,9 @@ async function enrichBlocksWithEmbeds(blocks: any[]): Promise<void> {
       promises.push(
         resolveEmbed(block.embed.url).then((res) => {
           block.embedData = res;
+          if (res.resolvedUrl && block.embed) {
+            block.embed.url = res.resolvedUrl;
+          }
         })
       );
     } else if (block.type === "bookmark" || block.type === "link_preview") {
@@ -33,6 +36,10 @@ async function enrichBlocksWithEmbeds(blocks: any[]): Promise<void> {
           promises.push(
             resolveEmbed(url).then((res) => {
               block.embedData = res;
+              if (res.resolvedUrl) {
+                if (block.bookmark) block.bookmark.url = res.resolvedUrl;
+                if (block.link_preview) block.link_preview.url = res.resolvedUrl;
+              }
             })
           );
         } else {
