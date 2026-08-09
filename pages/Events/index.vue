@@ -23,8 +23,8 @@ useSeoMeta({
             <Border></Border>
             <p>new → old</p>
             <Border></Border>
-            <div class="article-list flex-vert gap-20" v-for="i in 5">
-              <EvnetCardSkelton></EvnetCardSkelton>
+            <div class="flex-vert gap-20 article-list">
+              <EvnetCardSkelton v-for="i in 5"></EvnetCardSkelton>
             </div>
           </div>
           <div class="bottom"></div>
@@ -41,7 +41,7 @@ ul {
 }
 
 .article-list {
-  max-width: 700px;
+  max-width: 800px;
   min-height: 80svh;
 }
 </style>
