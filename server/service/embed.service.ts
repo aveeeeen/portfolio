@@ -9,7 +9,7 @@ export type EmbedResult =
 /**
  * Extract location/query from a Google Maps URL, resolving shortlinks if necessary.
  */
-async function extractGoogleMapsInfo(urlStr: string): Promise<{ query?: string; zoom?: string; embedUrl?: string; resolvedUrl?: string } | null> {
+async function extractGoogleMapsInfo(urlStr: string): Promise<{ query?: string; center?: string; zoom?: string; embedUrl?: string; resolvedUrl?: string } | null> {
   let targetUrl = urlStr.trim();
 
   // Helper to extract nested Google Maps URL from query parameters (link, continue, q, url)
@@ -102,7 +102,6 @@ async function extractGoogleMapsInfo(urlStr: string): Promise<{ query?: string; 
   }
 
   targetUrl = unwrapNestedUrl(targetUrl);
-
   const resolvedUrl = targetUrl !== urlStr ? targetUrl : undefined;
 
   // 2. Already an iframe embed URL (e.g. google.com/maps/embed?pb=...)
@@ -111,56 +110,73 @@ async function extractGoogleMapsInfo(urlStr: string): Promise<{ query?: string; 
   }
 
   try {
-    // Decode targetUrl in case parameters are URL-encoded
     const decodedUrl = decodeURIComponent(targetUrl);
 
-    // 3. Priority 1: Check 3d/4d exact location coordinates in data parameter (!3d34.7120857!4d135.5082373)
+    let center: string | undefined = undefined;
+    let zoom: string | undefined = undefined;
+
+    // Check 3d/4d exact location coordinates in data parameter (!3d34.6726647!4d135.4910468)
     const dataMatch = decodedUrl.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/) || targetUrl.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/);
     if (dataMatch) {
-      return { query: `${dataMatch[1]},${dataMatch[2]}`, zoom: "15", resolvedUrl };
+      center = `${dataMatch[1]},${dataMatch[2]}`;
     }
 
-    // 4. Priority 2: Check @lat,lng coordinates in URL
+    // Check @lat,lng coordinates in URL
     const coordMatch = decodedUrl.match(/@(-?\d+\.\d+),(-?\d+\.\d+)(?:,(\d+(?:\.\d+)?z))?/) || targetUrl.match(/@(-?\d+\.\d+),(-?\d+\.\d+)(?:,(\d+(?:\.\d+)?z))?/);
     if (coordMatch) {
-      const coords = `${coordMatch[1]},${coordMatch[2]}`;
-      const zoom = coordMatch[3] ? coordMatch[3].replace("z", "") : "15";
-      return { query: coords, zoom, resolvedUrl };
+      if (!center) {
+        center = `${coordMatch[1]},${coordMatch[2]}`;
+      }
+      if (coordMatch[3]) {
+        zoom = coordMatch[3].replace("z", "");
+      }
     }
 
+    let placeName: string | undefined = undefined;
     const parsed = new URL(targetUrl);
 
-    // 5. Priority 3: Check q or query search parameter
-    let qParam = parsed.searchParams.get("q") || parsed.searchParams.get("query");
-    if (qParam) {
-      qParam = qParam.replace(/^@/, "").replace(/,\d+z$/, "").trim();
-      if (qParam && !qParam.startsWith("http")) {
-        return { query: qParam, resolvedUrl };
-      }
-    }
-
-    // 6. Priority 4: Check place name from pathname: /place/Place+Name/
+    // Priority A: Check place name from pathname: /place/Place+Name/
     const placeMatch = parsed.pathname.match(/\/place\/([^/@]+)/);
     if (placeMatch && placeMatch[1]) {
-      const placeName = decodeURIComponent(placeMatch[1].replace(/\+/g, " ")).trim();
-      if (placeName && placeName !== "@") {
-        return { query: placeName, resolvedUrl };
+      const p = decodeURIComponent(placeMatch[1].replace(/\+/g, " ")).trim();
+      if (p && p !== "@" && !p.startsWith("@")) {
+        placeName = p;
       }
     }
 
-    // 7. Priority 5: Check search query from pathname: /search/Search+Query/...
-    const searchMatch = parsed.pathname.match(/\/search\/([^/@]+)/);
-    if (searchMatch && searchMatch[1]) {
-      const searchQuery = decodeURIComponent(searchMatch[1].replace(/\+/g, " ")).trim();
-      if (searchQuery) {
-        return { query: searchQuery, resolvedUrl };
+    // Priority B: Check search query from pathname: /search/Search+Query/...
+    if (!placeName) {
+      const searchMatch = parsed.pathname.match(/\/search\/([^/@]+)/);
+      if (searchMatch && searchMatch[1]) {
+        const s = decodeURIComponent(searchMatch[1].replace(/\+/g, " ")).trim();
+        if (s) {
+          placeName = s;
+        }
       }
     }
 
-    // 8. Priority 6: Check FTID or Place ID or search query in data parameter (!1s...)
+    // Priority C: Check q or query search parameter
+    if (!placeName) {
+      let qParam = parsed.searchParams.get("q") || parsed.searchParams.get("query");
+      if (qParam) {
+        qParam = qParam.replace(/^@/, "").replace(/,\d+z$/, "").trim();
+        if (qParam && !qParam.startsWith("http") && !/^-?\d+\.\d+,-?\d+\.\d+$/.test(qParam)) {
+          placeName = qParam;
+        }
+      }
+    }
+
+    if (placeName) {
+      return { query: placeName, center, zoom: zoom || "17", resolvedUrl };
+    }
+
+    if (center) {
+      return { query: center, zoom: zoom || "17", resolvedUrl };
+    }
+
     const ftidMatch = decodedUrl.match(/!1s(0x[0-9a-fA-F]+:0x[0-9a-fA-F]+)/);
     if (ftidMatch) {
-      return { query: ftidMatch[1], zoom: "15", resolvedUrl };
+      return { query: ftidMatch[1], center, zoom: zoom || "17", resolvedUrl };
     }
 
     return { resolvedUrl };
@@ -170,13 +186,65 @@ async function extractGoogleMapsInfo(urlStr: string): Promise<{ query?: string; 
 }
 
 /**
+ * Parse timestamp strings (e.g. 8371, 8371s, 1h20m30s) to seconds
+ */
+function parseTimestampToSeconds(ts: string): number | null {
+  if (!ts) return null;
+  const clean = ts.replace(/s$/i, "").trim();
+  if (/^\d+$/.test(clean)) {
+    return parseInt(clean, 10);
+  }
+  const match = clean.match(/(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s?)?/i);
+  if (match && (match[1] || match[2] || match[3])) {
+    const h = parseInt(match[1] || "0", 10);
+    const m = parseInt(match[2] || "0", 10);
+    const s = parseInt(match[3] || "0", 10);
+    return h * 3600 + m * 60 + s;
+  }
+  return null;
+}
+
+/**
+ * Convert any YouTube URL (watch, embed, shorts, live, youtu.be) with timestamp to iframe embed URL
+ */
+function formatYouTubeEmbedUrl(url: string): string | null {
+  if (!url) return null;
+
+  const youtubeMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+  if (!youtubeMatch) return null;
+
+  const videoId = youtubeMatch[1];
+  let embedUrl = `https://www.youtube.com/embed/${videoId}`;
+
+  let startSec: number | null = null;
+  try {
+    const parsed = new URL(url);
+    const tParam = parsed.searchParams.get("t") || parsed.searchParams.get("start") || parsed.hash.replace(/^#/, "").match(/(?:t|start)=([^&]+)/)?.[1];
+    if (tParam) {
+      startSec = parseTimestampToSeconds(tParam);
+    }
+  } catch {
+    const tMatch = url.match(/[?&#](?:t|start)=([^&#]+)/);
+    if (tMatch) {
+      startSec = parseTimestampToSeconds(tMatch[1]);
+    }
+  }
+
+  if (startSec !== null && !isNaN(startSec) && startSec > 0) {
+    embedUrl += `?start=${startSec}`;
+  }
+
+  return embedUrl;
+}
+
+/**
  * Check static iframe patterns for supported providers
  */
 function matchStaticIframePattern(url: string): string | null {
   // YouTube
-  const youtubeMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]+)/);
-  if (youtubeMatch) {
-    return `https://www.youtube.com/embed/${youtubeMatch[1]}`;
+  const ytEmbed = formatYouTubeEmbedUrl(url);
+  if (ytEmbed) {
+    return ytEmbed;
   }
 
   // Spotify
@@ -314,6 +382,9 @@ export async function resolveEmbed(url: string): Promise<EmbedResult> {
 
       if (isValidApiKey) {
         let iframeUrl = `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${encodeURIComponent(info.query)}`;
+        if (info.center) {
+          iframeUrl += `&center=${info.center}`;
+        }
         if (info.zoom) {
           iframeUrl += `&zoom=${info.zoom}`;
         }
@@ -325,7 +396,11 @@ export async function resolveEmbed(url: string): Promise<EmbedResult> {
         };
       }
 
-      let fallbackEmbedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(info.query)}&output=embed`;
+      let fallbackEmbedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(info.query)}`;
+      if (info.center) {
+        fallbackEmbedUrl += `&ll=${info.center}`;
+      }
+      fallbackEmbedUrl += `&output=embed`;
       if (info.zoom) {
         fallbackEmbedUrl += `&z=${info.zoom}`;
       }
