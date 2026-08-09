@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="footer-area">
     <div class="footer-border"></div>
     <footer class="flex-vert center-">
       <div class="footer-box">
@@ -71,6 +71,10 @@ a {
   padding: 24px;
 }
 
+.footer-area {
+  position: relative;
+}
+
 .footer-links {
   padding: 64px 0 32px 0;
   justify-content: flex-end;
@@ -78,7 +82,13 @@ a {
 
 footer {
   height: fit-content;
-  width: 100svw;
+  width: 100%;
   background-color: blue;
+}
+
+@media (max-width: 800px) {
+  .footer-box {
+    width: fit-content;
+  }
 }
 </style>
