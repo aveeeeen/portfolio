@@ -71,7 +71,8 @@ onMounted(() => {
 }
 
 img {
-  width: 100%;
+  width: 600px;
+  max-width: 90%;
   height: auto;
   box-sizing: border-box;
 }
