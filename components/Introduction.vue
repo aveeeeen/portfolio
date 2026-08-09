@@ -8,7 +8,8 @@
 
 <style scoped>
 h1 {
-  background-color: var(--bg-color);
+  background-color: #fff;
+  color: #000;
   line-height: 200%;
   text-align: right;
   display: block;
@@ -18,7 +19,8 @@ h1 {
 }
 
 h3 {
-  background-color: var(--bg-color);
+  background-color: #fff;
+  background-color: #000;
   line-height: 200%;
   text-align: right;
   display: block;
