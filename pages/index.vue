@@ -183,7 +183,7 @@ function scrollToAbout() {
 
 .intro>h1 {
   line-height: 1.0;
-  font-weight: 300;
+  font-weight: 450;
   font-size: 2rem;
 }
 
@@ -195,6 +195,7 @@ function scrollToAbout() {
 
 
 .scroll-indication-anchor {
+  margin-top: 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -212,7 +213,7 @@ function scrollToAbout() {
 }
 
 .scroll-indication {
-  font-weight: 200;
+  font-weight: 600;
   font-size: 1rem;
   color: var(--text-color);
 }
@@ -277,7 +278,7 @@ function scrollToAbout() {
 
   .intro>h1 {
     line-height: 1.0;
-    font-weight: 300;
+    font-weight: 450;
     font-size: 1.4rem;
   }
 
@@ -293,7 +294,7 @@ function scrollToAbout() {
 
   .scroll-indication-box {
     padding: 2px;
-    border-top: solid 1px var(--text-color);
+    border-top: solid 2px var(--text-color);
   }
 
   .scroll-indication-anchor {
