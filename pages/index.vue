@@ -12,15 +12,6 @@ const highlightedCode = computed(() => {
   return hljs.highlight(bio, { language: 'json' }).value;
 });
 
-onBeforeMount(() => {
-  if (import.meta.client) {
-    let html = document.querySelector("html");
-    if (html) {
-      html.style.backgroundColor = "blue";
-    }
-  }
-});
-
 const getIsUnder = () => {
   const aboutEl = document.getElementById('about');
   isUnderPageHeight.value = window.scrollY > (aboutEl?.offsetTop ?? window.innerHeight) - 64;
@@ -34,22 +25,6 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  if (import.meta.client) {
-    let html = document.querySelector("html");
-    if (html) {
-      html.style.removeProperty("background-color");
-    }
-    const savedTheme = localStorage.getItem("theme");
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const isDark = savedTheme ? savedTheme === "dark" : prefersDark;
-
-    if (isDark) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }
-
   document.removeEventListener("scroll", getIsUnder);
 });
 
