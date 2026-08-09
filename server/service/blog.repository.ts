@@ -1,6 +1,7 @@
 import { APIResponseError, Client } from "@notionhq/client";
 import type { ArticleResult, ArticleBlocksResult, NotionBlock, ListArticleInput, Pagination, PaginationInput, Tag } from "./blog.service.types";
 import type { GroupFilterOperatorArray } from "@notionhq/client/build/src/api-endpoints";
+import { shouldBypassCache } from "../utils/cache";
 
 const notion = new Client({
   auth: process.env.NOTION_API_KEY
@@ -94,7 +95,8 @@ const getAllRawArticles = defineCachedFunction(
   {
     maxAge: 60,
     name: "blog-getAllRawArticles",
-    getKey: (input) => JSON.stringify(input ?? {})
+    getKey: (input) => JSON.stringify(input ?? {}),
+    shouldBypassCache
   }
 );
 
@@ -118,7 +120,8 @@ export const getManyArticles = defineCachedFunction(
   {
     maxAge: 60,
     name: "blog-getManyArticles",
-    getKey: (input: ListArticleInput) => JSON.stringify(input ?? {})
+    getKey: (input: ListArticleInput) => JSON.stringify(input ?? {}),
+    shouldBypassCache
   }
 );
 
@@ -147,7 +150,8 @@ export const getAllPagesAndCursors = defineCachedFunction(
   {
     maxAge: 300,
     name: "blog-getAllPagesAndCursors",
-    getKey: (input: PaginationInput) => JSON.stringify(input ?? {})
+    getKey: (input: PaginationInput) => JSON.stringify(input ?? {}),
+    shouldBypassCache
   }
 );
 
@@ -263,8 +267,9 @@ export const getArticleBlocksById = defineCachedFunction(
   },
   {
     maxAge: 300,
-    name: "blog-getArticleBlocksById",
-    getKey: (id: string) => id
+    name: "blog-getArticleBlocksById-v5",
+    getKey: (id: string) => id,
+    shouldBypassCache
   }
 );
 
@@ -287,6 +292,7 @@ export const getAllTags = defineCachedFunction(
   {
     maxAge: 600,
     name: "blog-getAllTags",
-    getKey: () => "all-tags"
+    getKey: () => "all-tags",
+    shouldBypassCache
   }
 );

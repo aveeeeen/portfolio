@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, onMounted, watch, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useFetch, useSeoMeta } from '#app';
 import { useNotionBlockParser } from '../composables/useNotionBlockParser';
@@ -41,6 +41,33 @@ const tocLinks = computed(() => {
     return [];
   }
   return getTableOfContents(event.value.blocks);
+});
+
+const loadTwitterWidgets = () => {
+  if (process.client && parsedHtml.value?.includes('twitter-tweet')) {
+    if ((window as any).twttr) {
+      (window as any).twttr.widgets?.load();
+    } else {
+      const script = document.createElement('script');
+      script.setAttribute('src', 'https://platform.twitter.com/widgets.js');
+      script.setAttribute('async', 'true');
+      script.setAttribute('charset', 'utf-8');
+      document.head.appendChild(script);
+    }
+  }
+};
+
+onMounted(() => {
+  if (event.value) {
+    isToCEmpty.value = tocLinks.value.length === 0;
+  }
+  loadTwitterWidgets();
+});
+
+watch(parsedHtml, () => {
+  nextTick(() => {
+    loadTwitterWidgets();
+  });
 });
 
 function closeModal() {

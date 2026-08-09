@@ -293,3 +293,27 @@ li {
     z-index: 1;
   }
 }
+
+/* Notion Bookmark Card Styling with Dark Mode Support */
+.notion-bookmark-card {
+  margin: 12px 0;
+  width: 600px;
+  max-width: 90%;
+}
+
+.notion-bookmark-card-link {
+  display: flex;
+  text-decoration: none;
+  color: var(--text-color);
+  border: 1px solid rgba(128, 128, 128, 0.2);
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: var(--ui-bg-color);
+  min-height: 85px;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.notion-bookmark-card-link:hover {
+  border-color: rgba(128, 128, 128, 0.4);
+}
+

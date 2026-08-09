@@ -32,6 +32,9 @@ export const getArticleById = async (id: string): Promise<ArticleResult> => {
   return article;
 }
 
+import { resolveEmbed } from "./embed.service";
+import type { NotionBlock } from "./blog.service.types";
+
 const extractExcerpt = (blocks: NotionBlock[]): string => {
   const paragraphs: string[] = [];
   for (const block of blocks) {
@@ -54,8 +57,50 @@ const extractExcerpt = (blocks: NotionBlock[]): string => {
   return paragraphs.join('\n\n');
 }
 
+import { fetchOgpMeta } from "./ogp.service";
+
+async function enrichBlocksWithEmbeds(blocks: NotionBlock[]): Promise<void> {
+  if (!blocks || !Array.isArray(blocks)) return;
+
+  const promises: Promise<void>[] = [];
+
+  for (const block of blocks) {
+    if (block.type === "embed" && block.embed?.url) {
+      promises.push(
+        resolveEmbed(block.embed.url).then((res) => {
+          (block as any).embedData = res;
+        })
+      );
+    } else if (block.type === "bookmark" || block.type === "link_preview") {
+      const url = block.bookmark?.url || block.link_preview?.url;
+      if (url) {
+        if (url.includes("embed")) {
+          promises.push(
+            resolveEmbed(url).then((res) => {
+              (block as any).embedData = res;
+            })
+          );
+        } else {
+          promises.push(
+            fetchOgpMeta(url).then((ogp) => {
+              (block as any).ogpData = ogp;
+            })
+          );
+        }
+      }
+    }
+
+    if (block.children && block.children.length > 0) {
+      promises.push(enrichBlocksWithEmbeds(block.children));
+    }
+  }
+
+  await Promise.all(promises);
+}
+
 export const getArticleBlocksById = async (id: string): Promise<ArticleBlocksResult> => {
   const article = await BlogRepository.getArticleBlocksById(id);
+  await enrichBlocksWithEmbeds(article.blocks);
   return {
     ...article,
     excerpt: extractExcerpt(article.blocks)
