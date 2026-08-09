@@ -145,7 +145,7 @@ function scrollToAbout() {
   position: absolute;
   top: 0px;
   left: 0px;
-  z-index: -1;
+  z-index: 1;
   object-fit: cover;
 }
 
@@ -166,7 +166,8 @@ function scrollToAbout() {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px
+  gap: 8px;
+  z-index: 1;
 }
 
 .scroll-indication-box {
