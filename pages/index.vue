@@ -4,6 +4,7 @@ import 'highlight.js/styles/atom-one-dark.css';
 
 const isUnderPageHeight = ref(false);
 const isMenuShown = ref(false);
+useTheme();
 
 const { data } = await useFetch<string>("https://raw.githubusercontent.com/aveeeeen/about-me/refs/heads/main/about-me.json");
 const bio = JSON.stringify(JSON.parse(data?.value ?? "error occured while fetching... ;_;)"), null, 2);
