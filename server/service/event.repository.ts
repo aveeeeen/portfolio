@@ -222,7 +222,7 @@ export const getEventBlocksById = defineCachedFunction(
   },
   {
     maxAge: 300,
-    name: "event-getEventBlocksById-v11",
+    name: "event-getEventBlocksById-v12",
     getKey: (id: string) => id,
     shouldBypassCache
   }
