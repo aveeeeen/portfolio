@@ -156,6 +156,7 @@ function closeModal() {
       </div>
     </div>
     <div class="bottom"></div>
+    <Footer></Footer>
   </div>
   <Nav :close="isMenuShown" @isclose="(e) => isMenuShown = e">
     <Menu></Menu>

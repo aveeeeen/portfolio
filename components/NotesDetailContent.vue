@@ -3,6 +3,7 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useFetch, useSeoMeta } from '#app';
 import { useNotionBlockParser } from '../composables/useNotionBlockParser';
+import TagButton from '~/components/atoms/TagButton.vue';
 
 const isShowToC = ref(false);
 const isMenuShown = ref(true);
@@ -86,7 +87,7 @@ watch(isMenuShown, () => {
             </template>
             <template #tags>
               <div v-for="tag in tags" :key="tag">
-                <NuxtLink :to="`/notes?page=1&tags=${tag}`"> {{ tag }} </NuxtLink>
+                <TagButton :name="tag" />
               </div>
             </template>
           </NoteHeader>
@@ -97,6 +98,7 @@ watch(isMenuShown, () => {
       </div>
       <div class="bottom"></div>
     </div>
+    <Footer></Footer>
   </div>
 
   <Nav :close="isMenuShown" @isclose="(e) => isMenuShown = e">

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import TagButton from '~/components/atoms/TagButton.vue';
+
 const isShowTags = ref(false);
 const isMenuShown = ref(true);
 const router = useRouter();
@@ -97,15 +99,15 @@ watch(isMenuShown, () => {
       </div>
       <div class="bottom"></div>
     </div>
+    <Footer></Footer>
   </div>
 
   <Nav :close="isMenuShown" @isclose="(e) => (isMenuShown = e)">
     <Menu></Menu>
     <div>
-      <div @click.stop class="ui-box tags relative" v-if="isShowTags">
+      <div @click.stop class="ui-box tags flex-vert gap-10" v-if="isShowTags">
         <div class="tag-list" v-for="tag in tagList.data.value" :key="tag.name">
-          <NuxtLink :to="`/notes?page=1&tags=${tag.name}`" @click="artilceList.refresh()"> {{ tag.name }}
-          </NuxtLink>
+          <TagButton :name="tag.name" @click="artilceList.refresh()" />
         </div>
       </div>
       <div v-else class="ui-box relative">
@@ -160,10 +162,12 @@ button {
 }
 
 .tags {
-  max-width: 300px;
+  width: fit-content;
+  padding: 10px;
   max-height: 250px;
   min-width: 100px;
   overflow-x: scroll;
+  flex-wrap: nowrap;
 }
 
 .tag-list {
@@ -171,7 +175,7 @@ button {
 }
 
 .article-list {
-  max-width: 700px;
+  max-width: 800px;
   min-height: 80svh;
 }
 </style>

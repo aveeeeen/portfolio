@@ -1,7 +1,7 @@
 <template>
   <div class="flex-vert note-header gap-20">
     <slot name="title"></slot>
-    <div class="flex-vert gap-10">
+    <div class="flex-vert gap-20">
       <slot name="date"></slot>
       <div class="flex-hori gap-10 tags">
         <p>Tags:</p>
@@ -18,13 +18,6 @@
   border: color-mix(in srgb, slateblue 60%, white 30%) solid;
   max-width: 700px;
   width: 90%;
-}
-
-.note-header a {
-  border: 2px solid;
-  padding: 2px 5px;
-  border-radius: 10px;
-  border-color: color-mix(in srgb, slateblue 60%, white 30%);
 }
 
 .note-header p,
