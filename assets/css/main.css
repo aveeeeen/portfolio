@@ -317,3 +317,31 @@ li {
   border-color: rgba(128, 128, 128, 0.4);
 }
 
+/* Notion Table Styling with Dark Mode Support */
+.notion-table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 16px 0;
+  font-size: 0.9em;
+  color: var(--text-color);
+}
+
+.notion-table th,
+.notion-table td {
+  border: 1px solid rgba(128, 128, 128, 0.25);
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.notion-table th {
+  background-color: var(--ui-bg-color);
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.notion-table td {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+

@@ -705,7 +705,7 @@ export function useNotionBlockParser() {
     const hasColumnHeader = data?.has_column_header === true;
     const hasRowHeader = data?.has_row_header === true;
 
-    let html = `<table style="border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 0.9em;">\n`;
+    let html = `<table class="notion-table" style="border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 0.9em; color: var(--text-color);">\n`;
 
     children.forEach((row, rowIndex) => {
       if (row.type !== "table_row") return;
@@ -716,8 +716,8 @@ export function useNotionBlockParser() {
         const isHeader = (hasColumnHeader && rowIndex === 0) || (hasRowHeader && colIndex === 0);
         const tag = isHeader ? "th" : "td";
         const cellStyle = isHeader
-          ? `style="border: 1px solid rgba(55, 53, 47, 0.09); padding: 8px 12px; background-color: #f7f6f3; font-weight: 600; text-align: left;"`
-          : `style="border: 1px solid rgba(55, 53, 47, 0.09); padding: 8px 12px; text-align: left;"`;
+          ? `style="border: 1px solid rgba(128, 128, 128, 0.25); padding: 8px 12px; background-color: var(--ui-bg-color); color: var(--text-color); font-weight: 600; text-align: left;"`
+          : `style="border: 1px solid rgba(128, 128, 128, 0.25); padding: 8px 12px; background-color: var(--bg-color); color: var(--text-color); text-align: left;"`;
         const cellContent = renderRichText(cell);
         html += `    <${tag} ${cellStyle}>${cellContent}</${tag}>\n`;
       });
