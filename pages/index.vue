@@ -40,24 +40,28 @@ function scrollToAbout() {
 
 <template>
   <video class="bg-video" src="~/assets/vid/bgVideo.mp4" preload="none" autoplay playsinline muted loop></video>
-  <div class="hero-box">
-    <div class="introduction">
-      <Introduction></Introduction>
+  <div class="intro-area">
+    <div class="intro-box" id="about">
+      <div class="intro-content">
+        <div class="intro">
+          <h1>Taichi Matsumoto (braven)</h1>
+          <h3>Live Coder, Musician, Programmer</h3>
+        </div>
+        <a v-if="!isUnderPageHeight" class="scroll-indication-anchor" href="#about" @click.prevent="scrollToAbout">
+          <div class="scroll-indication-box">
+            <span class="scroll-indication">Know About me</span>
+          </div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+            fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" class="scroll-indication-arrow">
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        </a>
+      </div>
     </div>
-    <a class="scroll-indication-anchor" href="#about" @click.prevent="scrollToAbout">
-      <div class="scroll-indication-box">
-        <span class="scroll-indication">Know About me</span>
-      </div>
-      <div>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff"
-          stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-          class="lucide lucide-chevron-down-icon lucide-chevron-down">
-          <path d="m6 9 6 6 6-6" />
-        </svg>
-      </div>
-    </a>
   </div>
-  <div class="center- flex-vert about-section" id="about">
+  <div class="hero-box">
+  </div>
+  <div class="center- flex-vert about-section">
     <div class="content-box index-content-box">
       <h1>About Me</h1>
       <Border></Border>
@@ -137,40 +141,96 @@ function scrollToAbout() {
   background-color: transparent;
 }
 
-.scroll-indication-anchor {
-  margin-top: 80svh;
+.intro-area {
+  position: absolute;
+  padding: 0px;
+  margin: 0px;
+  top: 0px;
+  left: 0px;
+  width: 100svw;
+  height: 100svh;
+  z-index: 2;
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.intro-box {
+  height: 16svh;
+  width: 100%;
+  background-color: var(--bg-color);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+}
+
+.intro-content {
+  max-width: 1400px;
+  width: 90%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 32px;
+}
+
+.intro {
+  width: fit-content;
+}
+
+.intro>h1 {
+  line-height: 1.0;
+  font-weight: 300;
+  font-size: 2rem;
+}
+
+.intro>h3 {
+  line-height: 2.0;
+  font-weight: 300;
+  font-size: 1rem;
+}
+
+
+.scroll-indication-anchor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
   z-index: 1;
+  margin-bottom: 24px
 }
 
 .scroll-indication-box {
   width: fit-content;
   height: fit-content;
   padding: 8px;
-  background-color: white;
   border: none;
-  border-radius: 12px;
+  background-color: var(--bg-color);
 }
 
 .scroll-indication {
-  font-weight: 350;
-  color: blue;
+  font-weight: 200;
   font-size: 1rem;
+  color: var(--text-color);
 }
 
-.scroll-indication-anchor:hover>.scroll-indication-box>.scroll-indication {
+.scroll-indication-arrow {
+  stroke: var(--text-color);
+}
+
+.scroll-indication-anchor:hover>.scroll-indication-box {
+  background-color: #0014FE;
+}
+
+.scroll-indication-anchor:hover>.scroll-indication-arrow {
+  stroke: white;
+}
+
+.scroll-indication-anchor:hover .scroll-indication {
   color: white;
-  background-color: blue;
-}
-
-.introduction {
-  position: absolute;
-  left: 10%;
-  top: 5%;
-  z-index: 1;
 }
 
 .top-menu {
@@ -192,9 +252,41 @@ function scrollToAbout() {
 }
 
 @media (max-width: 800px) {
-  .introduction {
+  .intro-box {
+    height: 25%;
+    overflow: hidden;
+  }
+
+  .intro-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
-    left: 0%;
+    gap: 8px;
+  }
+
+  .intro {
+    width: 100%;
+    margin-left: 32px;
+    justify-self: flex-start;
+  }
+
+  .intro>h1 {
+    line-height: 1.0;
+    font-weight: 300;
+    font-size: 1.4rem;
+  }
+
+  .intro>h3 {
+    line-height: 2.0;
+    font-weight: 300;
+    font-size: 0.8rem;
+  }
+
+  .scroll-indication-anchor {
+    margin: 0;
   }
 
   .top-menu {

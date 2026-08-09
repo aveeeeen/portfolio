@@ -84,7 +84,7 @@ a {
 footer {
   height: fit-content;
   width: 100%;
-  background-color: blue;
+  background-color: #0014FE;
 }
 
 @media (max-width: 800px) {
