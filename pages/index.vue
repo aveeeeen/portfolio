@@ -22,7 +22,8 @@ onBeforeMount(() => {
 });
 
 const getIsUnder = () => {
-  isUnderPageHeight.value = window.scrollY > window.innerHeight;
+  const aboutEl = document.getElementById('about');
+  isUnderPageHeight.value = window.scrollY > (aboutEl?.offsetTop ?? window.innerHeight) - 10;
 }
 
 onMounted(() => {
@@ -86,9 +87,9 @@ function scrollToAbout() {
         </div>
       </a>
     </div>
-    <div class="center- flex-vert about-section">
+    <div class="center- flex-vert about-section" id="about">
       <div class="content-box">
-        <h1 id="about">About Me</h1>
+        <h1>About Me</h1>
         <Border></Border>
         <div class="spacing">
           <pre class="code-block"><code class="hljs language-json code-padding" v-html="highlightedCode"></code></pre>
@@ -169,7 +170,7 @@ function scrollToAbout() {
 }
 
 .scroll-indication-anchor {
-  margin-top: 80vh;
+  margin-top: 80svh;
   display: flex;
   flex-direction: column;
   align-items: center;
