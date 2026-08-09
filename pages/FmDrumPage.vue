@@ -17,6 +17,7 @@ useSeoMeta({
       </div>
       <div class="bottom"></div>
     </div>
+    <Footer></Footer>
   </div>
 
   <!-- nav box -->

@@ -73,6 +73,7 @@ watch(isMenuShown, () => {
       </div>
       <div class="bottom"></div>
     </div>
+    <Footer></Footer>
   </div>
 
   <Nav :close="isMenuShown" @isclose="(e) => isMenuShown = e">

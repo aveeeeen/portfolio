@@ -94,6 +94,7 @@ function closeModal() {
       </div>
     </div>
     <div class="bottom"></div>
+    <Footer></Footer>
   </div>
 
   <!-- nav box -->

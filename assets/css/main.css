@@ -19,9 +19,9 @@ html.dark {
   --html-bg-color: #222;
   --bg-color: #222;
   --tile-bg-color: #3c3c3c;
-  --ui-bg-color: #2f2f2f;
-  --text-color: #ccc;
-  --text-color-a: #a9a9cf;
+  --ui-bg-color: #333;
+  --text-color: #eee;
+  --text-color-a: #d2d2ff;
   --text-bg-color: rgb(32, 32, 44);
   --text-bg-color-a: rgb(32, 32, 44);
 }
@@ -46,6 +46,7 @@ html {
   background-color: var(--html-bg-color);
   font-family: "Noto Sans JP", sans-serif;
   font-optical-sizing: auto;
+  letter-spacing: 0.05rch;
 }
 
 body {
@@ -83,20 +84,32 @@ a {
   display: inline;
   color: var(--text-color-a);
   text-decoration: none;
+  font-weight: 360;
 }
 
 ul {
   padding-left: 20px;
 }
 
+p {
+  font-weight: 360;
+}
+
 h1 {
   font-size: 1.8rem;
   line-height: 100%;
+  font-weight: 480;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 420;
 }
 
 h3 {
   font-size: 1.5rem;
   line-height: 100%;
+  font-weight: 360;
 }
 
 .bottom {
@@ -142,7 +155,7 @@ iframe {
   display: block;
   background-color: var(--bg-color);
   padding: 20px;
-  max-width: 800px;
+  max-width: 1000px;
   width: 90%;
   margin: 0 0px;
   overflow-x: hidden;
@@ -166,7 +179,7 @@ iframe {
   display: block;
   background-color: var(--bg-color);
   padding: 20px;
-  max-width: 700px;
+  max-width: 800px;
   overflow-x: hidden;
   width: 90%;
 }
@@ -175,7 +188,7 @@ iframe {
   display: block;
   background-color: var(--bg-color);
   padding: 20px;
-  max-width: 700px;
+  max-width: 800px;
   overflow-x: hidden;
   width: 90%;
 }
@@ -183,7 +196,12 @@ iframe {
 .article > p,
 li,
 ul {
-  line-height: 1.75rem;
+  line-height: 1.7rem;
+  font-weight: 350;
+}
+
+.article > h1 {
+  font-weight: 480;
 }
 
 th,
@@ -203,7 +221,7 @@ table {
   display: block;
   left: 0%;
   top: 0%;
-  padding-top: 32px;
+  padding-top: 54px;
   padding-bottom: 32px;
 }
 
@@ -269,7 +287,7 @@ li {
 
   .menu {
     position: fixed;
-    top: 32px;
+    top: 16px;
     right: 0%;
     margin-right: 10px;
     z-index: 1;

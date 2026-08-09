@@ -92,6 +92,7 @@ watch(isMenuShown, () => {
       </div>
       <div class="bottom"></div>
     </div>
+    <Footer></Footer>
   </div>
 
   <Nav :close="isMenuShown" @isclose="(e) => (isMenuShown = e)">
@@ -153,7 +154,7 @@ h2 {
 }
 
 .article-list {
-  max-width: 700px;
+  max-width: 800px;
   min-height: 80svh;
 }
 </style>

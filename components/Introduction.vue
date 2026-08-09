@@ -9,7 +9,7 @@
 <style scoped>
 h1 {
   background-color: var(--bg-color);
-  line-height: 240%;
+  line-height: 200%;
   text-align: right;
   display: block;
   width: fit-content;
@@ -19,7 +19,7 @@ h1 {
 
 h3 {
   background-color: var(--bg-color);
-  line-height: 260%;
+  line-height: 200%;
   text-align: right;
   display: block;
   width: fit-content;
@@ -36,10 +36,12 @@ h3 {
 @media (max-width: 800px) {
   h1 {
     line-height: 150%;
+    font-size: 1.5rem;
   }
 
   h3 {
     line-height: 150%;
+    font-size: 1.3rem;
   }
 }
 </style>
