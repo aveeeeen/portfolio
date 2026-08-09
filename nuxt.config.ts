@@ -24,7 +24,7 @@ export default defineNuxtConfig({
   },
   plugins: [
     '~/plugins/directives',
-    '~/plugins/theme.client',
+    // '~/plugins/theme.client',
     '~/plugins/scroll-to-top.client'
   ],
   routeRules: {
