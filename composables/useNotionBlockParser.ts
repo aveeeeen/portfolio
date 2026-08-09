@@ -537,6 +537,10 @@ export function useNotionBlockParser() {
         return `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${escapeHtml(embedData.iframeUrl)}" style="width: 600px; max-width: 90%; min-height: 360px; border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}\n</div>\n`;
       }
       if (embedData.type === "bookmark") {
+        if (isGoogleMapsUrl(url) || isGoogleMapsUrl(embedData.url || "")) {
+          const targetUrl = embedData.url || url;
+          return `<div style="margin: 8px 0; width: 600px; max-width: 90%; padding: 12px; border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 6px; background-color: var(--ui-bg-color); color: var(--text-color);"><a href="${escapeHtml(targetUrl)}" target="_blank" rel="noopener noreferrer" style="color: var(--text-color-a); text-decoration: underline; word-break: break-all;">Google Maps で場所を開く</a>${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}</div>\n`;
+        }
         return renderOgpCard(embedData, caption);
       }
       return renderEmbedResult(embedData, caption, url, false);

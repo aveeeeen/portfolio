@@ -70,14 +70,17 @@ async function extractGoogleMapsInfo(urlStr: string): Promise<{ query?: string; 
   }
 
   try {
+    // Decode targetUrl in case parameters are URL-encoded
+    const decodedUrl = decodeURIComponent(targetUrl);
+
     // 3. Priority 1: Check 3d/4d exact location coordinates in data parameter (!3d34.7120857!4d135.5082373)
-    const dataMatch = targetUrl.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/);
+    const dataMatch = decodedUrl.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/) || targetUrl.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/);
     if (dataMatch) {
       return { query: `${dataMatch[1]},${dataMatch[2]}`, zoom: "15", resolvedUrl };
     }
 
     // 4. Priority 2: Check @lat,lng coordinates in URL
-    const coordMatch = targetUrl.match(/@(-?\d+\.\d+),(-?\d+\.\d+)(?:,(\d+(?:\.\d+)?z))?/);
+    const coordMatch = decodedUrl.match(/@(-?\d+\.\d+),(-?\d+\.\d+)(?:,(\d+(?:\.\d+)?z))?/) || targetUrl.match(/@(-?\d+\.\d+),(-?\d+\.\d+)(?:,(\d+(?:\.\d+)?z))?/);
     if (coordMatch) {
       const coords = `${coordMatch[1]},${coordMatch[2]}`;
       const zoom = coordMatch[3] ? coordMatch[3].replace("z", "") : "15";
@@ -90,7 +93,7 @@ async function extractGoogleMapsInfo(urlStr: string): Promise<{ query?: string; 
     let qParam = parsed.searchParams.get("q") || parsed.searchParams.get("query");
     if (qParam) {
       qParam = qParam.replace(/^@/, "").replace(/,\d+z$/, "").trim();
-      if (qParam) {
+      if (qParam && !qParam.startsWith("http")) {
         return { query: qParam, resolvedUrl };
       }
     }
@@ -111,6 +114,12 @@ async function extractGoogleMapsInfo(urlStr: string): Promise<{ query?: string; 
       if (searchQuery) {
         return { query: searchQuery, resolvedUrl };
       }
+    }
+
+    // 8. Priority 6: Check FTID or Place ID or search query in data parameter (!1s...)
+    const ftidMatch = decodedUrl.match(/!1s(0x[0-9a-fA-F]+:0x[0-9a-fA-F]+)/);
+    if (ftidMatch) {
+      return { query: ftidMatch[1], zoom: "15", resolvedUrl };
     }
 
     return { resolvedUrl };
