@@ -1,5 +1,11 @@
-<script setup>
+<script setup lang="ts">
+import { boolean } from 'zod';
 import ThemeToggle from './ThemeToggle.vue';
+
+type NavProps = {
+  close: boolean;
+  notShowTitle?: boolean;
+};
 
 defineOptions({
   inheritAttrs: false,
@@ -8,9 +14,7 @@ defineOptions({
 const isMobile = ref(false);
 const isMenuShown = ref(false);
 
-const props = defineProps({
-  close: Boolean,
-});
+const props = defineProps<NavProps>();
 
 watch(() => props.close, (newVal) => {
   isMenuShown.value = newVal;
@@ -43,11 +47,11 @@ onUnmounted(() => {
 
 <template>
   <div v-if="isMobile" class="menu show-right flex-vert gap-10">
-    <div class="ui-box">
+    <div class="ui-box" v-if="!props.notShowTitle">
       <NuxtLink class="page-title" to="/">Portfolio site of braven</NuxtLink>
     </div>
-    <Burger @click.stop="toggleMenu" class="burger" :isClose="isMenuShown"></Burger>
-    <div v-if="isMenuShown" class="show-right flex-vert gap-10">
+    <Burger v-if="!props.notShowTitle" @click.stop="toggleMenu" class="burger" :isClose="isMenuShown"></Burger>
+    <div v-if="isMenuShown || props.notShowTitle" class="show-right flex-vert gap-10">
       <slot></slot>
       <ThemeToggle />
     </div>
@@ -55,7 +59,7 @@ onUnmounted(() => {
   </div>
 
   <div v-else class="menu show-right flex-vert gap-10">
-    <div class="ui-box">
+    <div class="ui-box" v-if="!props.notShowTitle">
       <NuxtLink class="page-title" to="/">Portfolio site of braven</NuxtLink>
     </div>
     <slot></slot>

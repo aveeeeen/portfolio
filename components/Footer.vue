@@ -11,7 +11,7 @@
           <li>The usage is for malicious activities.</li>
         </ol>
         <div class="flex-hori gap-20 footer-links">
-          <NuxtLink to="/about">Know about who I am.</NuxtLink>
+          <NuxtLink to="/">Know about who I am.</NuxtLink>
           <NuxtLink to="/works">Works</NuxtLink>
           <NuxtLink to="/events">Events</NuxtLink>
           <NuxtLink to="/notes">Notes and Blogs</NuxtLink>
