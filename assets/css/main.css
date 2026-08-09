@@ -57,6 +57,7 @@ body {
   padding: 0;
   position: relative;
   display: block;
+  background-color: var(--bg-color);
 }
 
 img {
