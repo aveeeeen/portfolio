@@ -20,7 +20,7 @@ h1 {
 
 h3 {
   background-color: #fff;
-  background-color: #000;
+  color: #000;
   line-height: 200%;
   text-align: right;
   display: block;
