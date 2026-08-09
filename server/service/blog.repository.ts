@@ -80,6 +80,7 @@ const getAllRawArticles = defineCachedFunction(
               direction: "descending"
             }
           ],
+          filter_properties: ["タグ", "Name", "isPublic"],
           page_size: 100,
           start_cursor: nextCursor
         })
@@ -159,12 +160,13 @@ export const getArticleById = async (id: string): Promise<ArticleResult> => {
   const [article, articleContent] = await Promise.all([
     retryNotionApi(() =>
       notion.pages.retrieve({
-        page_id: id
+        page_id: id,
+        filter_properties: ["タグ", "Name", "isPublic"]
       })
     ),
     retryNotionApi(() =>
       notion.pages.retrieveMarkdown({
-        page_id: id
+        page_id: id,
       })
     )
   ]);
