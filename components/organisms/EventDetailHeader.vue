@@ -39,27 +39,60 @@ onMounted(() => {
 
 <template>
   <div class="flex-vert note-header gap-20">
-    <h1 v-if="props.title">{{ props.title }}</h1>
+    <slot name="title">
+      <h1 v-if="props.title">{{ props.title }}</h1>
+      <Skelton v-else class="title-skeleton" />
+    </slot>
+
     <div class="flex-vert gap-10">
-      <p v-if="props.date">
-        開催日時:
-        {{
-          dateToLocal(new Date(props.date))
-        }}
-      </p>
-      <p v-if="props.venue">
-        会場: {{ props.venue }}
-      </p>
+      <slot name="date">
+        <p v-if="props.date">
+          開催日時:
+          {{
+            dateToLocal(new Date(props.date))
+          }}
+        </p>
+        <Skelton v-else class="date-skeleton" />
+      </slot>
+
+      <slot name="venue">
+        <p v-if="props.venue">
+          会場: {{ props.venue }}
+        </p>
+        <Skelton v-else class="venue-skeleton" />
+      </slot>
+      <slot></slot>
     </div>
-    <template v-if="props.imageUrl">
-      <Skelton v-if="!isImageLoaded" class="img-skelton" :class="{ portrait: isPortrait }" />
-      <NuxtImg v-show="isImageLoaded" ref="imgRef" :src="props.imageUrl" format="webp" :class="{ portrait: isPortrait }"
-        @load="handleImageLoad" @error="handleImageError" />
-    </template>
+
+    <slot name="img">
+      <template v-if="props.imageUrl">
+        <Skelton v-if="!isImageLoaded" class="img-skelton" :class="{ portrait: isPortrait }" />
+        <NuxtImg v-show="isImageLoaded" ref="imgRef" :src="props.imageUrl" format="webp" :class="{ portrait: isPortrait }"
+          @load="handleImageLoad" @error="handleImageError" />
+      </template>
+    </slot>
   </div>
 </template>
 
 <style scoped>
+.title-skeleton {
+  width: 70%;
+  height: 2.5rem;
+  border-radius: 10px;
+}
+
+.date-skeleton {
+  width: 35%;
+  height: 1.2rem;
+  border-radius: 6px;
+}
+
+.venue-skeleton {
+  width: 45%;
+  height: 1.2rem;
+  border-radius: 6px;
+}
+
 .img-skelton {
   width: 100%;
   height: 35svh;
