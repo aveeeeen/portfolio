@@ -117,7 +117,7 @@ function scrollToAbout() {
 
 .bg-video {
   width: 100vw;
-  height: 100vh;
+  height: 100svh;
   position: absolute;
   top: 0px;
   left: 0px;
