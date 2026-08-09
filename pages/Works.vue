@@ -17,7 +17,7 @@ function closeModal() {
 <template>
   <div @click="closeModal()" class="page">
     <div class="center- flex-vert">
-      <div id="projects" class="content-box">
+      <div id="projects" class="content-box content-box-noheight">
         <h1>Works</h1>
         <Border></Border>
         <div class="space"></div>
@@ -183,5 +183,10 @@ a>h1 {
 
 img {
   max-width: 800px;
+}
+
+.content-box-noheight {
+  min-height: fit-content;
+  height: auto;
 }
 </style>
