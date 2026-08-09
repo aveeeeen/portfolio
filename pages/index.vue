@@ -15,7 +15,7 @@ const highlightedCode = computed(() => {
 
 const getIsUnder = () => {
   const aboutEl = document.getElementById('about');
-  isUnderPageHeight.value = window.scrollY > (aboutEl?.offsetTop ?? window.innerHeight) - 64;
+  isUnderPageHeight.value = window.scrollY > (aboutEl?.offsetTop ?? window.innerHeight) - 32;
 }
 
 onMounted(() => {
@@ -41,7 +41,7 @@ function scrollToAbout() {
 <template>
   <video class="bg-video" src="~/assets/vid/bgVideo.mp4" preload="none" autoplay playsinline muted loop></video>
   <div class="intro-area">
-    <div class="intro-box" id="about">
+    <div class="intro-box">
       <div class="intro-content">
         <div class="intro">
           <h1>Taichi Matsumoto (braven)</h1>
@@ -61,7 +61,7 @@ function scrollToAbout() {
   </div>
   <div class="hero-box">
   </div>
-  <div class="center- flex-vert about-section">
+  <div class="center- flex-vert about-section" id="about">
     <div class="content-box index-content-box">
       <h1>About Me</h1>
       <Border></Border>
@@ -173,7 +173,7 @@ function scrollToAbout() {
   flex-direction: row;
   align-items: flex-start;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: flex-start;
   padding: 32px;
 }
 
@@ -253,7 +253,7 @@ function scrollToAbout() {
 
 @media (max-width: 800px) {
   .intro-box {
-    height: 25%;
+    height: 28%;
     overflow: hidden;
   }
 
@@ -265,10 +265,12 @@ function scrollToAbout() {
     justify-content: flex-start;
     align-items: center;
     gap: 8px;
+    padding: 0;
   }
 
   .intro {
     width: 100%;
+    margin-top: 8px;
     margin-left: 32px;
     justify-self: flex-start;
   }
@@ -283,6 +285,15 @@ function scrollToAbout() {
     line-height: 2.0;
     font-weight: 300;
     font-size: 0.8rem;
+  }
+
+  .scroll-indication {
+    font-size: 0.8rem;
+  }
+
+  .scroll-indication-box {
+    padding: 2px;
+    border-top: solid 1px var(--text-color);
   }
 
   .scroll-indication-anchor {
