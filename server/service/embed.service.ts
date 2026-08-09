@@ -28,40 +28,59 @@ async function extractGoogleMapsInfo(urlStr: string): Promise<{ query?: string; 
 
   targetUrl = unwrapNestedUrl(targetUrl);
 
-  // 1. Resolve shortened URLs (maps.app.goo.gl or goo.gl/maps) via HTTP GET request
+  // 1. Resolve shortened URLs (maps.app.goo.gl or goo.gl/maps or google.com/url) via HTTP GET request
   if (targetUrl.includes("maps.app.goo.gl") || targetUrl.includes("goo.gl/maps") || targetUrl.includes("google.com/url")) {
     try {
+      // 1a. Try manual redirect with bot User-Agent (Firebase Dynamic Links returns 302 Location header for bots)
       const manualRes = await fetch(targetUrl, {
         method: "GET",
         redirect: "manual",
         headers: {
-          "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-          "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+          "User-Agent": "facebookexternalhit/1.1"
         }
       });
       const loc = manualRes.headers.get("location");
       if (loc && loc.startsWith("http")) {
         targetUrl = unwrapNestedUrl(loc);
-      }
-
-      if (targetUrl.includes("maps.app.goo.gl") || targetUrl.includes("goo.gl/maps") || targetUrl.includes("google.com/url")) {
-        const res = await fetch(targetUrl, {
+      } else {
+        // 1b. Try with ?dfl=1 desktop fallback parameter
+        const urlWithDfl = targetUrl.includes("?") ? `${targetUrl}&dfl=1` : `${targetUrl}?dfl=1`;
+        const manualResDfl = await fetch(urlWithDfl, {
           method: "GET",
-          redirect: "follow",
+          redirect: "manual",
           headers: {
-            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+            "User-Agent": "facebookexternalhit/1.1"
           }
         });
-        if (res.url && res.url !== targetUrl) {
-          targetUrl = unwrapNestedUrl(res.url);
-        }
-        const text = await res.text();
-        const refreshMatch =
-          text.match(/<meta[^>]+http-equiv=["']refresh["'][^>]+content=["']\d+;\s*url=["']?([^"'>]+)["']?/i) ||
-          text.match(/(https:\/\/(?:www\.)?google\.[^"'\s<>]+\/maps\/[^"'\s<>]+)/i);
-        if (refreshMatch) {
-          targetUrl = unwrapNestedUrl(refreshMatch[1]);
+        const locDfl = manualResDfl.headers.get("location");
+        if (locDfl && locDfl.startsWith("http")) {
+          targetUrl = unwrapNestedUrl(locDfl);
+        } else {
+          // 1c. Fallback GET with follow redirects
+          const res = await fetch(targetUrl, {
+            method: "GET",
+            redirect: "follow",
+            headers: {
+              "User-Agent": "facebookexternalhit/1.1"
+            }
+          });
+          if (res.url && res.url !== targetUrl) {
+            targetUrl = unwrapNestedUrl(res.url);
+          }
+          const text = await res.text();
+          const refreshMatch =
+            text.match(/<meta[^>]+http-equiv=["']refresh["'][^>]+content=["']\d+;\s*url=["']?([^"'>]+)["']?/i) ||
+            text.match(/(https:\/\/(?:www\.)?google\.[^"'\s<>]+\/maps\/place\/[^"'\s<>]+)/i) ||
+            text.match(/(https:\/\/(?:www\.)?google\.[^"'\s<>]+\/maps\/[^"'\s<>]+)/i);
+
+          if (refreshMatch) {
+            targetUrl = unwrapNestedUrl(refreshMatch[1]);
+          } else {
+            const qMatch = text.match(/\/maps\/preview\/place\?[^"'\s<>]*q=([^&"'\s<>]+)/i);
+            if (qMatch) {
+              targetUrl = `https://www.google.com/maps/place/${qMatch[1]}`;
+            }
+          }
         }
       }
     } catch {
