@@ -533,7 +533,10 @@ export function useNotionBlockParser() {
 
     if (isGoogleMapsUrl(url) || url.includes("embed")) {
       const formatted = formatEmbedUrl(url);
-      const targetIframeSrc = (formatted && formatted !== url) ? formatted : (embedData?.iframeUrl || url);
+      const targetIframeSrc = (embedData?.type === "iframe" && embedData.iframeUrl)
+        ? embedData.iframeUrl
+        : ((formatted && formatted !== url) ? formatted : url);
+
       return `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${escapeHtml(targetIframeSrc)}" style="width: 600px; max-width: 90%; min-height: 360px; border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}\n</div>\n`;
     }
 
@@ -619,6 +622,11 @@ export function useNotionBlockParser() {
         if (name && name !== "@") {
           return `https://maps.google.com/maps?q=${encodeURIComponent(name)}&output=embed`;
         }
+      }
+
+      // If it's a shortlink without coordinates, return url unchanged so server embedData is used
+      if (url.includes("maps.app.goo.gl") || url.includes("goo.gl/maps")) {
+        return url;
       }
 
       return `https://maps.google.com/maps?q=${encodeURIComponent(url)}&output=embed`;
