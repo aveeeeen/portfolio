@@ -1,40 +1,90 @@
 import { URL } from "url";
 
 export type EmbedResult =
-  | { type: "oembed"; html: string; provider?: string; title?: string }
-  | { type: "iframe"; iframeUrl: string; provider?: string }
-  | { type: "bookmark"; title: string; description?: string; image?: string; siteName?: string; favicon?: string; url: string }
-  | { type: "fallback"; url: string };
+  | { type: "oembed"; html: string; provider?: string; title?: string; resolvedUrl?: string }
+  | { type: "iframe"; iframeUrl: string; provider?: string; resolvedUrl?: string }
+  | { type: "bookmark"; title: string; description?: string; image?: string; siteName?: string; favicon?: string; url: string; resolvedUrl?: string }
+  | { type: "fallback"; url: string; resolvedUrl?: string };
 
 /**
  * Extract location/query from a Google Maps URL, resolving shortlinks if necessary.
  */
-async function extractGoogleMapsInfo(urlStr: string): Promise<{ query?: string; zoom?: string; embedUrl?: string } | null> {
-  let targetUrl = urlStr;
+async function extractGoogleMapsInfo(urlStr: string): Promise<{ query?: string; zoom?: string; embedUrl?: string; resolvedUrl?: string } | null> {
+  let targetUrl = urlStr.trim();
 
-  // 1. Resolve shortened URLs (maps.app.goo.gl or goo.gl/maps) via HTTP GET request
+  // Helper to extract nested Google Maps URL from query parameters (link, continue, q, url)
+  const unwrapNestedUrl = (u: string): string => {
+    try {
+      const parsed = new URL(u);
+      const nested = parsed.searchParams.get("link") || parsed.searchParams.get("continue") || parsed.searchParams.get("url");
+      if (nested && (nested.includes("google.com/maps") || nested.includes("maps.google.com") || nested.includes("place"))) {
+        return decodeURIComponent(nested);
+      }
+    } catch {
+      // Ignore URL parse error
+    }
+    return u;
+  };
+
+  targetUrl = unwrapNestedUrl(targetUrl);
+
+  // 1. Resolve shortened URLs (maps.app.goo.gl or goo.gl/maps or google.com/url) via HTTP GET request
   if (targetUrl.includes("maps.app.goo.gl") || targetUrl.includes("goo.gl/maps") || targetUrl.includes("google.com/url")) {
     try {
-      const res = await fetch(targetUrl, {
+      // 1a. Try manual redirect with bot User-Agent (Firebase Dynamic Links returns 302 Location header for bots)
+      const manualRes = await fetch(targetUrl, {
         method: "GET",
-        redirect: "follow",
+        redirect: "manual",
         headers: {
-          "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+          "User-Agent": "facebookexternalhit/1.1"
         }
       });
-      if (res.url && res.url !== targetUrl) {
-        targetUrl = res.url;
+      const loc = manualRes.headers.get("location");
+      if (loc && loc.startsWith("http")) {
+        targetUrl = unwrapNestedUrl(loc);
       } else {
-        const text = await res.text();
-        const refreshMatch =
-          text.match(/<meta[^>]+http-equiv=["']refresh["'][^>]+content=["']\d+;\s*url=["']?([^"'>]+)["']?/i) ||
-          text.match(/<a[^>]+href=["'](https:\/\/(?:www\.)?google\.[^"']+\/maps\/[^"']+)["']/i);
-        if (refreshMatch) {
-          targetUrl = refreshMatch[1];
+        // 1b. Try with ?dfl=1 desktop fallback parameter
+        const urlWithDfl = targetUrl.includes("?") ? `${targetUrl}&dfl=1` : `${targetUrl}?dfl=1`;
+        const manualResDfl = await fetch(urlWithDfl, {
+          method: "GET",
+          redirect: "manual",
+          headers: {
+            "User-Agent": "facebookexternalhit/1.1"
+          }
+        });
+        const locDfl = manualResDfl.headers.get("location");
+        if (locDfl && locDfl.startsWith("http")) {
+          targetUrl = unwrapNestedUrl(locDfl);
+        } else {
+          // 1c. Fallback GET with follow redirects
+          const res = await fetch(targetUrl, {
+            method: "GET",
+            redirect: "follow",
+            headers: {
+              "User-Agent": "facebookexternalhit/1.1"
+            }
+          });
+          if (res.url && res.url !== targetUrl) {
+            targetUrl = unwrapNestedUrl(res.url);
+          }
+          const text = await res.text();
+          const refreshMatch =
+            text.match(/<meta[^>]+http-equiv=["']refresh["'][^>]+content=["']\d+;\s*url=["']?([^"'>]+)["']?/i) ||
+            text.match(/(https:\/\/(?:www\.)?google\.[^"'\s<>]+\/maps\/place\/[^"'\s<>]+)/i) ||
+            text.match(/(https:\/\/(?:www\.)?google\.[^"'\s<>]+\/maps\/[^"'\s<>]+)/i);
+
+          if (refreshMatch) {
+            targetUrl = unwrapNestedUrl(refreshMatch[1]);
+          } else {
+            const qMatch = text.match(/\/maps\/preview\/place\?[^"'\s<>]*q=([^&"'\s<>]+)/i);
+            if (qMatch) {
+              targetUrl = `https://www.google.com/maps/place/${qMatch[1]}`;
+            }
+          }
         }
       }
     } catch {
-      // Continue with original URL
+      // Continue with targetUrl
     }
   }
 
@@ -42,67 +92,80 @@ async function extractGoogleMapsInfo(urlStr: string): Promise<{ query?: string; 
   if (targetUrl.includes("consent.google.com") || targetUrl.includes("google.com/url")) {
     try {
       const u = new URL(targetUrl);
-      const cont = u.searchParams.get("continue") || u.searchParams.get("q");
+      const cont = u.searchParams.get("continue") || u.searchParams.get("q") || u.searchParams.get("url");
       if (cont && cont.includes("google.com/maps")) {
-        targetUrl = cont;
+        targetUrl = decodeURIComponent(cont);
       }
     } catch {
       // Ignore URL parsing errors
     }
   }
 
+  targetUrl = unwrapNestedUrl(targetUrl);
+
+  const resolvedUrl = targetUrl !== urlStr ? targetUrl : undefined;
+
   // 2. Already an iframe embed URL (e.g. google.com/maps/embed?pb=...)
   if (targetUrl.includes("/maps/embed")) {
-    return { embedUrl: targetUrl };
+    return { embedUrl: targetUrl, resolvedUrl };
   }
 
   try {
-    const parsed = new URL(targetUrl);
+    // Decode targetUrl in case parameters are URL-encoded
+    const decodedUrl = decodeURIComponent(targetUrl);
 
-    // 3. Check 3d/4d exact location coordinates in data parameter (!3d34.7120857!4d135.5082373)
-    const dataMatch = targetUrl.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/);
+    // 3. Priority 1: Check 3d/4d exact location coordinates in data parameter (!3d34.7120857!4d135.5082373)
+    const dataMatch = decodedUrl.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/) || targetUrl.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/);
     if (dataMatch) {
-      return { query: `${dataMatch[1]},${dataMatch[2]}`, zoom: "15" };
+      return { query: `${dataMatch[1]},${dataMatch[2]}`, zoom: "15", resolvedUrl };
     }
 
-    // 4. Check q or query search parameter
+    // 4. Priority 2: Check @lat,lng coordinates in URL
+    const coordMatch = decodedUrl.match(/@(-?\d+\.\d+),(-?\d+\.\d+)(?:,(\d+(?:\.\d+)?z))?/) || targetUrl.match(/@(-?\d+\.\d+),(-?\d+\.\d+)(?:,(\d+(?:\.\d+)?z))?/);
+    if (coordMatch) {
+      const coords = `${coordMatch[1]},${coordMatch[2]}`;
+      const zoom = coordMatch[3] ? coordMatch[3].replace("z", "") : "15";
+      return { query: coords, zoom, resolvedUrl };
+    }
+
+    const parsed = new URL(targetUrl);
+
+    // 5. Priority 3: Check q or query search parameter
     let qParam = parsed.searchParams.get("q") || parsed.searchParams.get("query");
     if (qParam) {
       qParam = qParam.replace(/^@/, "").replace(/,\d+z$/, "").trim();
-      if (qParam) {
-        return { query: qParam };
+      if (qParam && !qParam.startsWith("http")) {
+        return { query: qParam, resolvedUrl };
       }
     }
 
-    // 4. Extract place name from pathname: /place/Place+Name/@lat,lng...
+    // 6. Priority 4: Check place name from pathname: /place/Place+Name/
     const placeMatch = parsed.pathname.match(/\/place\/([^/@]+)/);
     if (placeMatch && placeMatch[1]) {
       const placeName = decodeURIComponent(placeMatch[1].replace(/\+/g, " ")).trim();
       if (placeName && placeName !== "@") {
-        return { query: placeName };
+        return { query: placeName, resolvedUrl };
       }
     }
 
-    // 5. Extract search query from pathname: /search/Search+Query/...
+    // 7. Priority 5: Check search query from pathname: /search/Search+Query/...
     const searchMatch = parsed.pathname.match(/\/search\/([^/@]+)/);
     if (searchMatch && searchMatch[1]) {
       const searchQuery = decodeURIComponent(searchMatch[1].replace(/\+/g, " ")).trim();
       if (searchQuery) {
-        return { query: searchQuery };
+        return { query: searchQuery, resolvedUrl };
       }
     }
 
-    // 6. Extract coordinates from pathname: /@lat,lng,zoom
-    const coordMatch = parsed.pathname.match(/@(-?\d+\.\d+),(-?\d+\.\d+)(?:,(\d+(?:\.\d+)?z))?/);
-    if (coordMatch) {
-      const coords = `${coordMatch[1]},${coordMatch[2]}`;
-      const zoom = coordMatch[3] ? coordMatch[3].replace("z", "") : undefined;
-      return { query: coords, zoom };
+    // 8. Priority 6: Check FTID or Place ID or search query in data parameter (!1s...)
+    const ftidMatch = decodedUrl.match(/!1s(0x[0-9a-fA-F]+:0x[0-9a-fA-F]+)/);
+    if (ftidMatch) {
+      return { query: ftidMatch[1], zoom: "15", resolvedUrl };
     }
 
-    return null;
+    return { resolvedUrl };
   } catch {
-    return null;
+    return { resolvedUrl };
   }
 }
 
@@ -185,17 +248,22 @@ function getKnownOembedEndpoint(url: string): string | null {
 }
 
 /**
- * Parse OpenGraph and title tags from raw HTML content
+ * Extract OpenGraph metadata from HTML string for Bookmark card fallback
  */
-function parseOpenGraphMeta(htmlStr: string, targetUrl: string): { title?: string; description?: string; image?: string; siteName?: string; favicon?: string } {
-  const getMetaTag = (attr: string, value: string): string | undefined => {
-    const regex = new RegExp(`<meta[^>]+(?:${attr}=["']${value}["'][^>]+content=["']([^"']+)["']|content=["']([^"']+)["'][^>]+${attr}=["']${value}["'])`, "i");
-    const match = htmlStr.match(regex);
-    return match ? match[1] || match[2] : undefined;
+function extractOpenGraphMetadata(htmlStr: string, targetUrl: string): { title?: string; description?: string; image?: string; siteName?: string; favicon?: string } {
+  const getMetaTag = (attrName: string, attrVal: string): string | undefined => {
+    const regex1 = new RegExp(`<meta[^>]+${attrName}=["']${attrVal}["'][^>]+content=["']([^"']+)["']`, "i");
+    const regex2 = new RegExp(`<meta[^>]+content=["']([^"']+)["'][^>]+${attrName}=["']${attrVal}["']`, "i");
+    const match = htmlStr.match(regex1) || htmlStr.match(regex2);
+    return match ? match[1] : undefined;
   };
 
-  const titleMatch = htmlStr.match(/<title[^>]*>([^<]+)<\/title>/i);
-  const title = getMetaTag("property", "og:title") || getMetaTag("name", "title") || (titleMatch ? titleMatch[1].trim() : undefined);
+  let title = getMetaTag("property", "og:title") || getMetaTag("name", "title");
+  if (!title) {
+    const titleMatch = htmlStr.match(/<title[^>]*>([^<]+)<\/title>/i);
+    title = titleMatch ? titleMatch[1].trim() : undefined;
+  }
+
   const description = getMetaTag("property", "og:description") || getMetaTag("name", "description");
   let image = getMetaTag("property", "og:image") || getMetaTag("name", "image");
   const siteName = getMetaTag("property", "og:site_name");
@@ -235,33 +303,47 @@ export async function resolveEmbed(url: string): Promise<EmbedResult> {
   // 1. Google Maps Check
   if (cleanUrl.includes("google.com/maps") || cleanUrl.includes("maps.app.goo.gl") || cleanUrl.includes("maps.google.com") || cleanUrl.includes("goo.gl/maps")) {
     const info = await extractGoogleMapsInfo(cleanUrl);
+
     if (info?.embedUrl) {
-      return { type: "iframe", iframeUrl: info.embedUrl, provider: "Google Maps" };
+      return { type: "iframe", iframeUrl: info.embedUrl, provider: "Google Maps", resolvedUrl: info.resolvedUrl };
     }
 
-    const apiKey = process.env.GOOGLE_CLOUD_API_KEY;
-    if (apiKey && info?.query) {
-      let iframeUrl = `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${encodeURIComponent(info.query)}`;
+    if (info?.query) {
+      const apiKey = process.env.GOOGLE_CLOUD_API_KEY;
+      const isValidApiKey = apiKey && !apiKey.startsWith("secret_") && apiKey.length > 20;
+
+      if (isValidApiKey) {
+        let iframeUrl = `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${encodeURIComponent(info.query)}`;
+        if (info.zoom) {
+          iframeUrl += `&zoom=${info.zoom}`;
+        }
+        return {
+          type: "iframe",
+          iframeUrl,
+          provider: "Google Maps",
+          resolvedUrl: info.resolvedUrl
+        };
+      }
+
+      let fallbackEmbedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(info.query)}&output=embed`;
       if (info.zoom) {
-        iframeUrl += `&zoom=${info.zoom}`;
+        fallbackEmbedUrl += `&z=${info.zoom}`;
       }
       return {
         type: "iframe",
-        iframeUrl,
-        provider: "Google Maps"
+        iframeUrl: fallbackEmbedUrl,
+        provider: "Google Maps",
+        resolvedUrl: info.resolvedUrl
       };
     }
 
-    // Fallback embed iframe URL (guarantees Google Maps always renders as an embedded map iframe)
-    const fallbackQuery = info?.query || cleanUrl;
-    const fallbackEmbedUrl = cleanUrl.includes("/maps/embed")
-      ? cleanUrl
-      : `https://maps.google.com/maps?q=${encodeURIComponent(fallbackQuery)}&output=embed`;
-
     return {
-      type: "iframe",
-      iframeUrl: fallbackEmbedUrl,
-      provider: "Google Maps"
+      type: "bookmark",
+      title: "Google Maps",
+      description: "Google マップで場所を表示します",
+      siteName: "Google Maps",
+      url: info?.resolvedUrl || cleanUrl,
+      resolvedUrl: info?.resolvedUrl
     };
   }
 

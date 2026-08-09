@@ -3,6 +3,17 @@ import * as EventRepository from "./event.repository";
 import { resolveEmbed } from "./embed.service";
 import { fetchOgpMeta } from "./ogp.service";
 
+function isEmbedOrMapsUrl(url: string): boolean {
+  if (!url) return false;
+  return (
+    url.includes("embed") ||
+    url.includes("google.com/maps") ||
+    url.includes("maps.google.com") ||
+    url.includes("maps.app.goo.gl") ||
+    url.includes("goo.gl/maps")
+  );
+}
+
 async function enrichBlocksWithEmbeds(blocks: any[]): Promise<void> {
   if (!blocks || !Array.isArray(blocks)) return;
 
@@ -13,15 +24,22 @@ async function enrichBlocksWithEmbeds(blocks: any[]): Promise<void> {
       promises.push(
         resolveEmbed(block.embed.url).then((res) => {
           block.embedData = res;
+          if (res.resolvedUrl && block.embed) {
+            block.embed.url = res.resolvedUrl;
+          }
         })
       );
     } else if (block.type === "bookmark" || block.type === "link_preview") {
       const url = block.bookmark?.url || block.link_preview?.url;
       if (url) {
-        if (url.includes("embed")) {
+        if (isEmbedOrMapsUrl(url)) {
           promises.push(
             resolveEmbed(url).then((res) => {
               block.embedData = res;
+              if (res.resolvedUrl) {
+                if (block.bookmark) block.bookmark.url = res.resolvedUrl;
+                if (block.link_preview) block.link_preview.url = res.resolvedUrl;
+              }
             })
           );
         } else {
