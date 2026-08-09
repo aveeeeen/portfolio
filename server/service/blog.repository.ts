@@ -267,7 +267,7 @@ export const getArticleBlocksById = defineCachedFunction(
   },
   {
     maxAge: 300,
-    name: "blog-getArticleBlocksById-v13",
+    name: "blog-getArticleBlocksById-v14",
     getKey: (id: string) => id,
     shouldBypassCache
   }

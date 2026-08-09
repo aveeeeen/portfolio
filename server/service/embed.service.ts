@@ -10,7 +10,23 @@ export type EmbedResult =
  * Extract location/query from a Google Maps URL, resolving shortlinks if necessary.
  */
 async function extractGoogleMapsInfo(urlStr: string): Promise<{ query?: string; zoom?: string; embedUrl?: string; resolvedUrl?: string } | null> {
-  let targetUrl = urlStr;
+  let targetUrl = urlStr.trim();
+
+  // Helper to extract nested Google Maps URL from query parameters (link, continue, q, url)
+  const unwrapNestedUrl = (u: string): string => {
+    try {
+      const parsed = new URL(u);
+      const nested = parsed.searchParams.get("link") || parsed.searchParams.get("continue") || parsed.searchParams.get("url");
+      if (nested && (nested.includes("google.com/maps") || nested.includes("maps.google.com") || nested.includes("place"))) {
+        return decodeURIComponent(nested);
+      }
+    } catch {
+      // Ignore URL parse error
+    }
+    return u;
+  };
+
+  targetUrl = unwrapNestedUrl(targetUrl);
 
   // 1. Resolve shortened URLs (maps.app.goo.gl or goo.gl/maps) via HTTP GET request
   if (targetUrl.includes("maps.app.goo.gl") || targetUrl.includes("goo.gl/maps") || targetUrl.includes("google.com/url")) {
@@ -19,33 +35,37 @@ async function extractGoogleMapsInfo(urlStr: string): Promise<{ query?: string; 
         method: "GET",
         redirect: "manual",
         headers: {
-          "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+          "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+          "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
         }
       });
       const loc = manualRes.headers.get("location");
       if (loc && loc.startsWith("http")) {
-        targetUrl = loc;
-      } else {
+        targetUrl = unwrapNestedUrl(loc);
+      }
+
+      if (targetUrl.includes("maps.app.goo.gl") || targetUrl.includes("goo.gl/maps") || targetUrl.includes("google.com/url")) {
         const res = await fetch(targetUrl, {
           method: "GET",
           redirect: "follow",
           headers: {
-            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
           }
         });
         if (res.url && res.url !== targetUrl) {
-          targetUrl = res.url;
+          targetUrl = unwrapNestedUrl(res.url);
         }
         const text = await res.text();
         const refreshMatch =
           text.match(/<meta[^>]+http-equiv=["']refresh["'][^>]+content=["']\d+;\s*url=["']?([^"'>]+)["']?/i) ||
           text.match(/(https:\/\/(?:www\.)?google\.[^"'\s<>]+\/maps\/[^"'\s<>]+)/i);
         if (refreshMatch) {
-          targetUrl = refreshMatch[1];
+          targetUrl = unwrapNestedUrl(refreshMatch[1]);
         }
       }
     } catch {
-      // Continue with original URL
+      // Continue with targetUrl
     }
   }
 
@@ -53,14 +73,16 @@ async function extractGoogleMapsInfo(urlStr: string): Promise<{ query?: string; 
   if (targetUrl.includes("consent.google.com") || targetUrl.includes("google.com/url")) {
     try {
       const u = new URL(targetUrl);
-      const cont = u.searchParams.get("continue") || u.searchParams.get("q");
+      const cont = u.searchParams.get("continue") || u.searchParams.get("q") || u.searchParams.get("url");
       if (cont && cont.includes("google.com/maps")) {
-        targetUrl = cont;
+        targetUrl = decodeURIComponent(cont);
       }
     } catch {
       // Ignore URL parsing errors
     }
   }
+
+  targetUrl = unwrapNestedUrl(targetUrl);
 
   const resolvedUrl = targetUrl !== urlStr ? targetUrl : undefined;
 
