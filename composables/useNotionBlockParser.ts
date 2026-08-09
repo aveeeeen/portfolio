@@ -113,7 +113,7 @@ export function useNotionBlockParser() {
         text = escapeHtml(item.text?.content || "");
         if (item.text?.link) {
           text = `<a href="${item.text.link.url}" target="_blank" rel="noopener noreferrer" style="color: #0b6e99; text-decoration: underline;">${text}</a>`;
-          if (escapeHtml(item.text.link.url).includes("embed")) text = `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${item.text.link.url || ""}" style="width: 100%; min-height: 360px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+          if (escapeHtml(item.text.link.url).includes("embed")) text = `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${item.text.link.url || ""}" style="width: 600px; max-width: 90%; min-height: 360px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
         }
       } else if (item.type === "mention") {
         text = renderMention(item);
@@ -316,9 +316,9 @@ export function useNotionBlockParser() {
       case "pdf":
         return renderPdf(typeData);
       case "bookmark":
-        return renderBookmark(typeData);
+        return renderBookmark(typeData, (block as any).ogpData, (block as any).embedData);
       case "embed":
-        return renderEmbed(typeData);
+        return renderEmbed(typeData, (block as any).embedData);
       case "equation":
         return renderEquation(typeData);
       case "table":
@@ -336,8 +336,7 @@ export function useNotionBlockParser() {
       case "child_database":
         return `<div style="margin: 4px 0; display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 4px; background-color: #f7f6f3; font-size: 0.95em;">🗃️ ${escapeHtml(typeData?.title || "Untitled")}</div>\n`;
       case "link_preview":
-        if (escapeHtml(typeData?.url).includes("embed")) return `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${typeData?.url || ""}" style="width: 100%; min-height: 360px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
-        return `<div style="margin: 8px 0; padding: 12px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;"><a href="${typeData?.url || ""}" target="_blank" rel="noopener noreferrer" style="color: #0b6e99; text-decoration: underline; word-break: break-all;">${escapeHtml(typeData?.url || "")}</a></div>\n`;
+        return renderLinkPreview(typeData, (block as any).ogpData, (block as any).embedData);
       case "breadcrumb":
         return "";
       case "unsupported":
@@ -466,7 +465,7 @@ export function useNotionBlockParser() {
     // YouTube embed support
     const youtubeMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]+)/);
     if (youtubeMatch) {
-      return `<div style="margin: 12px 0; display: flex; flex-direction: column; gap: 6px;" class="notion-media notion-video"><iframe src="https://www.youtube.com/embed/${youtubeMatch[1]}" style="width: 100%; aspect-ratio: 16/9; border: none; border-radius: 4px;" allowfullscreen></iframe>${caption ? `<div style="font-size: 0.85em; opacity: 0.6;">${caption}</div>` : ""}</div>\n`;
+      return `<div style="margin: 12px 0; display: flex; flex-direction: column; gap: 6px;" class="notion-media notion-video"><iframe src="https://www.youtube.com/embed/${youtubeMatch[1]}" style="width: 100%; width:600px; max-width: 90%; aspect-ratio: 16/9; border: none; border-radius: 4px;" allowfullscreen></iframe>${caption ? `<div style="font-size: 0.85em; opacity: 0.6;">${caption}</div>` : ""}</div>\n`;
     }
 
     return `<div style="margin: 12px 0; display: flex; flex-direction: column; gap: 6px;" class="notion-media notion-video"><video src="${url}" controls style="max-width: 100%; border-radius: 4px;"></video>${caption ? `<div style="font-size: 0.85em; opacity: 0.6;">${caption}</div>` : ""}</div>\n`;
@@ -488,13 +487,58 @@ export function useNotionBlockParser() {
   const renderPdf = (data: any): string => {
     const url = getFileUrl(data);
     const caption = renderRichText(data?.caption || []);
-    return `<div style="margin: 12px 0; display: flex; flex-direction: column; gap: 6px;" class="notion-media notion-pdf"><iframe src="${url}" style="width: 100%; height: 500px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;"></iframe>${caption ? `<div style="font-size: 0.85em; opacity: 0.6;">${caption}</div>` : ""}</div>\n`;
+    return `<div style="margin: 12px 0; display: flex; flex-direction: column; gap: 6px;" class="notion-media notion-pdf"><iframe src="${url}" style="width: 600px; max-width: 90%; height: 500px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;"></iframe>${caption ? `<div style="font-size: 0.85em; opacity: 0.6;">${caption}</div>` : ""}</div>\n`;
   };
 
-  const renderBookmark = (data: any): string => {
+  const renderOgpCard = (ogp: any, caption: string): string => {
+    if (!ogp) return "";
+
+    const siteName = ogp.siteName ? escapeHtml(ogp.siteName) : null;
+    const title = ogp.title ? escapeHtml(ogp.title) : null;
+    const description = ogp.description ? escapeHtml(ogp.description) : null;
+    const image = ogp.image ? escapeHtml(ogp.image) : null;
+    const url = escapeHtml(ogp.url || "");
+
+    const hasAnyMeta = title || description || siteName || image;
+
+    if (!hasAnyMeta) {
+      return `<div style="margin: 8px 0; width: 600px; max-width: 90%; padding: 12px; border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 6px; background-color: var(--ui-bg-color); color: var(--text-color);"><a href="${url}" target="_blank" rel="noopener noreferrer" style="color: var(--text-color-a); text-decoration: underline; word-break: break-all;">${url}</a>${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}</div>\n`;
+    }
+
+    return `<div style="margin: 12px 0; width: 600px; max-width: 90%;" class="notion-embed notion-bookmark-card">
+  <a href="${url}" target="_blank" rel="noopener noreferrer" class="notion-bookmark-card-link" style="display: flex; text-decoration: none; color: var(--text-color); border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 6px; overflow: hidden; background-color: var(--ui-bg-color); min-height: 85px; transition: background-color 0.15s ease, border-color 0.15s ease;">
+    <div style="flex: 1; padding: 12px 14px; min-width: 0; display: flex; flex-direction: column; justify-content: space-between;">
+      ${title ? `<div class="notion-bookmark-card-title" style="font-size: 0.9em; font-weight: 600; color: var(--text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px;">${title}</div>` : ""}
+      ${description ? `<div class="notion-bookmark-card-description" style="font-size: 0.8em; color: var(--text-color); opacity: 0.75; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 8px; line-height: 1.4;">${description}</div>` : ""}
+      ${siteName ? `<div class="notion-bookmark-card-site" style="display: flex; align-items: center; gap: 6px; font-size: 0.78em; color: var(--text-color); opacity: 0.85;"><span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${siteName}</span></div>` : ""}
+    </div>
+    ${image ? `<div style="width: 180px; min-width: 110px; background-image: url('${image}'); background-size: cover; background-position: center;"></div>` : ""}
+  </a>
+  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}
+</div>\n`;
+  };
+
+  const renderBookmark = (data: any, ogpData?: any, embedData?: any): string => {
     const url = data?.url || "";
     const caption = renderRichText(data?.caption || []);
-    if (escapeHtml(url).includes("embed")) return `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${url || ""}" style="width: 100%; min-height: 360px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+
+    if (url.includes("embed")) {
+      return `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${escapeHtml(url)}" style="width: 600px; max-width: 90%; min-height: 360px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}\n</div>\n`;
+    }
+
+    if (ogpData) {
+      return renderOgpCard(ogpData, caption);
+    }
+
+    if (embedData) {
+      return renderEmbedResult(embedData, caption, url, false);
+    }
+
+    const formatted = formatEmbedUrl(url);
+    if (formatted && formatted !== url) {
+      return `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${escapeHtml(formatted)}" style="width: 600px; max-width: 90%; min-height: 360px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}\n</div>\n`;
+    }
+
     return `<div style="margin: 8px 0; padding: 12px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;"><a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #0b6e99; text-decoration: underline; word-break: break-all;">${escapeHtml(url)}</a>${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}</div>\n`;
   };
 
@@ -542,18 +586,31 @@ export function useNotionBlockParser() {
     }
 
     // Google Maps
-    if (url.includes("google.com/maps")) {
-      if (!url.includes("output=embed") && !url.includes("/embed")) {
-        const joinChar = url.includes("?") ? "&" : "?";
-        return `${url}${joinChar}output=embed`;
-      }
-    }
+    if (url.includes("google.com/maps") || url.includes("maps.google.com") || url.includes("maps.app.goo.gl")) {
+      if (url.includes("/maps/embed")) return url;
 
-    if (url.includes("maps.app.goo.gl")) {
-      if (!url.includes("output=embed") && !url.includes("/embed")) {
-        const joinChar = escapeHtml(url);
-        return `https://www.google.com/maps/embed/v1/place?key=AIzaSyCNwCbz1CjCScdV_qOyeAZfafYUHRKmtNA&q=${url.replace("https://maps.app.goo.gl/", "")}`;
+      // Extract 3d/4d coordinates in data param (!3d34.7120857!4d135.5082373)
+      const dataMatch = url.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/);
+      if (dataMatch) {
+        return `https://maps.google.com/maps?q=${dataMatch[1]},${dataMatch[2]}&z=15&output=embed`;
       }
+
+      // Extract place name
+      const placeMatch = url.match(/\/place\/([^/@]+)/);
+      if (placeMatch && placeMatch[1]) {
+        const name = decodeURIComponent(placeMatch[1].replace(/\+/g, " "));
+        if (name && name !== "@") {
+          return `https://maps.google.com/maps?q=${encodeURIComponent(name)}&output=embed`;
+        }
+      }
+
+      // Extract @lat,lng
+      const coordMatch = url.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+      if (coordMatch) {
+        return `https://maps.google.com/maps?q=${coordMatch[1]},${coordMatch[2]}&z=15&output=embed`;
+      }
+
+      return `https://maps.google.com/maps?q=${encodeURIComponent(url)}&output=embed`;
     }
 
     // CodeSandbox: codesandbox.io/s/id -> codesandbox.io/embed/id
@@ -565,13 +622,78 @@ export function useNotionBlockParser() {
     return url;
   };
 
-  const renderEmbed = (data: any): string => {
+  const renderEmbedResult = (embedData: any, caption: string, rawUrl: string, isEmbedBlock = false): string => {
+    const forceEmbed = isEmbedBlock || rawUrl.includes("embed");
+
+    if (!embedData || embedData.type === "fallback") {
+      const formatted = formatEmbedUrl(rawUrl);
+      const targetIframeSrc = (formatted && formatted !== rawUrl) ? formatted : rawUrl;
+      if (forceEmbed || (formatted && formatted !== rawUrl)) {
+        return `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${escapeHtml(targetIframeSrc)}" style="width: 600px; max-width: 90%; min-height: 360px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}\n</div>\n`;
+      }
+      return `<div style="margin: 8px 0; padding: 12px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;"><a href="${escapeHtml(rawUrl)}" target="_blank" rel="noopener noreferrer" style="color: #0b6e99; text-decoration: underline; word-break: break-all;">${escapeHtml(rawUrl)}</a>${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}</div>\n`;
+    }
+
+    if (embedData.type === "oembed") {
+      return `<div style="margin: 16px 0;" class="notion-embed notion-oembed">\n  ${embedData.html}\n  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 6px;">${caption}</div>` : ""}\n</div>\n`;
+    }
+
+    if (embedData.type === "iframe") {
+      return `<div style="margin: 16px 0;" class="notion-embed notion-iframe">\n  <iframe src="${escapeHtml(embedData.iframeUrl)}" style="width: 600px; max-width: 90%; min-height: 380px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 6px;">${caption}</div>` : ""}\n</div>\n`;
+    }
+
+    if (embedData.type === "bookmark") {
+      if (forceEmbed) {
+        const formatted = formatEmbedUrl(rawUrl);
+        const targetIframeSrc = (formatted && formatted !== rawUrl) ? formatted : rawUrl;
+        return `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${escapeHtml(targetIframeSrc)}" style="width: 600px; max-width: 90%; min-height: 360px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}\n</div>\n`;
+      }
+
+      return renderOgpCard({
+        url: embedData.url || rawUrl,
+        title: embedData.title,
+        description: embedData.description,
+        siteName: embedData.siteName,
+        image: embedData.image
+      }, caption);
+    }
+
+    return `<div style="margin: 8px 0; padding: 12px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;"><a href="${escapeHtml(rawUrl)}" target="_blank" rel="noopener noreferrer" style="color: #0b6e99; text-decoration: underline; word-break: break-all;">${escapeHtml(rawUrl)}</a>${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}</div>\n`;
+  };
+
+  const renderEmbed = (data: any, embedData?: any): string => {
     const url = data?.url || "";
     if (!url) return "";
+    const caption = renderRichText(data?.caption || []);
+    if (embedData) {
+      return renderEmbedResult(embedData, caption, url, true);
+    }
     const embedUrl = formatEmbedUrl(url);
+    return `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${escapeHtml(embedUrl || url)}" style="width: 600px; max-width: 90%; min-height: 360px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}\n</div>\n`;
+  };
+
+  const renderLinkPreview = (data: any, ogpData?: any, embedData?: any): string => {
+    const url = data?.url || "";
+    if (!url) return "";
     const caption = renderRichText(data?.caption || []);
 
-    return `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${embedUrl}" style="width: 100%; min-height: 360px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}\n</div>\n`;
+    if (url.includes("embed")) {
+      return `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${escapeHtml(url)}" style="width: 600px; max-width: 90%; min-height: 360px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}\n</div>\n`;
+    }
+
+    if (ogpData) {
+      return renderOgpCard(ogpData, caption);
+    }
+
+    if (embedData) {
+      return renderEmbedResult(embedData, caption, url, false);
+    }
+
+    const formatted = formatEmbedUrl(url);
+    if (formatted && formatted !== url) {
+      return `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${escapeHtml(formatted)}" style="width: 600px; max-width: 90%; min-height: 360px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}\n</div>\n`;
+    }
+    return `<div style="margin: 8px 0; padding: 12px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;"><a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #0b6e99; text-decoration: underline; word-break: break-all;">${escapeHtml(url)}</a>${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}</div>\n`;
   };
 
   const renderEquation = (data: any): string => {
@@ -583,7 +705,7 @@ export function useNotionBlockParser() {
     const hasColumnHeader = data?.has_column_header === true;
     const hasRowHeader = data?.has_row_header === true;
 
-    let html = `<table style="border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 0.9em;">\n`;
+    let html = `<table class="notion-table" style="border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 0.9em; color: var(--text-color);">\n`;
 
     children.forEach((row, rowIndex) => {
       if (row.type !== "table_row") return;
@@ -594,8 +716,8 @@ export function useNotionBlockParser() {
         const isHeader = (hasColumnHeader && rowIndex === 0) || (hasRowHeader && colIndex === 0);
         const tag = isHeader ? "th" : "td";
         const cellStyle = isHeader
-          ? `style="border: 1px solid rgba(55, 53, 47, 0.09); padding: 8px 12px; background-color: #f7f6f3; font-weight: 600; text-align: left;"`
-          : `style="border: 1px solid rgba(55, 53, 47, 0.09); padding: 8px 12px; text-align: left;"`;
+          ? `style="border: 1px solid rgba(128, 128, 128, 0.25); padding: 8px 12px; background-color: var(--ui-bg-color); color: var(--text-color); font-weight: 600; text-align: left;"`
+          : `style="border: 1px solid rgba(128, 128, 128, 0.25); padding: 8px 12px; background-color: var(--bg-color); color: var(--text-color); text-align: left;"`;
         const cellContent = renderRichText(cell);
         html += `    <${tag} ${cellStyle}>${cellContent}</${tag}>\n`;
       });

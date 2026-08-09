@@ -1,6 +1,7 @@
 import { APIResponseError, Client } from "@notionhq/client";
 import type { EventBlocksResult, NotionBlock, ListEventResult, ListEventInput, Pagination, PaginationInput } from "./event.service.types";
 import type { PropertyFilter } from "@notionhq/client/build/src/api-endpoints";
+import { shouldBypassCache } from "../utils/cache";
 
 const notion = new Client({
   auth: process.env.NOTION_API_KEY
@@ -75,7 +76,8 @@ const getAllRawEvents = defineCachedFunction(
   {
     maxAge: 60,
     name: "event-getAllRawEvents",
-    getKey: () => "all-raw-events"
+    getKey: () => "all-raw-events",
+    shouldBypassCache
   }
 );
 
@@ -108,7 +110,8 @@ export const getManyEvents = defineCachedFunction(
   {
     maxAge: 60,
     name: "event-getManyEvents",
-    getKey: (input: ListEventInput) => JSON.stringify(input ?? {})
+    getKey: (input: ListEventInput) => JSON.stringify(input ?? {}),
+    shouldBypassCache
   }
 );
 
@@ -134,7 +137,8 @@ export const getAllPagesAndCursors = defineCachedFunction(
   {
     maxAge: 300,
     name: "event-getAllPagesAndCursors",
-    getKey: (input: PaginationInput) => JSON.stringify(input ?? {})
+    getKey: (input: PaginationInput) => JSON.stringify(input ?? {}),
+    shouldBypassCache
   }
 );
 
@@ -218,7 +222,8 @@ export const getEventBlocksById = defineCachedFunction(
   },
   {
     maxAge: 300,
-    name: "event-getEventBlocksById",
-    getKey: (id: string) => id
+    name: "event-getEventBlocksById-v5",
+    getKey: (id: string) => id,
+    shouldBypassCache
   }
 );
