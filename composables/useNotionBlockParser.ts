@@ -531,29 +531,30 @@ export function useNotionBlockParser() {
     const url = data?.url || "";
     const caption = renderRichText(data?.caption || []);
 
-    if (isGoogleMapsUrl(url) || url.includes("embed")) {
-      const formatted = formatEmbedUrl(url);
-      const targetIframeSrc = (embedData?.type === "iframe" && embedData.iframeUrl)
-        ? embedData.iframeUrl
-        : ((formatted && formatted !== url) ? formatted : url);
+    // 1. If server provided embedData
+    if (embedData) {
+      if (embedData.type === "iframe" && embedData.iframeUrl) {
+        return `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${escapeHtml(embedData.iframeUrl)}" style="width: 600px; max-width: 90%; min-height: 360px; border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}\n</div>\n`;
+      }
+      if (embedData.type === "bookmark") {
+        return renderOgpCard(embedData, caption);
+      }
+      return renderEmbedResult(embedData, caption, url, false);
+    }
 
-      return `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${escapeHtml(targetIframeSrc)}" style="width: 600px; max-width: 90%; min-height: 360px; border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}\n</div>\n`;
+    // 2. Client-side iframe formatting fallback
+    const formatted = formatEmbedUrl(url);
+    if (formatted && formatted !== url) {
+      return `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${escapeHtml(formatted)}" style="width: 600px; max-width: 90%; min-height: 360px; border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}\n</div>\n`;
     }
 
     if (ogpData) {
       return renderOgpCard(ogpData, caption);
     }
 
-    if (embedData) {
-      return renderEmbedResult(embedData, caption, url, false);
-    }
-
-    const formatted = formatEmbedUrl(url);
-    if (formatted && formatted !== url) {
-      return `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${escapeHtml(formatted)}" style="width: 600px; max-width: 90%; min-height: 360px; border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}\n</div>\n`;
-    }
-
-    return `<div style="margin: 8px 0; width: 600px; max-width: 90%; padding: 12px; border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 6px; background-color: var(--ui-bg-color); color: var(--text-color);"><a href="${url}" target="_blank" rel="noopener noreferrer" style="color: var(--text-color-a); text-decoration: underline; word-break: break-all;">${escapeHtml(url)}</a>${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}</div>\n`;
+    // 3. Simple Link Card Fallback
+    const linkTitle = isGoogleMapsUrl(url) ? "Google Maps で開く" : url;
+    return `<div style="margin: 8px 0; width: 600px; max-width: 90%; padding: 12px; border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 6px; background-color: var(--ui-bg-color); color: var(--text-color);"><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" style="color: var(--text-color-a); text-decoration: underline; word-break: break-all;">${escapeHtml(linkTitle)}</a>${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}</div>\n`;
   };
 
   const formatEmbedUrl = (url: string): string => {

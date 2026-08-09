@@ -240,35 +240,44 @@ export async function resolveEmbed(url: string): Promise<EmbedResult> {
   // 1. Google Maps Check
   if (cleanUrl.includes("google.com/maps") || cleanUrl.includes("maps.app.goo.gl") || cleanUrl.includes("maps.google.com") || cleanUrl.includes("goo.gl/maps")) {
     const info = await extractGoogleMapsInfo(cleanUrl);
+
     if (info?.embedUrl) {
       return { type: "iframe", iframeUrl: info.embedUrl, provider: "Google Maps" };
     }
 
-    const apiKey = process.env.GOOGLE_CLOUD_API_KEY;
-    const isValidApiKey = apiKey && !apiKey.startsWith("secret_") && apiKey.length > 20;
+    if (info?.query) {
+      const apiKey = process.env.GOOGLE_CLOUD_API_KEY;
+      const isValidApiKey = apiKey && !apiKey.startsWith("secret_") && apiKey.length > 20;
 
-    if (isValidApiKey && info?.query) {
-      let iframeUrl = `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${encodeURIComponent(info.query)}`;
+      if (isValidApiKey) {
+        let iframeUrl = `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${encodeURIComponent(info.query)}`;
+        if (info.zoom) {
+          iframeUrl += `&zoom=${info.zoom}`;
+        }
+        return {
+          type: "iframe",
+          iframeUrl,
+          provider: "Google Maps"
+        };
+      }
+
+      let fallbackEmbedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(info.query)}&output=embed`;
       if (info.zoom) {
-        iframeUrl += `&zoom=${info.zoom}`;
+        fallbackEmbedUrl += `&z=${info.zoom}`;
       }
       return {
         type: "iframe",
-        iframeUrl,
+        iframeUrl: fallbackEmbedUrl,
         provider: "Google Maps"
       };
     }
 
-    // Fallback embed iframe URL (guarantees Google Maps always renders as an embedded map iframe)
-    const fallbackQuery = info?.query || cleanUrl;
-    const fallbackEmbedUrl = cleanUrl.includes("/maps/embed")
-      ? cleanUrl
-      : `https://maps.google.com/maps?q=${encodeURIComponent(fallbackQuery)}&output=embed`;
-
     return {
-      type: "iframe",
-      iframeUrl: fallbackEmbedUrl,
-      provider: "Google Maps"
+      type: "bookmark",
+      title: "Google Maps",
+      description: "Google マップで場所を表示します",
+      siteName: "Google Maps",
+      url: cleanUrl
     };
   }
 
