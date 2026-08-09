@@ -6,8 +6,8 @@
   --bg-color: #ededfd;
   --tile-bg-color: #ccc;
   --ui-bg-color: white;
-  --text-color: black;
-  --text-color-a: blue;
+  --text-color: #222;
+  --text-color-a: #0014fe;
   --text-bg-color: white;
   --text-bg-color-a: white;
   --alpha-zero: rgba(0, 0, 0, 0);
@@ -81,7 +81,7 @@ img {
 a:hover {
   color: white;
   display: inline;
-  background-color: blue;
+  background-color: #0014fe;
 }
 
 a {
@@ -249,7 +249,7 @@ li {
   position: fixed;
   top: 16px;
   right: 5%;
-  z-index: 1;
+  z-index: 3;
 }
 
 @media (max-width: 760px) {
@@ -295,7 +295,7 @@ li {
     top: 16px;
     right: 0%;
     margin-right: 10px;
-    z-index: 1;
+    z-index: 3;
   }
 }
 

@@ -104,7 +104,7 @@ watch(isMenuShown, () => {
 button:hover {
   color: white;
   display: inline;
-  background-color: blue;
+  background-color: #0014FE;
 }
 
 button {
