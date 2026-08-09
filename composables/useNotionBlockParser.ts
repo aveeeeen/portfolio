@@ -518,12 +518,23 @@ export function useNotionBlockParser() {
 </div>\n`;
   };
 
+  const isGoogleMapsUrl = (url: string): boolean => {
+    return (
+      url.includes("google.com/maps") ||
+      url.includes("maps.google.com") ||
+      url.includes("maps.app.goo.gl") ||
+      url.includes("goo.gl/maps")
+    );
+  };
+
   const renderBookmark = (data: any, ogpData?: any, embedData?: any): string => {
     const url = data?.url || "";
     const caption = renderRichText(data?.caption || []);
 
-    if (url.includes("embed")) {
-      return `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${escapeHtml(url)}" style="width: 600px; max-width: 90%; min-height: 360px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}\n</div>\n`;
+    if (isGoogleMapsUrl(url) || url.includes("embed")) {
+      const formatted = formatEmbedUrl(url);
+      const targetIframeSrc = (formatted && formatted !== url) ? formatted : (embedData?.iframeUrl || url);
+      return `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${escapeHtml(targetIframeSrc)}" style="width: 600px; max-width: 90%; min-height: 360px; border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}\n</div>\n`;
     }
 
     if (ogpData) {
@@ -536,10 +547,10 @@ export function useNotionBlockParser() {
 
     const formatted = formatEmbedUrl(url);
     if (formatted && formatted !== url) {
-      return `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${escapeHtml(formatted)}" style="width: 600px; max-width: 90%; min-height: 360px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}\n</div>\n`;
+      return `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${escapeHtml(formatted)}" style="width: 600px; max-width: 90%; min-height: 360px; border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}\n</div>\n`;
     }
 
-    return `<div style="margin: 8px 0; padding: 12px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;"><a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #0b6e99; text-decoration: underline; word-break: break-all;">${escapeHtml(url)}</a>${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}</div>\n`;
+    return `<div style="margin: 8px 0; width: 600px; max-width: 90%; padding: 12px; border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 6px; background-color: var(--ui-bg-color); color: var(--text-color);"><a href="${url}" target="_blank" rel="noopener noreferrer" style="color: var(--text-color-a); text-decoration: underline; word-break: break-all;">${escapeHtml(url)}</a>${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}</div>\n`;
   };
 
   const formatEmbedUrl = (url: string): string => {
@@ -586,28 +597,28 @@ export function useNotionBlockParser() {
     }
 
     // Google Maps
-    if (url.includes("google.com/maps") || url.includes("maps.google.com") || url.includes("maps.app.goo.gl")) {
+    if (url.includes("google.com/maps") || url.includes("maps.google.com") || url.includes("maps.app.goo.gl") || url.includes("goo.gl/maps")) {
       if (url.includes("/maps/embed")) return url;
 
-      // Extract 3d/4d coordinates in data param (!3d34.7120857!4d135.5082373)
+      // Priority 1: Extract 3d/4d coordinates in data param (!3d34.7120857!4d135.5082373)
       const dataMatch = url.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/);
       if (dataMatch) {
         return `https://maps.google.com/maps?q=${dataMatch[1]},${dataMatch[2]}&z=15&output=embed`;
       }
 
-      // Extract place name
-      const placeMatch = url.match(/\/place\/([^/@]+)/);
-      if (placeMatch && placeMatch[1]) {
-        const name = decodeURIComponent(placeMatch[1].replace(/\+/g, " "));
-        if (name && name !== "@") {
-          return `https://maps.google.com/maps?q=${encodeURIComponent(name)}&output=embed`;
-        }
-      }
-
-      // Extract @lat,lng
+      // Priority 2: Extract @lat,lng
       const coordMatch = url.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
       if (coordMatch) {
         return `https://maps.google.com/maps?q=${coordMatch[1]},${coordMatch[2]}&z=15&output=embed`;
+      }
+
+      // Priority 3: Extract place name from /place/Name/
+      const placeMatch = url.match(/\/place\/([^/@]+)/);
+      if (placeMatch && placeMatch[1]) {
+        const name = decodeURIComponent(placeMatch[1].replace(/\+/g, " ")).trim();
+        if (name && name !== "@") {
+          return `https://maps.google.com/maps?q=${encodeURIComponent(name)}&output=embed`;
+        }
       }
 
       return `https://maps.google.com/maps?q=${encodeURIComponent(url)}&output=embed`;

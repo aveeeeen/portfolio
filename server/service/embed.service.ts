@@ -57,15 +57,23 @@ async function extractGoogleMapsInfo(urlStr: string): Promise<{ query?: string; 
   }
 
   try {
-    const parsed = new URL(targetUrl);
-
-    // 3. Check 3d/4d exact location coordinates in data parameter (!3d34.7120857!4d135.5082373)
+    // 3. Priority 1: Check 3d/4d exact location coordinates in data parameter (!3d34.7120857!4d135.5082373)
     const dataMatch = targetUrl.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/);
     if (dataMatch) {
       return { query: `${dataMatch[1]},${dataMatch[2]}`, zoom: "15" };
     }
 
-    // 4. Check q or query search parameter
+    // 4. Priority 2: Check @lat,lng coordinates in URL
+    const coordMatch = targetUrl.match(/@(-?\d+\.\d+),(-?\d+\.\d+)(?:,(\d+(?:\.\d+)?z))?/);
+    if (coordMatch) {
+      const coords = `${coordMatch[1]},${coordMatch[2]}`;
+      const zoom = coordMatch[3] ? coordMatch[3].replace("z", "") : "15";
+      return { query: coords, zoom };
+    }
+
+    const parsed = new URL(targetUrl);
+
+    // 5. Priority 3: Check q or query search parameter
     let qParam = parsed.searchParams.get("q") || parsed.searchParams.get("query");
     if (qParam) {
       qParam = qParam.replace(/^@/, "").replace(/,\d+z$/, "").trim();
@@ -74,7 +82,7 @@ async function extractGoogleMapsInfo(urlStr: string): Promise<{ query?: string; 
       }
     }
 
-    // 4. Extract place name from pathname: /place/Place+Name/@lat,lng...
+    // 6. Priority 4: Check place name from pathname: /place/Place+Name/
     const placeMatch = parsed.pathname.match(/\/place\/([^/@]+)/);
     if (placeMatch && placeMatch[1]) {
       const placeName = decodeURIComponent(placeMatch[1].replace(/\+/g, " ")).trim();
@@ -83,21 +91,13 @@ async function extractGoogleMapsInfo(urlStr: string): Promise<{ query?: string; 
       }
     }
 
-    // 5. Extract search query from pathname: /search/Search+Query/...
+    // 7. Priority 5: Check search query from pathname: /search/Search+Query/...
     const searchMatch = parsed.pathname.match(/\/search\/([^/@]+)/);
     if (searchMatch && searchMatch[1]) {
       const searchQuery = decodeURIComponent(searchMatch[1].replace(/\+/g, " ")).trim();
       if (searchQuery) {
         return { query: searchQuery };
       }
-    }
-
-    // 6. Extract coordinates from pathname: /@lat,lng,zoom
-    const coordMatch = parsed.pathname.match(/@(-?\d+\.\d+),(-?\d+\.\d+)(?:,(\d+(?:\.\d+)?z))?/);
-    if (coordMatch) {
-      const coords = `${coordMatch[1]},${coordMatch[2]}`;
-      const zoom = coordMatch[3] ? coordMatch[3].replace("z", "") : undefined;
-      return { query: coords, zoom };
     }
 
     return null;
@@ -185,17 +185,22 @@ function getKnownOembedEndpoint(url: string): string | null {
 }
 
 /**
- * Parse OpenGraph and title tags from raw HTML content
+ * Extract OpenGraph metadata from HTML string for Bookmark card fallback
  */
-function parseOpenGraphMeta(htmlStr: string, targetUrl: string): { title?: string; description?: string; image?: string; siteName?: string; favicon?: string } {
-  const getMetaTag = (attr: string, value: string): string | undefined => {
-    const regex = new RegExp(`<meta[^>]+(?:${attr}=["']${value}["'][^>]+content=["']([^"']+)["']|content=["']([^"']+)["'][^>]+${attr}=["']${value}["'])`, "i");
-    const match = htmlStr.match(regex);
-    return match ? match[1] || match[2] : undefined;
+function extractOpenGraphMetadata(htmlStr: string, targetUrl: string): { title?: string; description?: string; image?: string; siteName?: string; favicon?: string } {
+  const getMetaTag = (attrName: string, attrVal: string): string | undefined => {
+    const regex1 = new RegExp(`<meta[^>]+${attrName}=["']${attrVal}["'][^>]+content=["']([^"']+)["']`, "i");
+    const regex2 = new RegExp(`<meta[^>]+content=["']([^"']+)["'][^>]+${attrName}=["']${attrVal}["']`, "i");
+    const match = htmlStr.match(regex1) || htmlStr.match(regex2);
+    return match ? match[1] : undefined;
   };
 
-  const titleMatch = htmlStr.match(/<title[^>]*>([^<]+)<\/title>/i);
-  const title = getMetaTag("property", "og:title") || getMetaTag("name", "title") || (titleMatch ? titleMatch[1].trim() : undefined);
+  let title = getMetaTag("property", "og:title") || getMetaTag("name", "title");
+  if (!title) {
+    const titleMatch = htmlStr.match(/<title[^>]*>([^<]+)<\/title>/i);
+    title = titleMatch ? titleMatch[1].trim() : undefined;
+  }
+
   const description = getMetaTag("property", "og:description") || getMetaTag("name", "description");
   let image = getMetaTag("property", "og:image") || getMetaTag("name", "image");
   const siteName = getMetaTag("property", "og:site_name");
@@ -240,7 +245,9 @@ export async function resolveEmbed(url: string): Promise<EmbedResult> {
     }
 
     const apiKey = process.env.GOOGLE_CLOUD_API_KEY;
-    if (apiKey && info?.query) {
+    const isValidApiKey = apiKey && !apiKey.startsWith("secret_") && apiKey.length > 20;
+
+    if (isValidApiKey && info?.query) {
       let iframeUrl = `https://www.google.com/maps/embed/v1/place?key=${apiKey}&q=${encodeURIComponent(info.query)}`;
       if (info.zoom) {
         iframeUrl += `&zoom=${info.zoom}`;

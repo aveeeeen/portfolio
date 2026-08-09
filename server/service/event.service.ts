@@ -3,6 +3,17 @@ import * as EventRepository from "./event.repository";
 import { resolveEmbed } from "./embed.service";
 import { fetchOgpMeta } from "./ogp.service";
 
+function isEmbedOrMapsUrl(url: string): boolean {
+  if (!url) return false;
+  return (
+    url.includes("embed") ||
+    url.includes("google.com/maps") ||
+    url.includes("maps.google.com") ||
+    url.includes("maps.app.goo.gl") ||
+    url.includes("goo.gl/maps")
+  );
+}
+
 async function enrichBlocksWithEmbeds(blocks: any[]): Promise<void> {
   if (!blocks || !Array.isArray(blocks)) return;
 
@@ -18,7 +29,7 @@ async function enrichBlocksWithEmbeds(blocks: any[]): Promise<void> {
     } else if (block.type === "bookmark" || block.type === "link_preview") {
       const url = block.bookmark?.url || block.link_preview?.url;
       if (url) {
-        if (url.includes("embed")) {
+        if (isEmbedOrMapsUrl(url)) {
           promises.push(
             resolveEmbed(url).then((res) => {
               block.embedData = res;
