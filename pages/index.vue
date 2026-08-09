@@ -23,7 +23,7 @@ onBeforeMount(() => {
 
 const getIsUnder = () => {
   const aboutEl = document.getElementById('about');
-  isUnderPageHeight.value = window.scrollY > (aboutEl?.offsetTop ?? window.innerHeight) - 10;
+  isUnderPageHeight.value = window.scrollY > (aboutEl?.offsetTop ?? window.innerHeight) - 64;
 }
 
 onMounted(() => {
@@ -53,56 +53,49 @@ onUnmounted(() => {
   document.removeEventListener("scroll", getIsUnder);
 });
 
-function closeModal() {
-  if (isMenuShown.value) {
-    isMenuShown.value = false;
-  }
-}
-
 function scrollToAbout() {
   const aboutEl = document.getElementById('about');
   if (aboutEl) {
     aboutEl.scrollIntoView({ behavior: 'smooth' });
   }
 }
+
 </script>
 
 <template>
-  <div @click="closeModal()" class="page">
-    <div class="hero-box">
-      <video class="bg-video" src="~/assets/vid/bgVideo.mp4" preload="none" autoplay playsinline muted loop></video>
-      <div class="introduction">
-        <Introduction></Introduction>
-      </div>
-      <a class="scroll-indication-anchor" href="#about" @click.prevent="scrollToAbout">
-        <div class="scroll-indication-box">
-          <span class="scroll-indication">Know About me</span>
-        </div>
-        <div>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff"
-            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-            class="lucide lucide-chevron-down-icon lucide-chevron-down">
-            <path d="m6 9 6 6 6-6" />
-          </svg>
-        </div>
-      </a>
+  <video class="bg-video" src="~/assets/vid/bgVideo.mp4" preload="none" autoplay playsinline muted loop></video>
+  <div class="hero-box">
+    <div class="introduction">
+      <Introduction></Introduction>
     </div>
-    <div class="center- flex-vert about-section" id="about">
-      <div class="content-box">
-        <h1>About Me</h1>
-        <Border></Border>
-        <div class="spacing">
-          <pre class="code-block"><code class="hljs language-json code-padding" v-html="highlightedCode"></code></pre>
-          <!-- picture box -->
-          <div class="img-box center-vert margin-left">
-            <NuxtImg class="about-img" src="/img/matsumoto.png" format="webp" />
-          </div>
-          <!-- description -->
-        </div>
+    <a class="scroll-indication-anchor" href="#about" @click.prevent="scrollToAbout">
+      <div class="scroll-indication-box">
+        <span class="scroll-indication">Know About me</span>
       </div>
-    </div>
-    <Footer></Footer>
+      <div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          class="lucide lucide-chevron-down-icon lucide-chevron-down">
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      </div>
+    </a>
   </div>
+  <div class="center- flex-vert about-section" id="about">
+    <div class="content-box index-content-box">
+      <h1>About Me</h1>
+      <Border></Border>
+      <div class="spacing">
+        <pre class="code-block"><code class="hljs language-json code-padding" v-html="highlightedCode"></code></pre>
+        <!-- picture box -->
+        <div class="img-box center-vert margin-left">
+          <NuxtImg class="about-img" src="/img/matsumoto.png" format="webp" />
+        </div>
+        <!-- description -->
+      </div>
+    </div>
+  </div>
+  <Footer></Footer>
   <!-- nav box -->
   <Nav v-if="isUnderPageHeight" :close="isMenuShown" @isclose="(e) => (isMenuShown = e)" :notShowTitle="true">
     <Menu></Menu>
@@ -147,16 +140,14 @@ function scrollToAbout() {
 }
 
 .bg-video {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   position: absolute;
-  top: 0%;
-  left: 0%;
+  top: 0px;
+  left: 0px;
   z-index: -1;
   object-fit: cover;
 }
-
-
 
 .hero-box {
   width: 100%;
@@ -167,6 +158,7 @@ function scrollToAbout() {
   align-items: center;
   justify-content: start;
   gap: 8px;
+  background-color: transparent;
 }
 
 .scroll-indication-anchor {
@@ -210,19 +202,16 @@ function scrollToAbout() {
   z-index: 1;
 }
 
-.footer-area {
-  position: absolute;
-  bottom: 0svh;
-  width: 100svw;
-  z-index: 1;
-}
-
 .about-section {
+  position: relative;
   width: 100%;
   height: auto;
   background-color: var(--bg-color);
-  padding-bottom: 120px;
-  padding-top: 120px;
+}
+
+.index-content-box {
+  margin-top: 54px;
+  margin-bottom: 54px;
 }
 
 @media (max-width: 800px) {
