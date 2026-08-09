@@ -78,7 +78,7 @@ a {
 
 footer {
   height: fit-content;
-  width: 100%;
+  width: 100svw;
   background-color: blue;
 }
 </style>

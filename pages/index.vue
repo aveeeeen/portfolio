@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import hljs from 'highlight.js';
 import 'highlight.js/styles/atom-one-dark.css';
+
 const isUnderPageHeight = ref(false);
 const isMenuShown = ref(false);
 
@@ -25,7 +26,10 @@ const getIsUnder = () => {
 }
 
 onMounted(() => {
-  document.addEventListener("scroll", getIsUnder)
+  console.log("mounted")
+  window.addEventListener("scroll", () => {
+    getIsUnder()
+  })
 })
 
 onUnmounted(() => {
@@ -44,6 +48,8 @@ onUnmounted(() => {
       document.documentElement.classList.remove("dark");
     }
   }
+
+  document.removeEventListener("scroll", getIsUnder);
 });
 
 function closeModal() {
@@ -62,9 +68,6 @@ function scrollToAbout() {
 
 <template>
   <div @click="closeModal()" class="page">
-    <div>
-
-    </div>
     <div class="hero-box">
       <video class="bg-video" src="~/assets/vid/bgVideo.mp4" preload="none" autoplay playsinline muted loop></video>
       <div class="introduction">
@@ -152,12 +155,7 @@ function scrollToAbout() {
   object-fit: cover;
 }
 
-.page {
-  width: 100%;
-  min-height: 100svh;
-  position: relative;
-  display: block;
-}
+
 
 .hero-box {
   width: 100%;
@@ -171,7 +169,7 @@ function scrollToAbout() {
 }
 
 .scroll-indication-anchor {
-  margin-top: 75vh;
+  margin-top: 80vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -191,6 +189,11 @@ function scrollToAbout() {
   font-weight: 350;
   color: blue;
   font-size: 1rem;
+}
+
+.scroll-indication-anchor:hover>.scroll-indication-box>.scroll-indication {
+  color: white;
+  background-color: blue;
 }
 
 .introduction {
