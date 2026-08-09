@@ -15,20 +15,31 @@ async function extractGoogleMapsInfo(urlStr: string): Promise<{ query?: string; 
   // 1. Resolve shortened URLs (maps.app.goo.gl or goo.gl/maps) via HTTP GET request
   if (targetUrl.includes("maps.app.goo.gl") || targetUrl.includes("goo.gl/maps") || targetUrl.includes("google.com/url")) {
     try {
-      const res = await fetch(targetUrl, {
+      const manualRes = await fetch(targetUrl, {
         method: "GET",
-        redirect: "follow",
+        redirect: "manual",
         headers: {
           "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
         }
       });
-      if (res.url && res.url !== targetUrl) {
-        targetUrl = res.url;
+      const loc = manualRes.headers.get("location");
+      if (loc && loc.startsWith("http")) {
+        targetUrl = loc;
       } else {
+        const res = await fetch(targetUrl, {
+          method: "GET",
+          redirect: "follow",
+          headers: {
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+          }
+        });
+        if (res.url && res.url !== targetUrl) {
+          targetUrl = res.url;
+        }
         const text = await res.text();
         const refreshMatch =
           text.match(/<meta[^>]+http-equiv=["']refresh["'][^>]+content=["']\d+;\s*url=["']?([^"'>]+)["']?/i) ||
-          text.match(/<a[^>]+href=["'](https:\/\/(?:www\.)?google\.[^"']+\/maps\/[^"']+)["']/i);
+          text.match(/(https:\/\/(?:www\.)?google\.[^"'\s<>]+\/maps\/[^"'\s<>]+)/i);
         if (refreshMatch) {
           targetUrl = refreshMatch[1];
         }

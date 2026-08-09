@@ -8,7 +8,7 @@ const cachedResolveEmbed = defineCachedFunction(
   },
   {
     maxAge: 60 * 60 * 24 * 7, // 7 days cache
-    name: "embed-resolution-v9",
+    name: "embed-resolution-v10",
     getKey: (url: string) => url,
     shouldBypassCache
   }
