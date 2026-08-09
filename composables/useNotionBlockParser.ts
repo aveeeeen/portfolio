@@ -458,14 +458,60 @@ export function useNotionBlockParser() {
     return `<figure style="margin: 16px 0; text-align: center;" class="notion-image-figure">\n  <img src="${imgUrl}" alt="${caption ? caption.replace(/<[^>]*>/g, "") : ""}" loading="lazy" decoding="async" style="max-width: 100%; border-radius: 6px; display: block; margin: 0 auto;">\n  ${caption ? `<figcaption style="font-size: 0.85em; margin-top: 6px; color: #aaa">${caption}</figcaption>` : ""}\n</figure>\n`;
   };
 
+  const parseTimestampToSeconds = (ts: string): number | null => {
+    if (!ts) return null;
+    const clean = ts.replace(/s$/i, "").trim();
+    if (/^\d+$/.test(clean)) {
+      return parseInt(clean, 10);
+    }
+    const match = clean.match(/(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s?)?/i);
+    if (match && (match[1] || match[2] || match[3])) {
+      const h = parseInt(match[1] || "0", 10);
+      const m = parseInt(match[2] || "0", 10);
+      const s = parseInt(match[3] || "0", 10);
+      return h * 3600 + m * 60 + s;
+    }
+    return null;
+  };
+
+  const formatYouTubeEmbedUrl = (url: string): string | null => {
+    if (!url) return null;
+
+    const youtubeMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+    if (!youtubeMatch) return null;
+
+    const videoId = youtubeMatch[1];
+    let embedUrl = `https://www.youtube.com/embed/${videoId}`;
+
+    let startSec: number | null = null;
+    try {
+      const parsed = new URL(url);
+      const tParam = parsed.searchParams.get("t") || parsed.searchParams.get("start") || parsed.hash.replace(/^#/, "").match(/(?:t|start)=([^&]+)/)?.[1];
+      if (tParam) {
+        startSec = parseTimestampToSeconds(tParam);
+      }
+    } catch {
+      const tMatch = url.match(/[?&#](?:t|start)=([^&#]+)/);
+      if (tMatch) {
+        startSec = parseTimestampToSeconds(tMatch[1]);
+      }
+    }
+
+    if (startSec !== null && !isNaN(startSec) && startSec > 0) {
+      embedUrl += `?start=${startSec}`;
+    }
+
+    return embedUrl;
+  };
+
   const renderVideo = (data: any): string => {
     const url = getFileUrl(data);
     const caption = renderRichText(data?.caption || []);
 
     // YouTube embed support
-    const youtubeMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]+)/);
-    if (youtubeMatch) {
-      return `<div style="margin: 12px 0; display: flex; flex-direction: column; gap: 6px;" class="notion-media notion-video"><iframe src="https://www.youtube.com/embed/${youtubeMatch[1]}" style="width: 100%; width:600px; max-width: 90%; aspect-ratio: 16/9; border: none; border-radius: 4px;" allowfullscreen></iframe>${caption ? `<div style="font-size: 0.85em; opacity: 0.6;">${caption}</div>` : ""}</div>\n`;
+    const ytEmbedUrl = formatYouTubeEmbedUrl(url);
+    if (ytEmbedUrl) {
+      return `<div style="margin: 12px 0; display: flex; flex-direction: column; gap: 6px;" class="notion-media notion-video"><iframe src="${escapeHtml(ytEmbedUrl)}" style="width: 100%; width:600px; max-width: 90%; aspect-ratio: 16/9; border: none; border-radius: 4px;" allowfullscreen></iframe>${caption ? `<div style="font-size: 0.85em; opacity: 0.6;">${caption}</div>` : ""}</div>\n`;
     }
 
     return `<div style="margin: 12px 0; display: flex; flex-direction: column; gap: 6px;" class="notion-media notion-video"><video src="${url}" controls style="max-width: 100%; border-radius: 4px;"></video>${caption ? `<div style="font-size: 0.85em; opacity: 0.6;">${caption}</div>` : ""}</div>\n`;
@@ -564,10 +610,10 @@ export function useNotionBlockParser() {
   const formatEmbedUrl = (url: string): string => {
     if (!url) return "";
 
-    // YouTube: watch?v=ID, youtu.be/ID, or shorts/ID
-    const youtubeMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]+)/);
-    if (youtubeMatch) {
-      return `https://www.youtube.com/embed/${youtubeMatch[1]}`;
+    // YouTube: watch?v=ID, youtu.be/ID, shorts/ID, or live/ID with timestamp
+    const ytEmbedUrl = formatYouTubeEmbedUrl(url);
+    if (ytEmbedUrl) {
+      return ytEmbedUrl;
     }
 
     // Spotify: open.spotify.com/track/ID -> open.spotify.com/embed/track/ID
