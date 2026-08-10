@@ -50,7 +50,8 @@ function scrollToAbout() {
           </div>
           <div class="line">
             <span class="line-number">2</span>
-            <h3>Live Coder, Musician, Programmer</h3>
+            <h3><span class="keyword">let</span> <span>braven</span> = [<span class="string">"Live Coder"</span>, <span
+                class="string">"Musician"</span>, <span class="string">"Programmer"</span>]</h3>
           </div>
         </div>
         <a v-if="!isUnderPageHeight" class="scroll-indication-anchor" href="#about" @click.prevent="scrollToAbout">
@@ -90,8 +91,9 @@ function scrollToAbout() {
 
 <style scoped>
 .about-img {
-  width: 35svh;
-  height: 35svh;
+  width: 35vh;
+  height: 35vh;
+
 }
 
 .img-box {
@@ -127,7 +129,7 @@ function scrollToAbout() {
 
 .bg-video {
   width: 100vw;
-  height: 100svh;
+  height: 100vh;
   position: absolute;
   top: 0px;
   left: 0px;
@@ -137,7 +139,7 @@ function scrollToAbout() {
 
 .hero-box {
   width: 100%;
-  height: 100svh;
+  height: 100vh;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -153,13 +155,14 @@ function scrollToAbout() {
   margin: 0px;
   top: 0px;
   left: 0px;
-  width: 100svw;
-  height: 100svh;
+  width: 100vw;
+  height: 100vh;
   z-index: 2;
   background-color: transparent;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  overflow: hidden;
 }
 
 .intro-box {
@@ -178,7 +181,7 @@ function scrollToAbout() {
   height: 100%;
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   padding: 32px;
 }
@@ -188,6 +191,7 @@ function scrollToAbout() {
   padding: 0 16px;
   font-family: "Noto Sans Mono", monospace;
   font-optical-sizing: auto;
+  letter-spacing: 0.01rch;
 }
 
 .line {
@@ -225,6 +229,13 @@ function scrollToAbout() {
   border-left: solid 2px #eee;
 }
 
+.string {
+  color: #F19A55;
+}
+
+.keyword {
+  color: #FF7B72;
+}
 
 .scroll-indication-anchor {
   display: flex;
@@ -234,7 +245,7 @@ function scrollToAbout() {
   z-index: 1;
   margin-bottom: 24px;
   background-color: transparent;
-  backdrop-filter: blur(16px);
+  backdrop-filter: blur(32px);
 }
 
 .scroll-indication-box {
@@ -285,9 +296,9 @@ function scrollToAbout() {
 }
 
 @media (max-width: 800px) {
+
   .intro-box {
-    height: 28%;
-    overflow: hidden;
+    height: 30%;
   }
 
   .intro-content {
@@ -319,7 +330,7 @@ function scrollToAbout() {
   }
 
   .line>h3 {
-    line-height: 2.0;
+    line-height: 1.5;
     font-weight: 300;
     font-size: 0.8rem;
     padding: 0px 16px;
