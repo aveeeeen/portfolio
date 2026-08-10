@@ -79,7 +79,6 @@ img {
   max-width: 600px;
   height: auto;
   box-sizing: border-box;
-  align-self: center;
 }
 
 img.portrait {
@@ -87,7 +86,6 @@ img.portrait {
   max-height: 40vh;
   width: auto;
   max-width: 100%;
-  align-self: center;
   object-fit: contain;
 }
 
