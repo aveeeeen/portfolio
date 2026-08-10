@@ -157,12 +157,13 @@ function scrollToAbout() {
 }
 
 .intro-box {
-  height: 16svh;
+  height: 20svh;
   width: 100%;
-  background-color: var(--bg-color);
   display: flex;
   flex-direction: column;
   align-items: center;
+  backdrop-filter: blur(16px);
+
 }
 
 .intro-content {
@@ -173,65 +174,77 @@ function scrollToAbout() {
   flex-direction: row;
   align-items: flex-start;
   justify-content: space-between;
-  align-items: flex-start;
   padding: 32px;
 }
 
 .intro {
   width: fit-content;
+  padding: 0 16px;
 }
 
 .intro>h1 {
+  display: block;
+  width: fit-content;
   line-height: 1.0;
   font-weight: 450;
   font-size: 2rem;
+  padding: 8px 32px;
+  margin: 0;
+  color: #eee;
+  border-left: solid 2px #eee;
 }
 
 .intro>h3 {
+  display: block;
+  width: fit-content;
   line-height: 2.0;
   font-weight: 300;
   font-size: 1rem;
+  padding: 4px 32px;
+  margin: 0;
+  color: #eee;
+  border-left: solid 2px #eee;
 }
 
 
 .scroll-indication-anchor {
-  margin-top: 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
   z-index: 1;
-  margin-bottom: 24px
+  margin-bottom: 24px;
+  background-color: transparent;
+  backdrop-filter: blur(16px);
 }
 
 .scroll-indication-box {
   width: fit-content;
   height: fit-content;
   padding: 8px;
-  border: none;
-  background-color: var(--bg-color);
+  border-top: solid 2px #eee;
 }
 
 .scroll-indication {
   font-weight: 600;
   font-size: 1rem;
-  color: var(--text-color);
+  color: #eee;
 }
 
 .scroll-indication-arrow {
-  stroke: var(--text-color);
+  stroke: #eee;
 }
 
-.scroll-indication-anchor:hover>.scroll-indication-box {
-  background-color: #0014FE;
+.scroll-indication-anchor:hover {
+  background-color: #eee;
 }
 
 .scroll-indication-anchor:hover>.scroll-indication-arrow {
-  stroke: white;
+  stroke: #0014fe;
 }
 
 .scroll-indication-anchor:hover .scroll-indication {
-  color: white;
+  color: #0014fe;
 }
 
 .top-menu {
@@ -263,15 +276,14 @@ function scrollToAbout() {
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
-    gap: 8px;
-    padding: 0;
+    gap: 24px;
+    padding: 16px 0 40px 0;
   }
 
   .intro {
     width: 100%;
-    margin-top: 8px;
     margin-left: 32px;
     justify-self: flex-start;
   }
@@ -280,12 +292,14 @@ function scrollToAbout() {
     line-height: 1.0;
     font-weight: 450;
     font-size: 1.4rem;
+    padding: 8px 16px;
   }
 
   .intro>h3 {
     line-height: 2.0;
     font-weight: 300;
     font-size: 0.8rem;
+    padding: 0px 16px;
   }
 
   .scroll-indication {
@@ -294,7 +308,7 @@ function scrollToAbout() {
 
   .scroll-indication-box {
     padding: 2px;
-    border-top: solid 2px var(--text-color);
+    border-top: solid 2px #eee;
   }
 
   .scroll-indication-anchor {
