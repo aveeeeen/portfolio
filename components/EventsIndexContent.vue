@@ -67,7 +67,7 @@ watch(isMenuShown, () => {
 </script>
 
 <template>
-  <div @click="closeModal()" class="page">
+  <div @click="isMenuShown = isMenuShown ? !isMenuShown : isMenuShown" class="page">
     <div class="center- flex-vert gap-20">
       <div class="content-box">
         <h1>Events</h1>
@@ -93,11 +93,11 @@ watch(isMenuShown, () => {
       <div class="bottom"></div>
     </div>
     <Footer></Footer>
+    <Nav :close="isMenuShown" @isclose="(e) => (isMenuShown = e)">
+      <Menu></Menu>
+    </Nav>
   </div>
 
-  <Nav :close="isMenuShown" @isclose="(e) => (isMenuShown = e)">
-    <Menu></Menu>
-  </Nav>
 </template>
 
 <style scoped>

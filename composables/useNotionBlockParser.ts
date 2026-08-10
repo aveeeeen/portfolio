@@ -50,47 +50,17 @@ export function useNotionBlockParser() {
 
   // ─── Color helpers ───
 
-  const getTextColorStyle = (color: string): string => {
+  const getTextColorClass = (color: string): string => {
     if (color === "default" || !color) return "";
-
-    const textColors: Record<string, string> = {
-      gray: "color: #787774",
-      brown: "color: #9f6b53",
-      orange: "color: #d9730d",
-      yellow: "color: #cb912f",
-      green: "color: #448361",
-      blue: "color: #337ea9",
-      purple: "color: #9065b0",
-      pink: "color: #c14c8a",
-      red: "color: #d44c47",
-    };
-
-    const bgColors: Record<string, string> = {
-      gray_background: "background-color: #f1f1ef",
-      brown_background: "background-color: #f4eeeb",
-      orange_background: "background-color: #fbecdd",
-      yellow_background: "background-color: #fbf3db",
-      green_background: "background-color: #edf3f0",
-      blue_background: "background-color: #ebf2f6",
-      purple_background: "background-color: #f5f0f7",
-      pink_background: "background-color: #f9eef3",
-      red_background: "background-color: #fdebec",
-    };
-
-    return textColors[color] || bgColors[color] || "";
+    if (color.endsWith("_background")) {
+      return `notion-bg-${color.replace("_background", "")}`;
+    }
+    return `notion-color-${color}`;
   };
 
-  const getBlockColorStyle = (color: string): string => {
-    if (color === "default" || !color) return "";
-
-    const style = getTextColorStyle(color);
-    if (!style) return "";
-
-    if (color.endsWith("_background")) {
-      return ` style="${style}; padding: 12px 16px; border-radius: 6px; margin: 4px 0;"`;
-    }
-
-    return ` style="${style}"`;
+  const getBlockColorClass = (color: string): string => {
+    const cls = getTextColorClass(color);
+    return cls ? ` class="${cls}"` : "";
   };
 
   // ─── Rich text rendering ───
@@ -112,14 +82,14 @@ export function useNotionBlockParser() {
       if (item.type === "text") {
         text = escapeHtml(item.text?.content || "");
         if (item.text?.link) {
-          text = `<a href="${item.text.link.url}" target="_blank" rel="noopener noreferrer" style="color: #0b6e99; text-decoration: underline;">${text}</a>`;
-          if (escapeHtml(item.text.link.url).includes("embed")) text = `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${item.text.link.url || ""}" style="width: 600px; max-width: 90%; min-height: 360px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+          text = `<a href="${item.text.link.url}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+          if (escapeHtml(item.text.link.url).includes("embed")) text = `<div class="notion-embed">\n  <iframe src="${item.text.link.url || ""}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
         }
       } else if (item.type === "mention") {
         text = renderMention(item);
       } else if (item.type === "equation") {
         const expr = escapeHtml(item.equation?.expression || "");
-        text = `<code class="notion-inline-math" style="padding: 2px 4px; font-style: italic; font-family: serif;">${expr}</code>`;
+        text = `<code class="notion-inline-math">${expr}</code>`;
       } else {
         text = escapeHtml(item.plain_text || "");
       }
@@ -135,23 +105,21 @@ export function useNotionBlockParser() {
 
     if (!mention) return plainText;
 
-    const mentionStyle = `background-color: rgba(15, 15, 15, 0.08); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; display: inline-flex; align-items: center; gap: 4px;`;
-
     switch (mention.type) {
       case "user":
-        return `<span class="notion-mention notion-mention-user" style="${mentionStyle} font-weight: 500;">👤 ${plainText}</span>`;
+        return `<span class="notion-mention notion-mention-user">👤 ${plainText}</span>`;
       case "page":
-        return `<span class="notion-mention notion-mention-page" style="${mentionStyle}">📄 <a href="${item.href || ""}" style="color: inherit; text-decoration: none;">${plainText}</a></span>`;
+        return `<span class="notion-mention notion-mention-page">📄 <a href="${item.href || ""}">${plainText}</a></span>`;
       case "database":
-        return `<span class="notion-mention notion-mention-database" style="${mentionStyle}">🗃️ <a href="${item.href || ""}" style="color: inherit; text-decoration: none;">${plainText}</a></span>`;
+        return `<span class="notion-mention notion-mention-database">🗃️ <a href="${item.href || ""}">${plainText}</a></span>`;
       case "date": {
         const start = mention.date?.start || "";
         const end = mention.date?.end || "";
         const display = end ? `${start} → ${end}` : start;
-        return `<span class="notion-mention notion-mention-date" style="${mentionStyle}">🗓️ ${display}</span>`;
+        return `<span class="notion-mention notion-mention-date">🗓️ ${display}</span>`;
       }
       case "link_preview":
-        return `<span class="notion-mention notion-mention-link" style="${mentionStyle}">🔗 <a href="${mention.link_preview?.url || ""}" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: none;">${plainText}</a></span>`;
+        return `<span class="notion-mention notion-mention-link">🔗 <a href="${mention.link_preview?.url || ""}" target="_blank" rel="noopener noreferrer">${plainText}</a></span>`;
       default:
         return plainText;
     }
@@ -161,7 +129,7 @@ export function useNotionBlockParser() {
     if (!annotations) return text;
 
     if (annotations.code) {
-      text = `<code style="background-color: rgba(15, 15, 15, 0.05); padding: 2px 4px; border-radius: 3px; font-family: monospace; font-size: 0.9em;">${text}</code>`;
+      text = `<code>${text}</code>`;
     }
     if (annotations.bold) {
       text = `<strong>${text}</strong>`;
@@ -173,12 +141,12 @@ export function useNotionBlockParser() {
       text = `<del>${text}</del>`;
     }
     if (annotations.underline) {
-      text = `<span style="text-decoration: underline;">${text}</span>`;
+      text = `<span class="notion-underline">${text}</span>`;
     }
     if (annotations.color && annotations.color !== "default") {
-      const colorStyle = getTextColorStyle(annotations.color);
-      if (colorStyle) {
-        text = `<span style="${colorStyle}">${text}</span>`;
+      const colorClass = getTextColorClass(annotations.color);
+      if (colorClass) {
+        text = `<span class="${colorClass}">${text}</span>`;
       }
     }
 
@@ -210,7 +178,7 @@ export function useNotionBlockParser() {
     }
     if (icon.type === "external" || icon.type === "file") {
       const url = getFileUrl(icon);
-      return url ? `<img src="${url}" alt="icon" style="width: 1.2em; height: 1.2em; object-fit: contain;">` : "";
+      return url ? `<img src="${url}" alt="icon" class="notion-icon">` : "";
     }
     return "";
   };
@@ -238,7 +206,7 @@ export function useNotionBlockParser() {
 
       // Group consecutive list items
       if (block.type === "bulleted_list_item") {
-        html += `<ul style="list-style-type: disc; padding-left: 24px; margin-bottom: 8px;">\n`;
+        html += `<ul>\n`;
         while (i < blocks.length && blocks[i].type === "bulleted_list_item") {
           html += renderBlock(blocks[i]);
           i++;
@@ -248,7 +216,7 @@ export function useNotionBlockParser() {
       }
 
       if (block.type === "numbered_list_item") {
-        html += `<ol style="list-style-type: decimal; padding-left: 24px; margin-bottom: 8px;">\n`;
+        html += `<ol>\n`;
         while (i < blocks.length && blocks[i].type === "numbered_list_item") {
           html += renderBlock(blocks[i]);
           i++;
@@ -258,7 +226,7 @@ export function useNotionBlockParser() {
       }
 
       if (block.type === "to_do") {
-        html += `<ul class="notion-todo-list" style="list-style-type: none; padding-left: 0; margin-bottom: 8px;">\n`;
+        html += `<ul class="notion-todo-list">\n`;
         while (i < blocks.length && blocks[i].type === "to_do") {
           html += renderBlock(blocks[i]);
           i++;
@@ -304,7 +272,7 @@ export function useNotionBlockParser() {
       case "code":
         return renderCode(typeData);
       case "divider":
-        return `<hr style="border: none; border-top: 1px solid #ccc; margin: 16px 0;">\n`;
+        return `<hr>\n`;
       case "image":
         return renderImage(typeData);
       case "video":
@@ -332,9 +300,9 @@ export function useNotionBlockParser() {
       case "table_of_contents":
         return "";
       case "child_page":
-        return `<div style="margin: 4px 0; display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 4px; background-color: #f7f6f3; font-size: 0.95em;">📄 ${escapeHtml(typeData?.title || "Untitled")}</div>\n`;
+        return `<div class="notion-child-block">📄 ${escapeHtml(typeData?.title || "Untitled")}</div>\n`;
       case "child_database":
-        return `<div style="margin: 4px 0; display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 4px; background-color: #f7f6f3; font-size: 0.95em;">🗃️ ${escapeHtml(typeData?.title || "Untitled")}</div>\n`;
+        return `<div class="notion-child-block">🗃️ ${escapeHtml(typeData?.title || "Untitled")}</div>\n`;
       case "link_preview":
         return renderLinkPreview(typeData, (block as any).ogpData, (block as any).embedData);
       case "breadcrumb":
@@ -350,84 +318,63 @@ export function useNotionBlockParser() {
 
   const renderParagraph = (data: any, childrenHtml: string): string => {
     const richText = renderRichText(data?.rich_text || []);
-    const colorStyle = getBlockColorStyle(data?.color || "default");
+    const colorClass = getBlockColorClass(data?.color || "default");
     const isEmpty = !richText && !childrenHtml;
 
     if (isEmpty) {
-      return `<div style="height: 32px;"></div>\n`;
+      return `<div class="notion-empty-paragraph"></div>\n`;
     }
 
-    return `<p${colorStyle || ` style="margin-top: 4px; margin-bottom: 4px; min-height: 1em;"`}>${richText}${childrenHtml ? "\n" + childrenHtml : ""}</p>\n`;
+    return `<p${colorClass}>${richText}${childrenHtml ? "\n" + childrenHtml : ""}</p>\n`;
   };
 
   const renderHeading = (data: any, level: number, childrenHtml: string, blockId: string): string => {
     const richText = renderRichText(data?.rich_text || []);
     const id = blockId;
-    const colorStyle = getBlockColorStyle(data?.color || "default");
+    const colorClass = getBlockColorClass(data?.color || "default");
     const isToggleable = data?.is_toggleable === true;
-
-    const fontSizes: Record<number, string> = {
-      1: "1.8em",
-      2: "1.5em",
-      3: "1.25em",
-      4: "1.1em",
-    };
-    const margins: Record<number, string> = {
-      1: "margin-top: 1.5em; margin-bottom: 0.5em;",
-      2: "margin-top: 1.4em; margin-bottom: 0.4em;",
-      3: "margin-top: 1.3em; margin-bottom: 0.3em;",
-      4: "margin-top: 1.2em; margin-bottom: 0.2em;",
-    };
-
-    const fontSize = fontSizes[level] || "1em";
-    const margin = margins[level] || "";
     const tag = `h${level}`;
 
     if (isToggleable) {
-      return `<details${colorStyle} id="${id}" class="notion-toggle-${tag}" style="${margin}"><summary style="cursor: pointer; outline: none; font-weight: bold; font-size: ${fontSize}; display: list-item;"><${tag} style="display: inline; font-size: 1em; margin: 0; padding: 0;">${richText}</${tag}></summary>\n<div style="padding-left: 20px; margin-top: 8px;">\n${childrenHtml}</div>\n</details>\n`;
+      return `<details${colorClass} id="${id}" class="notion-toggle-${tag}"><summary><${tag}>${richText}</${tag}></summary>\n<div>\n${childrenHtml}</div>\n</details>\n`;
     }
 
-    return `<${tag}${colorStyle || ` style="font-size: ${fontSize}; ${margin} font-weight: bold;"`} id="${id}">${richText}</${tag}>\n`;
+    return `<${tag}${colorClass} id="${id}">${richText}</${tag}>\n`;
   };
 
   const renderListItem = (data: any, childrenHtml: string): string => {
     const richText = renderRichText(data?.rich_text || []);
-    const colorStyle = getBlockColorStyle(data?.color || "default");
-    return `<li${colorStyle || ` style="margin-bottom: 4px;"`}>${richText}${childrenHtml ? "\n" + childrenHtml : ""}</li>\n`;
+    const colorClass = getBlockColorClass(data?.color || "default");
+    return `<li${colorClass}>${richText}${childrenHtml ? "\n" + childrenHtml : ""}</li>\n`;
   };
 
   const renderTodo = (data: any, childrenHtml: string): string => {
     const richText = renderRichText(data?.rich_text || []);
     const checked = data?.checked === true;
-    const colorStyle = getBlockColorStyle(data?.color || "default");
-    const checkbox = `<input type="checkbox" disabled${checked ? " checked" : ""} style="margin-right: 8px; vertical-align: middle;">`;
-    return `<li${colorStyle || ` style="margin-bottom: 6px; list-style-type: none; display: flex; align-items: center;"`}><label style="display: inline-flex; align-items: center;">${checkbox}<span style="${checked ? "text-decoration: line-through; opacity: 0.6;" : ""}">${richText}</span></label>${childrenHtml ? "\n" + childrenHtml : ""}</li>\n`;
+    const colorClass = getBlockColorClass(data?.color || "default");
+    const checkbox = `<input type="checkbox" disabled${checked ? " checked" : ""}>`;
+    return `<li${colorClass}><label>${checkbox}<span class="${checked ? "notion-todo-checked" : ""}">${richText}</span></label>${childrenHtml ? "\n" + childrenHtml : ""}</li>\n`;
   };
 
   const renderToggle = (data: any, childrenHtml: string): string => {
     const richText = renderRichText(data?.rich_text || []);
-    const colorStyle = getBlockColorStyle(data?.color || "default");
-    return `<details${colorStyle || ` style="margin: 6px 0;"`} class="notion-toggle"><summary style="cursor: pointer; outline: none; display: list-item; font-weight: 500;">${richText}</summary>\n<div style="padding-left: 20px; margin-top: 6px;">\n${childrenHtml}</div></details>\n`;
+    const colorClass = getBlockColorClass(data?.color || "default");
+    return `<details${colorClass} class="notion-toggle"><summary>${richText}</summary>\n<div>\n${childrenHtml}</div></details>\n`;
   };
 
   const renderQuote = (data: any, childrenHtml: string): string => {
     const richText = renderRichText(data?.rich_text || []);
-    const colorStyle = getBlockColorStyle(data?.color || "default");
-    return `<blockquote${colorStyle || ` style="border-left: 3px solid #888; padding-left: 14px; margin: 12px 0;"`}>${richText}${childrenHtml ? "\n" + childrenHtml : ""}</blockquote>\n`;
+    const colorClass = getBlockColorClass(data?.color || "default");
+    return `<blockquote${colorClass}>${richText}${childrenHtml ? "\n" + childrenHtml : ""}</blockquote>\n`;
   };
 
   const renderCallout = (data: any, childrenHtml: string): string => {
     const richText = renderRichText(data?.rich_text || []);
     const icon = getIconHtml(data?.icon) || "💡";
     const color = data?.color || "default";
-    const isBg = color.endsWith("_background");
-    const colorStyle = getTextColorStyle(color);
+    const colorClass = getTextColorClass(color);
 
-    const baseStyle = `display: flex; gap: 12px; padding: 16px; border-radius: 8px; margin: 12px 0; align-items: flex-start;`;
-    const borderStyle = isBg ? "" : "border: 1px solid rgba(55, 53, 47, 0.09);";
-    const fullStyle = `${baseStyle} ${borderStyle} ${colorStyle}`.trim();
-
-    return `<div style="${fullStyle}" class="notion-callout">\n  <span style="font-size: 1.2em; line-height: 1.2; user-select: none;">${icon}</span>\n  <div style="flex: 1; min-width: 0;">\n${richText ? `    <p style="margin: 0;">${richText}</p>\n` : ""}${childrenHtml}  </div>\n</div>\n`;
+    return `<div class="notion-callout${colorClass ? ' ' + colorClass : ''}">\n  <span class="notion-callout-icon">${icon}</span>\n  <div class="notion-callout-content">\n${richText ? `    <p>${richText}</p>\n` : ""}${childrenHtml}  </div>\n</div>\n`;
   };
 
   const renderCode = (data: any): string => {
@@ -436,10 +383,10 @@ export function useNotionBlockParser() {
     const language = data?.language || "";
     const caption = renderRichText(data?.caption || []);
 
-    let html = `<pre style="background-color: #f7f6f3; padding: 16px; border-radius: 8px; font-family: monospace; font-size: 0.9em; overflow-x: auto; border: 1px solid rgba(15, 15, 15, 0.05); margin: 12px 0;"><code class="language-${language}">${escaped}</code></pre>\n`;
+    let html = `<pre><code class="language-${language}">${escaped}</code></pre>\n`;
 
     if (caption) {
-      html += `<div style="font-size: 0.85em; opacity: 0.6; margin-top: -8px; margin-bottom: 12px;">${caption}</div>\n`;
+      html += `<div class="notion-caption">${caption}</div>\n`;
     }
 
     return html;
@@ -455,7 +402,7 @@ export function useNotionBlockParser() {
       imgUrl = url;
     }
 
-    return `<figure style="margin: 16px 0; text-align: center;" class="notion-image-figure">\n  <img src="${imgUrl}" alt="${caption ? caption.replace(/<[^>]*>/g, "") : ""}" loading="lazy" decoding="async" style="max-width: 100%; border-radius: 6px; display: block; margin: 0 auto;">\n  ${caption ? `<figcaption style="font-size: 0.85em; margin-top: 6px; color: #aaa">${caption}</figcaption>` : ""}\n</figure>\n`;
+    return `<figure class="notion-image-figure">\n  <img src="${imgUrl}" alt="${caption ? caption.replace(/<[^>]*>/g, "") : ""}" loading="lazy" decoding="async">\n  ${caption ? `<figcaption>${caption}</figcaption>` : ""}\n</figure>\n`;
   };
 
   const parseTimestampToSeconds = (ts: string): number | null => {
@@ -511,29 +458,29 @@ export function useNotionBlockParser() {
     // YouTube embed support
     const ytEmbedUrl = formatYouTubeEmbedUrl(url);
     if (ytEmbedUrl) {
-      return `<div style="margin: 12px 0; display: flex; flex-direction: column; gap: 6px;" class="notion-media notion-video"><iframe src="${escapeHtml(ytEmbedUrl)}" style="width: 100%; width:600px; max-width: 90%; aspect-ratio: 16/9; border: none; border-radius: 4px;" allowfullscreen></iframe>${caption ? `<div style="font-size: 0.85em; opacity: 0.6;">${caption}</div>` : ""}</div>\n`;
+      return `<div class="notion-media notion-video"><iframe src="${escapeHtml(ytEmbedUrl)}" allowfullscreen></iframe>${caption ? `<div class="notion-caption">${caption}</div>` : ""}</div>\n`;
     }
 
-    return `<div style="margin: 12px 0; display: flex; flex-direction: column; gap: 6px;" class="notion-media notion-video"><video src="${url}" controls style="max-width: 100%; border-radius: 4px;"></video>${caption ? `<div style="font-size: 0.85em; opacity: 0.6;">${caption}</div>` : ""}</div>\n`;
+    return `<div class="notion-media notion-video"><video src="${url}" controls></video>${caption ? `<div class="notion-caption">${caption}</div>` : ""}</div>\n`;
   };
 
   const renderAudio = (data: any): string => {
     const url = getFileUrl(data);
     const caption = renderRichText(data?.caption || []);
-    return `<div style="margin: 12px 0; display: flex; flex-direction: column; gap: 6px;" class="notion-media notion-audio"><audio src="${url}" controls style="width: 100%;"></audio>${caption ? `<div style="font-size: 0.85em; opacity: 0.6;">${caption}</div>` : ""}</div>\n`;
+    return `<div class="notion-media notion-audio"><audio src="${url}" controls></audio>${caption ? `<div class="notion-caption">${caption}</div>` : ""}</div>\n`;
   };
 
   const renderFile = (data: any): string => {
     const url = getFileUrl(data);
     const caption = renderRichText(data?.caption || []);
     const name = data?.name || "Download file";
-    return `<div style="margin: 8px 0; display: flex; align-items: center; gap: 8px; padding: 12px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px; background-color: #f7f6f3;" class="notion-media notion-file"><span style="font-size: 1.2em;">📎</span><a href="${url}" target="_blank" style="font-size: 0.9em; font-weight: 500; color: inherit; text-decoration: none;">${escapeHtml(name)}</a>${caption ? `<span style="font-size: 0.85em; opacity: 0.6; margin-left: auto;">${caption}</span>` : ""}</div>\n`;
+    return `<div class="notion-media notion-file"><span class="notion-file-icon">📎</span><a href="${url}" target="_blank">${escapeHtml(name)}</a>${caption ? `<span class="notion-caption">${caption}</span>` : ""}</div>\n`;
   };
 
   const renderPdf = (data: any): string => {
     const url = getFileUrl(data);
     const caption = renderRichText(data?.caption || []);
-    return `<div style="margin: 12px 0; display: flex; flex-direction: column; gap: 6px;" class="notion-media notion-pdf"><iframe src="${url}" style="width: 600px; max-width: 90%; height: 500px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;"></iframe>${caption ? `<div style="font-size: 0.85em; opacity: 0.6;">${caption}</div>` : ""}</div>\n`;
+    return `<div class="notion-media notion-pdf"><iframe src="${url}"></iframe>${caption ? `<div class="notion-caption">${caption}</div>` : ""}</div>\n`;
   };
 
   const renderOgpCard = (ogp: any, caption: string): string => {
@@ -548,19 +495,19 @@ export function useNotionBlockParser() {
     const hasAnyMeta = title || description || siteName || image;
 
     if (!hasAnyMeta) {
-      return `<div style="margin: 8px 0; width: 600px; max-width: 90%; padding: 12px; border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 6px; background-color: var(--ui-bg-color); color: var(--text-color);"><a href="${url}" target="_blank" rel="noopener noreferrer" style="color: var(--text-color-a); text-decoration: underline; word-break: break-all;">${url}</a>${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}</div>\n`;
+      return `<div class="notion-embed notion-bookmark-card"><a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>${caption ? `<div class="notion-caption">${caption}</div>` : ""}</div>\n`;
     }
 
-    return `<div style="margin: 12px 0; width: 600px; max-width: 90%;" class="notion-embed notion-bookmark-card">
-  <a href="${url}" target="_blank" rel="noopener noreferrer" class="notion-bookmark-card-link" style="display: flex; text-decoration: none; color: var(--text-color); border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 6px; overflow: hidden; background-color: var(--ui-bg-color); min-height: 85px; transition: background-color 0.15s ease, border-color 0.15s ease;">
-    <div style="flex: 1; padding: 12px 14px; min-width: 0; display: flex; flex-direction: column; justify-content: space-between;">
-      ${title ? `<div class="notion-bookmark-card-title" style="font-size: 0.9em; font-weight: 600; color: var(--text-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px;">${title}</div>` : ""}
-      ${description ? `<div class="notion-bookmark-card-description" style="font-size: 0.8em; color: var(--text-color); opacity: 0.75; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 8px; line-height: 1.4;">${description}</div>` : ""}
-      ${siteName ? `<div class="notion-bookmark-card-site" style="display: flex; align-items: center; gap: 6px; font-size: 0.78em; color: var(--text-color); opacity: 0.85;"><span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${siteName}</span></div>` : ""}
+    return `<div class="notion-embed notion-bookmark-card">
+  <a href="${url}" target="_blank" rel="noopener noreferrer" class="notion-bookmark-card-link">
+    <div class="notion-bookmark-card-content">
+      ${title ? `<div class="notion-bookmark-card-title">${title}</div>` : ""}
+      ${description ? `<div class="notion-bookmark-card-description">${description}</div>` : ""}
+      ${siteName ? `<div class="notion-bookmark-card-site"><span>${siteName}</span></div>` : ""}
     </div>
-    ${image ? `<div style="width: 180px; min-width: 110px; background-image: url('${image}'); background-size: cover; background-position: center;"></div>` : ""}
+    ${image ? `<div class="notion-bookmark-card-image" style="background-image: url('${image}');"></div>` : ""}
   </a>
-  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}
+  ${caption ? `<div class="notion-caption">${caption}</div>` : ""}
 </div>\n`;
   };
 
@@ -580,12 +527,12 @@ export function useNotionBlockParser() {
     // 1. If server provided embedData
     if (embedData) {
       if (embedData.type === "iframe" && embedData.iframeUrl) {
-        return `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${escapeHtml(embedData.iframeUrl)}" style="width: 600px; max-width: 90%; min-height: 360px; border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}\n</div>\n`;
+        return `<div class="notion-embed">\n  <iframe src="${escapeHtml(embedData.iframeUrl)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div class="notion-caption">${caption}</div>` : ""}\n</div>\n`;
       }
       if (embedData.type === "bookmark") {
         if (isGoogleMapsUrl(url) || isGoogleMapsUrl(embedData.url || "")) {
           const targetUrl = embedData.url || url;
-          return `<div style="margin: 8px 0; width: 600px; max-width: 90%; padding: 12px; border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 6px; background-color: var(--ui-bg-color); color: var(--text-color);"><a href="${escapeHtml(targetUrl)}" target="_blank" rel="noopener noreferrer" style="color: var(--text-color-a); text-decoration: underline; word-break: break-all;">Google Maps で場所を開く</a>${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}</div>\n`;
+          return `<div class="notion-embed notion-bookmark-card"><a href="${escapeHtml(targetUrl)}" target="_blank" rel="noopener noreferrer">Google Maps で場所を開く</a>${caption ? `<div class="notion-caption">${caption}</div>` : ""}</div>\n`;
         }
         return renderOgpCard(embedData, caption);
       }
@@ -595,7 +542,7 @@ export function useNotionBlockParser() {
     // 2. Client-side iframe formatting fallback
     const formatted = formatEmbedUrl(url);
     if (formatted && formatted !== url) {
-      return `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${escapeHtml(formatted)}" style="width: 600px; max-width: 90%; min-height: 360px; border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}\n</div>\n`;
+      return `<div class="notion-embed">\n  <iframe src="${escapeHtml(formatted)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div class="notion-caption">${caption}</div>` : ""}\n</div>\n`;
     }
 
     if (ogpData) {
@@ -604,7 +551,7 @@ export function useNotionBlockParser() {
 
     // 3. Simple Link Card Fallback
     const linkTitle = isGoogleMapsUrl(url) ? "Google Maps で開く" : url;
-    return `<div style="margin: 8px 0; width: 600px; max-width: 90%; padding: 12px; border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 6px; background-color: var(--ui-bg-color); color: var(--text-color);"><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" style="color: var(--text-color-a); text-decoration: underline; word-break: break-all;">${escapeHtml(linkTitle)}</a>${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}</div>\n`;
+    return `<div class="notion-embed notion-bookmark-card"><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(linkTitle)}</a>${caption ? `<div class="notion-caption">${caption}</div>` : ""}</div>\n`;
   };
 
   const formatEmbedUrl = (url: string): string => {
@@ -704,19 +651,19 @@ export function useNotionBlockParser() {
       const targetIframeSrc = (formatted && formatted !== rawUrl) ? formatted : rawUrl;
 
       if (!isShortlinkUrl(targetIframeSrc) && (forceEmbed || (formatted && formatted !== rawUrl))) {
-        return `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${escapeHtml(targetIframeSrc)}" style="width: 600px; max-width: 90%; min-height: 360px; border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}\n</div>\n`;
+        return `<div class="notion-embed">\n  <iframe src="${escapeHtml(targetIframeSrc)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div class="notion-caption">${caption}</div>` : ""}\n</div>\n`;
       }
 
       const displayTitle = isGoogleMapsUrl(rawUrl) ? "Google Maps で場所を開く" : rawUrl;
-      return `<div style="margin: 8px 0; width: 600px; max-width: 90%; padding: 12px; border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 6px; background-color: var(--ui-bg-color); color: var(--text-color);"><a href="${escapeHtml(rawUrl)}" target="_blank" rel="noopener noreferrer" style="color: var(--text-color-a); text-decoration: underline; word-break: break-all;">${escapeHtml(displayTitle)}</a>${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}</div>\n`;
+      return `<div class="notion-embed notion-bookmark-card"><a href="${escapeHtml(rawUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(displayTitle)}</a>${caption ? `<div class="notion-caption">${caption}</div>` : ""}</div>\n`;
     }
 
     if (embedData.type === "oembed") {
-      return `<div style="margin: 16px 0;" class="notion-embed notion-oembed">\n  ${embedData.html}\n  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 6px;">${caption}</div>` : ""}\n</div>\n`;
+      return `<div class="notion-embed notion-oembed">\n  ${embedData.html}\n  ${caption ? `<div class="notion-caption">${caption}</div>` : ""}\n</div>\n`;
     }
 
     if (embedData.type === "iframe") {
-      return `<div style="margin: 16px 0;" class="notion-embed notion-iframe">\n  <iframe src="${escapeHtml(embedData.iframeUrl)}" style="width: 600px; max-width: 90%; min-height: 380px; border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 6px;">${caption}</div>` : ""}\n</div>\n`;
+      return `<div class="notion-embed notion-iframe">\n  <iframe src="${escapeHtml(embedData.iframeUrl)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div class="notion-caption">${caption}</div>` : ""}\n</div>\n`;
     }
 
     if (embedData.type === "bookmark") {
@@ -724,7 +671,7 @@ export function useNotionBlockParser() {
         const formatted = formatEmbedUrl(rawUrl);
         const targetIframeSrc = (formatted && formatted !== rawUrl) ? formatted : rawUrl;
         if (!isShortlinkUrl(targetIframeSrc) && formatted && formatted !== rawUrl) {
-          return `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${escapeHtml(targetIframeSrc)}" style="width: 600px; max-width: 90%; min-height: 360px; border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}\n</div>\n`;
+          return `<div class="notion-embed">\n  <iframe src="${escapeHtml(targetIframeSrc)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div class="notion-caption">${caption}</div>` : ""}\n</div>\n`;
         }
       }
 
@@ -738,7 +685,7 @@ export function useNotionBlockParser() {
     }
 
     const displayTitle = isGoogleMapsUrl(rawUrl) ? "Google Maps で場所を開く" : rawUrl;
-    return `<div style="margin: 8px 0; width: 600px; max-width: 90%; padding: 12px; border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 6px; background-color: var(--ui-bg-color); color: var(--text-color);"><a href="${escapeHtml(rawUrl)}" target="_blank" rel="noopener noreferrer" style="color: var(--text-color-a); text-decoration: underline; word-break: break-all;">${escapeHtml(displayTitle)}</a>${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}</div>\n`;
+    return `<div class="notion-embed notion-bookmark-card"><a href="${escapeHtml(rawUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(displayTitle)}</a>${caption ? `<div class="notion-caption">${caption}</div>` : ""}</div>\n`;
   };
 
   const renderEmbed = (data: any, embedData?: any): string => {
@@ -751,9 +698,9 @@ export function useNotionBlockParser() {
     const embedUrl = formatEmbedUrl(url);
     const targetSrc = (embedUrl && embedUrl !== url) ? embedUrl : url;
     if (isShortlinkUrl(targetSrc)) {
-      return `<div style="margin: 8px 0; width: 600px; max-width: 90%; padding: 12px; border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 6px; background-color: var(--ui-bg-color); color: var(--text-color);"><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" style="color: var(--text-color-a); text-decoration: underline; word-break: break-all;">Google Maps で場所を開く</a>${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}</div>\n`;
+      return `<div class="notion-embed notion-bookmark-card"><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">Google Maps で場所を開く</a>${caption ? `<div class="notion-caption">${caption}</div>` : ""}</div>\n`;
     }
-    return `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${escapeHtml(targetSrc)}" style="width: 600px; max-width: 90%; min-height: 360px; border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}\n</div>\n`;
+    return `<div class="notion-embed">\n  <iframe src="${escapeHtml(targetSrc)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div class="notion-caption">${caption}</div>` : ""}\n</div>\n`;
   };
 
   const renderLinkPreview = (data: any, ogpData?: any, embedData?: any): string => {
@@ -762,7 +709,7 @@ export function useNotionBlockParser() {
     const caption = renderRichText(data?.caption || []);
 
     if (url.includes("embed")) {
-      return `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${escapeHtml(url)}" style="width: 600px; max-width: 90%; min-height: 360px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}\n</div>\n`;
+      return `<div class="notion-embed">\n  <iframe src="${escapeHtml(url)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div class="notion-caption">${caption}</div>` : ""}\n</div>\n`;
     }
 
     if (ogpData) {
@@ -775,21 +722,21 @@ export function useNotionBlockParser() {
 
     const formatted = formatEmbedUrl(url);
     if (formatted && formatted !== url) {
-      return `<div style="margin: 12px 0;" class="notion-embed">\n  <iframe src="${escapeHtml(formatted)}" style="width: 600px; max-width: 90%; min-height: 360px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}\n</div>\n`;
+      return `<div class="notion-embed">\n  <iframe src="${escapeHtml(formatted)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div class="notion-caption">${caption}</div>` : ""}\n</div>\n`;
     }
-    return `<div style="margin: 8px 0; padding: 12px; border: 1px solid rgba(55, 53, 47, 0.09); border-radius: 6px;"><a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #0b6e99; text-decoration: underline; word-break: break-all;">${escapeHtml(url)}</a>${caption ? `<div style="font-size: 0.85em; opacity: 0.6; margin-top: 4px;">${caption}</div>` : ""}</div>\n`;
+    return `<div class="notion-embed notion-bookmark-card"><a href="${url}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a>${caption ? `<div class="notion-caption">${caption}</div>` : ""}</div>\n`;
   };
 
   const renderEquation = (data: any): string => {
     const expression = data?.expression || "";
-    return `<div style="text-align: center; margin: 12px 0; font-family: serif; font-size: 1.1em; overflow-x: auto; padding: 8px 0;">$$ ${escapeHtml(expression)} $$</div>\n`;
+    return `<div class="notion-equation">$$ ${escapeHtml(expression)} $$</div>\n`;
   };
 
   const renderTable = (data: any, children: NotionBlock[]): string => {
     const hasColumnHeader = data?.has_column_header === true;
     const hasRowHeader = data?.has_row_header === true;
 
-    let html = `<table class="notion-table" style="border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 0.9em; color: var(--text-color);">\n`;
+    let html = `<table class="notion-table">\n`;
 
     children.forEach((row, rowIndex) => {
       if (row.type !== "table_row") return;
@@ -799,11 +746,8 @@ export function useNotionBlockParser() {
       cells.forEach((cell, colIndex) => {
         const isHeader = (hasColumnHeader && rowIndex === 0) || (hasRowHeader && colIndex === 0);
         const tag = isHeader ? "th" : "td";
-        const cellStyle = isHeader
-          ? `style="border: 1px solid rgba(128, 128, 128, 0.25); padding: 8px 12px; background-color: var(--ui-bg-color); color: var(--text-color); font-weight: 600; text-align: left;"`
-          : `style="border: 1px solid rgba(128, 128, 128, 0.25); padding: 8px 12px; background-color: var(--bg-color); color: var(--text-color); text-align: left;"`;
         const cellContent = renderRichText(cell);
-        html += `    <${tag} ${cellStyle}>${cellContent}</${tag}>\n`;
+        html += `    <${tag}>${cellContent}</${tag}>\n`;
       });
       html += `  </tr>\n`;
     });
@@ -813,7 +757,7 @@ export function useNotionBlockParser() {
   };
 
   const renderColumnList = (children: NotionBlock[]): string => {
-    let html = `<div style="display: flex; gap: 24px; flex-wrap: wrap; margin: 12px 0; width: 100%;" class="notion-columns">\n`;
+    let html = `<div class="notion-columns">\n`;
     for (const child of children) {
       if (child.type === "column") {
         html += renderBlock(child);
@@ -824,7 +768,7 @@ export function useNotionBlockParser() {
   };
 
   const renderColumn = (childrenHtml: string): string => {
-    return `<div style="flex: 1 1 200px; min-width: 0;" class="notion-column">\n${childrenHtml}</div>\n`;
+    return `<div class="notion-column">\n${childrenHtml}</div>\n`;
   };
 
   // ─── Table of Contents extraction ───

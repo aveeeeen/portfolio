@@ -15,7 +15,7 @@ function closeModal() {
 
 
 <template>
-  <div @click="closeModal()" class="page">
+  <div @click="isMenuShown = isMenuShown ? !isMenuShown : isMenuShown" class="page">
     <div class="center- flex-vert">
       <div id="projects" class="content-box content-box-noheight">
         <h1>Works</h1>
@@ -157,19 +157,18 @@ function closeModal() {
     </div>
     <div class="bottom"></div>
     <Footer></Footer>
-  </div>
-  <Nav :close="isMenuShown" @isclose="(e) => isMenuShown = e">
-    <Menu></Menu>
-    <div class="ui-box" style="padding-left: 10px">
-      <div class="flex-vert gap-5">
-        <a @click.stop="closeModal()" href="#projects">Projects / Research</a>
-        <a @click.stop="closeModal()" href="#live-performance">Live Performance</a>
-        <a @click.stop="closeModal()" href="#music">Music</a>
-        <a @click.stop="closeModal()" href="#devs">Devs</a>
+    <Nav :close="isMenuShown" @isclose="(e) => isMenuShown = e">
+      <Menu></Menu>
+      <div class="ui-box" style="padding-left: 10px">
+        <div class="flex-vert gap-5">
+          <a @click.stop="closeModal()" href="#projects">Projects / Research</a>
+          <a @click.stop="closeModal()" href="#live-performance">Live Performance</a>
+          <a @click.stop="closeModal()" href="#music">Music</a>
+          <a @click.stop="closeModal()" href="#devs">Devs</a>
+        </div>
       </div>
-    </div>
-  </Nav>
-
+    </Nav>
+  </div>
 </template>
 
 <style scoped>

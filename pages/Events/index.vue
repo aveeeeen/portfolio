@@ -17,7 +17,7 @@ useSeoMeta({
       <EventsIndexContent :key="route.fullPath" />
     </template>
     <template #fallback>
-      <div class="page" @click="!isMenuShown">
+      <div class="page" @click="isMenuShown = isMenuShown ? !isMenuShown : isMenuShown">
         <div class="center- flex-vert gap-20">
           <div class="content-box">
             <h1>Events</h1>

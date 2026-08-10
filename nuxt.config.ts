@@ -53,6 +53,6 @@ export default defineNuxtConfig({
   alias: {
     "@": resolve(__dirname, "/")
   },
-  css: ['~/assets/css/main.css', '~/assets/css/utils.css', '~/assets/css/fmdrums.css'],
+  css: ['~/assets/css/main.css', '~/assets/css/article.css', '~/assets/css/utils.css', '~/assets/css/fmdrums.css'],
   compatibilityDate: '2024-07-12',
 })

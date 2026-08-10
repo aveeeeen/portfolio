@@ -1,0 +1,592 @@
+/* article.css - Centralized styles for Notion article content under .article */
+
+.article {
+  --p-margin: 1.5em;
+  --p-line-height: 1.75rem;
+  --p-font-weight: 320;
+  --li-line-height: 1.5em;
+  --code-bg-color: #555;
+  letter-spacing: 0.08em;
+}
+
+/* Typography & Direct Children */
+.article > p {
+  line-height: var(--p-line-height);
+  font-weight: var(--p-font-weight);
+  margin-top: 0px;
+  margin-bottom: var(--p-margin);
+  min-height: 1em;
+  color: var(--text-color);
+}
+
+.article > h1,
+.article h1 {
+  font-size: 1.8rem;
+  line-height: 1.2;
+  font-weight: 480;
+  margin-top: 1.5em;
+  margin-bottom: 1.4em;
+  color: var(--text-color);
+}
+
+.article > h2,
+.article h2 {
+  font-size: 1.5rem;
+  font-weight: 420;
+  margin-top: 1.4em;
+  margin-bottom: 0.7em;
+  color: var(--text-color);
+}
+
+.article > h2 > a,
+.article h2 > a {
+  font-size: 1.5rem;
+}
+
+.article > h3,
+.article h3 {
+  font-size: 1.25rem;
+  font-weight: 420;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  color: var(--text-color);
+}
+
+.article > h3 > a,
+.article h3 > a {
+  font-size: 1.25rem;
+}
+
+.article > h4,
+.article h4 {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1.2em;
+  margin-bottom: 0.2em;
+  color: var(--text-color);
+}
+
+/* Links & Underline */
+.article a {
+  color: var(--text-color-a);
+  text-decoration: underline;
+}
+
+.article a:hover {
+  color: white;
+  background-color: #0014fe;
+}
+
+.article .notion-underline {
+  text-decoration: underline;
+}
+
+.article .notion-empty-paragraph {
+  height: 0px;
+}
+
+/* Lists */
+.article > ul,
+.article ul {
+  list-style-type: disc;
+  padding-left: 32px;
+  margin-top: 0;
+  margin-bottom: 2rem;
+  line-height: var(--p-line-height);
+  font-weight: var(--p-font-weight);
+  color: var(--text-color);
+}
+
+.article > ol,
+.article ol {
+  list-style-type: decimal;
+  padding-left: 24px;
+  margin-top: 0;
+  margin-bottom: var(--p-margin);
+  line-height: var(--p-line-height);
+  font-weight: var(--p-font-weight);
+  color: var(--text-color);
+}
+
+.article li {
+  margin-bottom: 8px;
+  margin-top: 8px;
+  line-height: var(--li-line-height);
+  font-weight: var(--p-font-weight);
+  color: var(--text-color);
+}
+
+/* Todo Lists */
+.article .notion-todo-list {
+  list-style-type: none;
+  padding-left: 0;
+  margin-bottom: var(--p-margin);
+}
+
+.article .notion-todo-list li {
+  margin-bottom: 6px;
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+}
+
+.article .notion-todo-list input[type="checkbox"] {
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.article .notion-todo-checked {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+/* Quotes & Dividers */
+.article > blockquote,
+.article blockquote {
+  border-left: 3px solid var(--text-color);
+  padding-left: 1rem;
+  margin: 2em 0;
+  color: var(--text-color);
+  font-family: "Noto Serif JP", serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+}
+
+.article > hr,
+.article hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 16px 0;
+}
+
+/* Code & Syntax Highlighting */
+.article code {
+  font-family: "Noto Sans Mono", monospace;
+  font-style: normal;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-size: 0.9em;
+  font-weight: 400;
+  background-color: var(--code-bg-color);
+  color: #7ee787;
+}
+
+.article pre {
+  background-color: var(--code-bg-color);
+  padding: 16px;
+  border-radius: 8px;
+  font-family: "Noto Sans Mono", monospace;
+  font-size: 0.9em;
+  overflow-x: auto;
+  border: 1px solid rgba(15, 15, 15, 0.05);
+  margin: 12px 0;
+}
+
+.article pre > code {
+  background-color: transparent;
+  padding: 0;
+}
+
+.article .shiki {
+  overflow-x: auto;
+  padding: 20px;
+  border: 1px black solid;
+  border-radius: 10px;
+}
+
+/* Images & Figures */
+.article .notion-image-figure {
+  margin: 16px 0;
+  text-align: center;
+}
+
+.article img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  display: block;
+  margin: 0 auto;
+}
+
+.article img.notion-icon {
+  width: 1.2em;
+  height: 1.2em;
+  object-fit: contain;
+  display: inline-block;
+  margin: 0;
+  vertical-align: sub;
+}
+
+.article figcaption {
+  font-size: 0.85em;
+  margin-top: 6px;
+  color: #aaa;
+}
+
+/* Media (Video, Audio, File, PDF) */
+.article .notion-media {
+  margin: 12px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.article .notion-media iframe {
+  width: 600px;
+  max-width: 90%;
+  aspect-ratio: 16/9;
+  border: none;
+  border-radius: 4px;
+}
+
+.article .notion-media video {
+  max-width: 100%;
+  border-radius: 4px;
+}
+
+.article .notion-media audio {
+  width: 100%;
+}
+
+.article .notion-file {
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid rgba(55, 53, 47, 0.09);
+  border-radius: 6px;
+  background-color: #f7f6f3;
+}
+
+.article .notion-file-icon {
+  font-size: 1.2em;
+}
+
+.article .notion-file a {
+  font-size: 0.9em;
+  font-weight: 500;
+  color: inherit;
+  text-decoration: none;
+}
+
+.article .notion-pdf iframe {
+  width: 600px;
+  max-width: 90%;
+  height: 500px;
+  border: 1px solid rgba(55, 53, 47, 0.09);
+  border-radius: 6px;
+}
+
+.article .notion-caption {
+  font-size: 0.85em;
+  opacity: 0.6;
+}
+
+.article pre + .notion-caption {
+  margin-top: -8px;
+  margin-bottom: 12px;
+}
+
+/* Callouts & Toggles */
+.article .notion-callout {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 8px;
+  margin: 12px 0;
+  align-items: flex-start;
+  border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+.article .notion-callout-icon {
+  font-size: 1.2em;
+  line-height: 1.2;
+  user-select: none;
+}
+
+.article .notion-callout-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.article .notion-callout-content > p {
+  margin: 0;
+}
+
+.article details.notion-toggle,
+.article details[class^="notion-toggle-"] {
+  margin: 6px 0;
+}
+
+.article details.notion-toggle summary,
+.article details[class^="notion-toggle-"] summary {
+  cursor: pointer;
+  outline: none;
+  display: list-item;
+  font-weight: 500;
+}
+
+.article details[class^="notion-toggle-"] summary > h1,
+.article details[class^="notion-toggle-"] summary > h2,
+.article details[class^="notion-toggle-"] summary > h3,
+.article details[class^="notion-toggle-"] summary > h4 {
+  display: inline;
+  font-size: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+.article details.notion-toggle > div,
+.article details[class^="notion-toggle-"] > div {
+  padding-left: 20px;
+  margin-top: 6px;
+}
+
+/* Bookmark Cards & Embeds */
+.article .notion-embed {
+  margin: 12px 0;
+}
+
+.article .notion-embed iframe {
+  width: 600px;
+  max-width: 90%;
+  min-height: 360px;
+  border: 1px solid rgba(128, 128, 128, 0.2);
+  border-radius: 6px;
+}
+
+.article .notion-bookmark-card {
+  margin: 12px 0;
+  width: 600px;
+  max-width: 90%;
+}
+
+.article .notion-bookmark-card-link {
+  display: flex;
+  text-decoration: none;
+  color: var(--text-color);
+  border: 1px solid rgba(128, 128, 128, 0.2);
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: var(--ui-bg-color);
+  min-height: 85px;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.article .notion-bookmark-card-link:hover {
+  border-color: rgba(128, 128, 128, 0.4);
+}
+
+.article .notion-bookmark-card-content {
+  flex: 1;
+  padding: 12px 14px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.article .notion-bookmark-card-title {
+  font-size: 0.9em;
+  font-weight: 600;
+  color: var(--text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+}
+
+.article .notion-bookmark-card-description {
+  font-size: 0.8em;
+  color: var(--text-color);
+  opacity: 0.75;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.article .notion-bookmark-card-site {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78em;
+  color: var(--text-color);
+  opacity: 0.85;
+}
+
+.article .notion-bookmark-card-image {
+  width: 180px;
+  min-width: 110px;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Tables */
+.article .notion-table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 16px 0;
+  font-size: 0.9em;
+  color: var(--text-color);
+}
+
+.article .notion-table th,
+.article .notion-table td {
+  border: 1px solid rgba(128, 128, 128, 0.25);
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.article .notion-table th {
+  background-color: var(--ui-bg-color);
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.article .notion-table td {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+/* Columns */
+.article .notion-columns {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin: 12px 0;
+  width: 100%;
+}
+
+.article .notion-column {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+/* Mentions & Child Blocks */
+.article .notion-mention {
+  background-color: var(--tile-bg-color);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.article .notion-child-block {
+  margin: 4px 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 1px solid rgba(55, 53, 47, 0.09);
+  border-radius: 4px;
+  background-color: #f7f6f3;
+  font-size: 0.95em;
+}
+
+/* Equations */
+.article .notion-equation {
+  text-align: center;
+  margin: 12px 0;
+  font-family: serif;
+  font-size: 1.1em;
+  overflow-x: auto;
+  padding: 8px 0;
+}
+
+.article .notion-inline-math {
+  padding: 2px 4px;
+  font-style: italic;
+  font-family: serif;
+}
+
+/* Notion Colors */
+.article .notion-color-gray {
+  color: #787774;
+}
+.article .notion-color-brown {
+  color: #9f6b53;
+}
+.article .notion-color-orange {
+  color: #d9730d;
+}
+.article .notion-color-yellow {
+  color: #cb912f;
+}
+.article .notion-color-green {
+  color: #448361;
+}
+.article .notion-color-blue {
+  color: #337ea9;
+}
+.article .notion-color-purple {
+  color: #9065b0;
+}
+.article .notion-color-pink {
+  color: #c14c8a;
+}
+.article .notion-color-red {
+  color: #d44c47;
+}
+
+.article .notion-bg-gray {
+  background-color: #f1f1ef;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin: 4px 0;
+}
+.article .notion-bg-brown {
+  background-color: #f4eeeb;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin: 4px 0;
+}
+.article .notion-bg-orange {
+  background-color: #fbecdd;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin: 4px 0;
+}
+.article .notion-bg-yellow {
+  background-color: #fbf3db;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin: 4px 0;
+}
+.article .notion-bg-green {
+  background-color: #edf3f0;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin: 4px 0;
+}
+.article .notion-bg-blue {
+  background-color: #ebf2f6;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin: 4px 0;
+}
+.article .notion-bg-purple {
+  background-color: #f5f0f7;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin: 4px 0;
+}
+.article .notion-bg-pink {
+  background-color: #f9eef3;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin: 4px 0;
+}
+.article .notion-bg-red {
+  background-color: #fdebec;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin: 4px 0;
+}

@@ -2,7 +2,7 @@
 import TagButton from '~/components/atoms/TagButton.vue';
 
 const isShowTags = ref(false);
-const isMenuShown = ref(true);
+const isMenuShown = ref(false);
 const router = useRouter();
 const route = useRoute();
 
@@ -24,8 +24,6 @@ if (artilceList.error) {
 if (artilceList.status.value === "error") {
   router.push("/notes")
 }
-
-
 
 function getNextContent() {
   if (Number(page.value) >= (pagination.data.value?.totalPages ?? 1)) return;
@@ -49,25 +47,10 @@ function getPrevContent() {
   });
 }
 
-function closeModal() {
-  if (isShowTags.value) {
-    isShowTags.value = false;
-  }
-
-  if (isMenuShown.value) {
-    isMenuShown.value = false;
-  }
-}
-
-watch(isMenuShown, () => {
-  if (!isMenuShown.value) {
-    isShowTags.value = false;
-  }
-});
 </script>
 
 <template>
-  <div @click="closeModal()" class="page">
+  <div @click="isMenuShown = isMenuShown ? !isMenuShown : isMenuShown" class="page">
     <div class="center- flex-vert gap-20">
       <div class="content-box">
         <h1>Notes</h1>
@@ -100,24 +83,23 @@ watch(isMenuShown, () => {
       <div class="bottom"></div>
     </div>
     <Footer></Footer>
-  </div>
-
-  <Nav :close="isMenuShown" @isclose="(e) => (isMenuShown = e)">
-    <Menu></Menu>
-    <div>
-      <div @click.stop class="ui-box tags flex-vert gap-10" v-if="isShowTags">
-        <div class="tag-list" v-for="tag in tagList.data.value" :key="tag.name">
-          <TagButton :name="tag.name" @click="artilceList.refresh()" />
+    <Nav :close="isMenuShown" @isclose="(e) => isMenuShown = e">
+      <Menu></Menu>
+      <div>
+        <div @click.stop class="ui-box tags flex-vert gap-10" v-if="isShowTags">
+          <div class="tag-list" v-for="tag in tagList.data.value" :key="tag.name">
+            <TagButton :name="tag.name" @click="artilceList.refresh()" />
+          </div>
+        </div>
+        <div v-else class="ui-box relative">
+          <a @click.stop="isShowTags = !isShowTags">Tags</a>
         </div>
       </div>
-      <div v-else class="ui-box relative">
-        <a @click.stop="isShowTags = !isShowTags">Tags</a>
+      <div v-if="isShowTags" class="ui-box">
+        <a @click.stop="isShowTags = !isShowTags">Close</a>
       </div>
-    </div>
-    <div v-if="isShowTags" class="ui-box">
-      <a @click.stop="isShowTags = !isShowTags">Close</a>
-    </div>
-  </Nav>
+    </Nav>
+  </div>
 </template>
 
 <style scoped>

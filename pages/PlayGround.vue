@@ -10,7 +10,7 @@ useSeoMeta({
 </script>
 
 <template>
-  <div class="page">
+  <div @click="isMenuShown = isMenuShown = isMenuShown ? !isMenuShown : isMenuShown" class="page">
     <div class="flex-vert center-">
       <div class="content-box">
         <h1>Playground</h1>
@@ -30,9 +30,9 @@ useSeoMeta({
       <div class="bottom"></div>
     </div>
     <Footer></Footer>
+    <!-- nav box -->
+    <Nav :close="isMenuShown" @isclose="(e) => (isMenuShown = e)">
+      <Menu></Menu>
+    </Nav>
   </div>
-  <!-- nav box -->
-  <Nav :close="isMenuShown" @isclose="(e) => (isMenuShown = e)">
-    <Menu></Menu>
-  </Nav>
 </template>
