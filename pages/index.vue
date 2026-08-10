@@ -50,8 +50,11 @@ function scrollToAbout() {
           </div>
           <div class="line">
             <span class="line-number">2</span>
-            <h3><span class="keyword">let</span> <span>braven</span> = [<span class="string">"Live Coder"</span>, <span
-                class="string">"Musician"</span>, <span class="string">"Programmer"</span>]</h3>
+            <h3>
+              <span class="keyword">let</span> <span>braven</span> = [<span class="string">"Live Coder"</span>,
+              <span class="string">"Musician"</span>, <span class="string">"Programmer"</span>]
+              <span class="cursor"></span>
+            </h3>
           </div>
         </div>
         <a v-if="!isUnderPageHeight" class="scroll-indication-anchor" href="#about" @click.prevent="scrollToAbout">
@@ -217,7 +220,6 @@ function scrollToAbout() {
 }
 
 .line>h3 {
-  display: block;
   width: fit-content;
   line-height: 2.0;
   font-weight: 300;
@@ -234,6 +236,25 @@ function scrollToAbout() {
 
 .keyword {
   color: #FF7B72;
+}
+
+.cursor {
+  display: inline-block;
+  background-color: transparent;
+  width: 0.1rem;
+  height: 1.5rem;
+  animation: blink 1s steps(1, end) infinite;
+  transform: translateY(0.4rem) translateX(-0.5rem);
+}
+
+@keyframes blink {
+  0% {
+    background-color: #ccc;
+  }
+
+  50% {
+    background-color: transparent;
+  }
 }
 
 .scroll-indication-anchor {
@@ -333,6 +354,19 @@ function scrollToAbout() {
     font-weight: 300;
     font-size: 0.8rem;
     padding: 0px 16px;
+    flex-direction: row;
+    align-items: baseline;
+    flex-wrap: wrap;
+  }
+
+  .cursor {
+    background-color: transparent;
+    display: inline-block;
+    width: 1px;
+    height: 1.2rem;
+    margin: 0;
+    padding: 0;
+    transform: translateY(0.3rem) translateX(-0.4rem);
   }
 
   .scroll-indication {
