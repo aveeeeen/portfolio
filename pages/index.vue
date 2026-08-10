@@ -171,8 +171,7 @@ function scrollToAbout() {
   display: flex;
   flex-direction: column;
   align-items: center;
-  backdrop-filter: blur(16px);
-
+  backdrop-filter: blur(64px);
 }
 
 .intro-content {
@@ -245,7 +244,7 @@ function scrollToAbout() {
   z-index: 1;
   margin-bottom: 24px;
   background-color: transparent;
-  backdrop-filter: blur(32px);
+  backdrop-filter: blur(64px);
 }
 
 .scroll-indication-box {
