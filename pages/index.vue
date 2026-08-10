@@ -318,7 +318,7 @@ function scrollToAbout() {
 @media (max-width: 800px) {
 
   .intro-box {
-    height: 30%;
+    height: 36%;
   }
 
   .intro-content {
@@ -344,14 +344,14 @@ function scrollToAbout() {
 
   .line>h1 {
     line-height: 1.0;
-    font-weight: 450;
-    font-size: 1.4rem;
+    font-weight: 600;
+    font-size: 1.0rem;
     padding: 8px 16px;
   }
 
   .line>h3 {
-    line-height: 1.5;
-    font-weight: 300;
+    line-height: 1.2;
+    font-weight: 400;
     font-size: 0.8rem;
     padding: 0px 16px;
     flex-direction: row;
@@ -370,7 +370,7 @@ function scrollToAbout() {
   }
 
   .scroll-indication {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
   }
 
   .scroll-indication-box {
