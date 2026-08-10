@@ -97,12 +97,16 @@ export const getManyEvents = defineCachedFunction(
     const sliced = rawEvents.slice(startIndex, startIndex + 10);
 
     return sliced.map(result => {
+      const props = (result as any).properties ?? {};
+      const files = props["Image"]?.files;
+      const imageUrl = files && files.length > 0 ? (files[0].file?.url ?? files[0].external?.url ?? "") : "";
+
       return {
         id: result.id,
-        title: (result as any).properties["Name"].title[0].plain_text,
-        date: (result as any).properties["Date"].date.start,
-        venue: (result as any).properties["Venue"].rich_text[0].plain_text,
-        imageUrl: (result as any).properties["Image"].files[0].file.url,
+        title: props["Name"]?.title?.[0]?.plain_text ?? "",
+        date: props["Date"]?.date?.start ?? "",
+        venue: props["Venue"]?.rich_text?.[0]?.plain_text ?? "",
+        imageUrl: imageUrl,
         createdAt: (result as any)["created_time"],
         updatedAt: (result as any)["last_edited_time"],
       } as ListEventResult;
@@ -211,12 +215,16 @@ export const getEventBlocksById = defineCachedFunction(
       getBlockChildren(id)
     ]);
 
+    const props = (event as any).properties ?? {};
+    const files = props["Image"]?.files;
+    const imageUrl = files && files.length > 0 ? (files[0].file?.url ?? files[0].external?.url ?? "") : "";
+
     return {
       id: id,
-      title: (event as any).properties["Name"].title[0].plain_text,
-      venue: (event as any).properties["Venue"].rich_text[0].plain_text,
-      imageUrl: (event as any).properties["Image"].files[0].file.url,
-      date: (event as any).properties["Date"].date.start,
+      title: props["Name"]?.title?.[0]?.plain_text ?? "",
+      venue: props["Venue"]?.rich_text?.[0]?.plain_text ?? "",
+      imageUrl: imageUrl,
+      date: props["Date"]?.date?.start ?? "",
       blocks,
       createdAt: (event as any)["created_time"],
       updatedAt: (event as any)["last_edited_time"],

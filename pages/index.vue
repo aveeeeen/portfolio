@@ -39,7 +39,7 @@ function scrollToAbout() {
 </script>
 
 <template>
-  <video class="bg-video" src="~/assets/vid/bgVideo.mp4" preload="none" autoplay playsinline muted loop></video>
+  <video class="bg-video" src="~/assets/vid/bgVideo.mp4" autoplay playsinline muted loop></video>
   <div class="intro-area">
     <div class="intro-box">
       <div class="intro-content">
@@ -175,6 +175,7 @@ function scrollToAbout() {
   flex-direction: column;
   align-items: center;
   backdrop-filter: blur(64px);
+  -webkit-backdrop-filter: blur(64px);
 }
 
 .intro-content {
@@ -265,7 +266,6 @@ function scrollToAbout() {
   z-index: 1;
   margin-bottom: 24px;
   background-color: transparent;
-  backdrop-filter: blur(64px);
 }
 
 .scroll-indication-box {
@@ -345,9 +345,9 @@ function scrollToAbout() {
   }
 
   .line>h1 {
-    line-height: 1.8;
+    line-height: 1.2;
     font-weight: 600;
-    font-size: 1.0rem;
+    font-size: 1.5rem;
     padding: 8px 16px;
   }
 

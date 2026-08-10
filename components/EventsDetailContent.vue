@@ -5,15 +5,13 @@ import { useFetch, useSeoMeta } from '#app';
 import { useNotionBlockParser } from '../composables/useNotionBlockParser';
 import type { EventBlocksResult, ListEventResult } from '~/server/service/event.service.types';
 import EventDetailHeader from './organisms/EventDetailHeader.vue';
+import EventDetailSkelton from './organisms/EventDetailSkelton.vue';
+import { useDate } from '../composables/useDate';
 
 const isShowToC = ref(false);
 const isMenuShown = ref(true);
 const route = useRoute();
-const isToCEmpty = ref(true);
-const tags = ref<string[]>([]);
-
-const { params } = useRoute();
-const data = await useFetch<EventBlocksResult>(`/api/event/${params.id}`);
+const data = useLazyFetch<EventBlocksResult>(() => `/api/event/${route.params.id}`);
 const event = computed(() => data.data.value ?? undefined);
 
 useSeoMeta({
@@ -22,9 +20,9 @@ useSeoMeta({
   twitterTitle: () => event.value?.title || '',
   ogImage: () => event.value?.imageUrl || '',
   twitterImage: () => event.value?.imageUrl || '',
-  description: () => `${event.value?.title}\n開催日：${event.value?.date}\n会場：${event.value?.venue} ` || '',
-  ogDescription: () => `${event.value?.title}\n開催日：${event.value?.date}\n会場：${event.value?.venue} ` || '',
-  twitterDescription: () => `${event.value?.title}\n開催日：${event.value?.date}\n会場：${event.value?.venue} ` || '',
+  description: () => event.value ? `bravenは、${event.value.title}に出演いたします。\n開催日：${useDate(event.value.date)}\n会場：${event.value.venue}` : '',
+  ogDescription: () => event.value ? `bravenは、${event.value.title}に出演いたします。\n開催日：${useDate(event.value.date)}\n会場：${event.value.venue}` : '',
+  twitterDescription: () => event.value ? `bravenは、${event.value.title}に出演いたします。\n開催日：${useDate(event.value.date)}\n会場：${event.value.venue}` : '',
 });
 
 const { parse, getTableOfContents } = useNotionBlockParser();
@@ -43,6 +41,8 @@ const tocLinks = computed(() => {
   return getTableOfContents(event.value.blocks);
 });
 
+const isToCEmpty = computed(() => tocLinks.value.length === 0);
+
 const loadTwitterWidgets = () => {
   if (process.client && parsedHtml.value?.includes('twitter-tweet')) {
     if ((window as any).twttr) {
@@ -58,9 +58,6 @@ const loadTwitterWidgets = () => {
 };
 
 onMounted(() => {
-  if (event.value) {
-    isToCEmpty.value = tocLinks.value.length === 0;
-  }
   loadTwitterWidgets();
 });
 
@@ -98,13 +95,14 @@ watch(isMenuShown, () => {
 </script>
 
 <template>
-  <div @click.prevent="closeModal()" class="page">
-    <div class="flex-vert center-">
+  <EventDetailSkelton v-if="!event" />
+  <template v-else>
+    <div class="flex-vert center-" @click.prevent="closeModal">
       <div class="content-box">
         <div class="flex-vert center-">
-          <EventDetailHeader v-if="event" :title="event.title" :date="event.date" :venue="event.venue"
+          <EventDetailHeader :title="event.title" :date="event.date" :venue="event.venue"
             :image-url="event.imageUrl" />
-          <main class="flex-vert center-" v-if="event">
+          <main class="flex-vert center-">
             <div class="event-box article" v-html="parsedHtml"></div>
           </main>
         </div>
@@ -135,8 +133,7 @@ watch(isMenuShown, () => {
         <a @click.stop="isShowToC = !isShowToC">Close</a>
       </div>
     </Nav>
-  </div>
-
+  </template>
 </template>
 
 <style>

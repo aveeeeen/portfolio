@@ -49,7 +49,7 @@ onMounted(() => {
         <p v-if="props.date">
           開催日時:
           {{
-            dateToLocal(new Date(props.date))
+            dateToLocal(props.date)
           }}
         </p>
         <Skelton v-else class="date-skeleton" />
@@ -142,8 +142,11 @@ img {
 
 img.portrait {
   height: 40vh;
-  width: fit-content;
+  max-height: 40vh;
+  width: auto;
+  max-width: 100%;
   align-self: center;
+  object-fit: contain;
 }
 
 @media (max-width: 800px) {

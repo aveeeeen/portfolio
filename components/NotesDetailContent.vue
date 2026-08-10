@@ -4,15 +4,12 @@ import { useRoute, useRouter } from 'vue-router';
 import { useFetch, useSeoMeta } from '#app';
 import { useNotionBlockParser } from '../composables/useNotionBlockParser';
 import TagButton from '~/components/atoms/TagButton.vue';
+import NoteDetailSkelton from '~/components/NoteDetailSkelton.vue';
 
 const isShowToC = ref(false);
 const isMenuShown = ref(true);
 const route = useRoute();
-const isToCEmpty = ref(true);
-const tags = ref<string[]>([]);
-
-const { params } = useRoute();
-const { data: article, error } = await useFetch(`/api/article/${params.id}`);
+const { data: article, error } = useLazyFetch<any>(() => `/api/article/${route.params.id}`);
 
 useSeoMeta({
   title: () => article.value?.title || '',
@@ -27,6 +24,8 @@ defineProps(["imgSrc"]);
 
 const { parse, getTableOfContents } = useNotionBlockParser();
 
+const tags = computed(() => (article.value?.tags || []).map((t: any) => t.name.trim()));
+
 const parsedHtml = computed(() => {
   if (!article.value || !article.value.blocks) {
     return '';
@@ -40,6 +39,8 @@ const tocLinks = computed(() => {
   }
   return getTableOfContents(article.value.blocks);
 });
+
+const isToCEmpty = computed(() => tocLinks.value.length === 0);
 
 const loadTwitterWidgets = () => {
   if (process.client && parsedHtml.value?.includes('twitter-tweet')) {
@@ -56,10 +57,6 @@ const loadTwitterWidgets = () => {
 };
 
 onMounted(() => {
-  if (article.value) {
-    tags.value = (article.value.tags || []).map((t: any) => t.name.trim());
-    isToCEmpty.value = tocLinks.value.length === 0;
-  }
   loadTwitterWidgets();
 });
 
@@ -97,11 +94,12 @@ watch(isMenuShown, () => {
 </script>
 
 <template>
-  <div @click="closeModal()" class="page">
-    <div class="flex-vert center-">
+  <NoteDetailSkelton v-if="!article" />
+  <template v-else>
+    <div class="flex-vert center-" @click.prevent="closeModal">
       <div class="content-box">
         <div class="flex-vert center-">
-          <NoteHeader v-if="article">
+          <NoteHeader>
             <template #title>
               <h1>{{ article.title }}</h1>
             </template>
@@ -123,7 +121,7 @@ watch(isMenuShown, () => {
               </div>
             </template>
           </NoteHeader>
-          <main class="flex-vert center-" v-if="article">
+          <main class="flex-vert center-">
             <div class="article-box article" v-html="parsedHtml"></div>
           </main>
         </div>
@@ -154,7 +152,7 @@ watch(isMenuShown, () => {
         <a @click.stop="isShowToC = !isShowToC">Close</a>
       </div>
     </Nav>
-  </div>
+  </template>
 </template>
 
 <style>
