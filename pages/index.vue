@@ -44,8 +44,14 @@ function scrollToAbout() {
     <div class="intro-box">
       <div class="intro-content">
         <div class="intro">
-          <h1>Taichi Matsumoto (braven)</h1>
-          <h3>Live Coder, Musician, Programmer</h3>
+          <div class="line">
+            <span class="line-number">1</span>
+            <h1>Taichi Matsumoto (braven)</h1>
+          </div>
+          <div class="line">
+            <span class="line-number">2</span>
+            <h3>Live Coder, Musician, Programmer</h3>
+          </div>
         </div>
         <a v-if="!isUnderPageHeight" class="scroll-indication-anchor" href="#about" @click.prevent="scrollToAbout">
           <div class="scroll-indication-box">
@@ -180,9 +186,22 @@ function scrollToAbout() {
 .intro {
   width: fit-content;
   padding: 0 16px;
+  font-family: "Noto Sans Mono", monospace;
+  font-optical-sizing: auto;
 }
 
-.intro>h1 {
+.line {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.line-number {
+  color: #ccc;
+  margin-right: 16px;
+}
+
+.line>h1 {
   display: block;
   width: fit-content;
   line-height: 1.0;
@@ -194,7 +213,7 @@ function scrollToAbout() {
   border-left: solid 2px #eee;
 }
 
-.intro>h3 {
+.line>h3 {
   display: block;
   width: fit-content;
   line-height: 2.0;
@@ -284,18 +303,22 @@ function scrollToAbout() {
 
   .intro {
     width: 100%;
-    margin-left: 32px;
+    margin-left: 24px;
     justify-self: flex-start;
   }
 
-  .intro>h1 {
+  .line-number {
+    font-size: 0.8rem;
+  }
+
+  .line>h1 {
     line-height: 1.0;
     font-weight: 450;
     font-size: 1.4rem;
     padding: 8px 16px;
   }
 
-  .intro>h3 {
+  .line>h3 {
     line-height: 2.0;
     font-weight: 300;
     font-size: 0.8rem;
