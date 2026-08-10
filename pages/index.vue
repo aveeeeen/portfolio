@@ -308,6 +308,7 @@ function scrollToAbout() {
   width: 100%;
   height: auto;
   background-color: var(--bg-color);
+  overflow-x: hidden;
 }
 
 .index-content-box {
@@ -344,14 +345,14 @@ function scrollToAbout() {
   }
 
   .line>h1 {
-    line-height: 1.0;
+    line-height: 1.8;
     font-weight: 600;
     font-size: 1.0rem;
     padding: 8px 16px;
   }
 
   .line>h3 {
-    line-height: 1.2;
+    line-height: 1.0;
     font-weight: 400;
     font-size: 0.8rem;
     padding: 0px 16px;

@@ -227,6 +227,7 @@ table {
   height: 100svh;
   position: relative;
   display: block;
+  overflow-x: hidden;
 }
 
 .center-hori {
@@ -252,14 +253,7 @@ li {
   z-index: 3;
 }
 
-@media (max-width: 760px) {
-  html {
-    font-size: 16px;
-    background-color: var(--html-bg-color);
-    font-family: "Noto Sans JP", sans-serif;
-    font-optical-sizing: auto;
-  }
-
+@media (max-width: 800px) {
   .ui-box {
     display: inline-block;
     background-color: var(--ui-bg-color);
