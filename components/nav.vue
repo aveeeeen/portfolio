@@ -52,7 +52,9 @@ onUnmounted(() => {
         <div class="line">
           <span class="line-number">1</span>
           <h3>
-            "Portfolio site of braven"
+            <span class="string">
+              "Portfolio site of braven"
+            </span>
             <span class="cursor"></span>
           </h3>
         </div>
@@ -72,7 +74,9 @@ onUnmounted(() => {
         <div class="line">
           <span class="line-number">1</span>
           <h3>
-            "Portfolio site of braven"
+            <span class="string">
+              "Portfolio site of braven"
+            </span>
             <span class="cursor"></span>
           </h3>
         </div>
@@ -112,12 +116,9 @@ onUnmounted(() => {
   border-left: solid 2px #aaa;
 }
 
-.string {
-  color: #F19A55;
-}
-
-.keyword {
-  color: #FF7B72;
+.header-link:hover>a>.line>h3>.string {
+  background-color: #0014fe;
+  color: white;
 }
 
 .cursor {

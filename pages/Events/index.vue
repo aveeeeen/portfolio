@@ -3,6 +3,7 @@ import EventsIndexContent from '~/components/EventsIndexContent.vue';
 import EvnetCardSkelton from '~/components/organisms/EvnetCardSkelton.vue';
 
 const route = useRoute();
+const isMenuShown = ref(false);
 
 useSeoMeta({
   description: "Upcoming Events and Archives",
@@ -16,7 +17,7 @@ useSeoMeta({
       <EventsIndexContent :key="route.fullPath" />
     </template>
     <template #fallback>
-      <div class="page">
+      <div class="page" @click="!isMenuShown">
         <div class="center- flex-vert gap-20">
           <div class="content-box">
             <h1>Events</h1>
@@ -29,6 +30,10 @@ useSeoMeta({
           </div>
           <div class="bottom"></div>
         </div>
+        <Footer></Footer>
+        <Nav :close="isMenuShown" @isclose="(e) => (isMenuShown = e)">
+          <Menu></Menu>
+        </Nav>
       </div>
     </template>
   </Suspense>

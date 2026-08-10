@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const route = useRoute();
+const isMenuShown = ref(false);
 
 useSeoMeta({
   description: "Published Notes and Blog",
@@ -13,7 +14,7 @@ useSeoMeta({
       <NotesIndexContent :key="route.fullPath" />
     </template>
     <template #fallback>
-      <div class="page">
+      <div class="page" @click="!isMenuShown">
         <div class="center- flex-vert gap-20">
           <div class="content-box">
             <h1>Notes</h1>
@@ -30,7 +31,12 @@ useSeoMeta({
           </div>
           <div class="bottom"></div>
         </div>
+        <Footer></Footer>
+        <Nav :close="isMenuShown" @isclose="(e) => (isMenuShown = e)">
+          <Menu></Menu>
+        </Nav>
       </div>
+      <!-- nav box -->
     </template>
   </Suspense>
 </template>
