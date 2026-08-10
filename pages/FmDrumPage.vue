@@ -10,7 +10,7 @@ useSeoMeta({
 </script>
 
 <template>
-  <div class="page">
+  <div @click="isMenuShown = isMenuShown ? !isMenuShown : isMenuShown" class="page">
     <div class="flex-vert center-">
       <div class="playground">
         <FmDrum></FmDrum>

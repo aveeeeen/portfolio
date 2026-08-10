@@ -67,8 +67,8 @@ onMounted(() => {
     <slot name="img">
       <template v-if="props.imageUrl">
         <Skelton v-if="!isImageLoaded" class="img-skelton" :class="{ portrait: isPortrait }" />
-        <NuxtImg v-show="isImageLoaded" ref="imgRef" :src="props.imageUrl" format="webp" :class="{ portrait: isPortrait }"
-          @load="handleImageLoad" @error="handleImageError" />
+        <NuxtImg v-show="isImageLoaded" ref="imgRef" :src="props.imageUrl" format="webp"
+          :class="{ portrait: isPortrait }" @load="handleImageLoad" @error="handleImageError" />
       </template>
     </slot>
   </div>
@@ -111,7 +111,7 @@ onMounted(() => {
   padding: 30px 20px;
   border-radius: 20px;
   border: color-mix(in srgb, slateblue 60%, white 30%) solid;
-  max-width: 700px;
+  max-width: 800px;
   width: 90%;
 }
 

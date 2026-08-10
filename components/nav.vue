@@ -60,7 +60,7 @@ onUnmounted(() => {
         </div>
       </NuxtLink>
     </div>
-    <Burger v-if="!props.notShowTitle" @click.stop="toggleMenu" class="burger" :isClose="isMenuShown"></Burger>
+    <Burger @click.stop="toggleMenu" v-if="!props.notShowTitle" class="burger" :isClose="isMenuShown"></Burger>
     <div v-if="isMenuShown || props.notShowTitle" class="show-right flex-vert gap-10">
       <slot></slot>
       <ThemeToggle />

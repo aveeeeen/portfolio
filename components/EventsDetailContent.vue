@@ -71,11 +71,22 @@ watch(parsedHtml, () => {
 });
 
 function closeModal() {
-  if (isShowToC.value === true) {
+  if (isShowToC.value) {
     isShowToC.value = false;
   }
   if (isMenuShown.value) {
     isMenuShown.value = false;
+  }
+}
+
+function scrollToId(id: string) {
+  closeModal();
+  if (process.client) {
+    const targetElement = document.getElementById(id);
+    if (targetElement) {
+      targetElement.scrollIntoView({ behavior: 'smooth' });
+      history.pushState(null, '', `#${id}`);
+    }
   }
 }
 
@@ -87,7 +98,7 @@ watch(isMenuShown, () => {
 </script>
 
 <template>
-  <div @click="closeModal()" class="page">
+  <div @click.prevent="closeModal()" class="page">
     <div class="flex-vert center-">
       <div class="content-box">
         <div class="flex-vert center-">
@@ -101,31 +112,31 @@ watch(isMenuShown, () => {
       <div class="bottom"></div>
     </div>
     <Footer></Footer>
+    <Nav :close="isMenuShown" @isclose="(e) => isMenuShown = e">
+      <Menu></Menu>
+      <div v-if="!isToCEmpty">
+        <div @click.stop class="ui-box toc relative" v-if="isShowToC">
+          <ul class="table-ul" v-for="link of tocLinks" :key="link.id">
+            <li class="table-li">
+              <a @click.prevent="scrollToId(link.id)" :href="`#${link.id}`">{{ link.text }}</a>
+              <ul v-if="link.children && link.children.length > 0" class="table-ul">
+                <li class="table-li" v-for="child in link.children" :key="child.id">
+                  <a @click.prevent="scrollToId(child.id)" :href="`#${child.id}`">{{ child.text }}</a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <div v-else class="ui-box relative">
+          <a @click.stop="isShowToC = !isShowToC">Table of Contents</a>
+        </div>
+      </div>
+      <div v-if="isShowToC" class="ui-box">
+        <a @click.stop="isShowToC = !isShowToC">Close</a>
+      </div>
+    </Nav>
   </div>
 
-  <Nav :close="isMenuShown" @isclose="(e) => isMenuShown = e">
-    <Menu></Menu>
-    <div v-if="!isToCEmpty">
-      <div @click.stop class="ui-box toc relative" v-if="isShowToC">
-        <ul class="table-ul" v-for="link of tocLinks" :key="link.id">
-          <li class="table-li">
-            <a @click="closeModal()" :href="`#${link.id}`">{{ link.text }}</a>
-            <ul v-if="link.children && link.children.length > 0" class="table-ul">
-              <li class="table-li" v-for="child in link.children" :key="child.id">
-                <a @click="closeModal()" :href="`#${child.id}`">{{ child.text }}</a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-      <div v-else class="ui-box relative">
-        <a @click.stop="isShowToC = !isShowToC">Table of Contents</a>
-      </div>
-    </div>
-    <div v-if="isShowToC" class="ui-box">
-      <a @click.stop="isShowToC = !isShowToC">Close</a>
-    </div>
-  </Nav>
 </template>
 
 <style>
@@ -134,14 +145,6 @@ watch(isMenuShown, () => {
   max-height: 250px;
   min-width: 100px;
   overflow-x: scroll;
-}
-
-h2>a {
-  font-size: 1.5rem;
-}
-
-h3>a {
-  font-size: 1.25rem;
 }
 
 .table-ul {
@@ -158,12 +161,5 @@ main {
   margin-top: 32px;
   margin-bottom: 32px;
   width: 100%;
-}
-
-.shiki {
-  overflow-x: auto;
-  padding: 20px;
-  border: 1px black solid;
-  border-radius: 10px;
 }
 </style>

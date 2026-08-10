@@ -1,7 +1,7 @@
 <template>
   <div class="flex-vert note-header gap-20">
     <slot name="title"></slot>
-    <div class="flex-vert gap-20">
+    <div class="flex-vert gap-10">
       <slot name="date"></slot>
       <div class="flex-hori gap-10 tags">
         <p>Tags:</p>
@@ -16,7 +16,7 @@
   padding: 30px 20px;
   border-radius: 20px;
   border: color-mix(in srgb, slateblue 60%, white 30%) solid;
-  max-width: 700px;
+  max-width: 800px;
   width: 90%;
 }
 
