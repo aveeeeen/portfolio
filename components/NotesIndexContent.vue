@@ -11,17 +11,15 @@ const tags = computed(() => route.query.tags ? route.query.tags.toString().split
 const keyword = computed(() => route.query.keyword ? `&keyword=${route.query.keyword}` : "");
 const queryparam = computed(() => `?page=${page.value}${tags.value}${keyword.value}`);
 
-const [pagination, artilceList, tagList] = await Promise.all([
-  useFetch(() => `/api/blog/pagination${queryparam.value}`, { method: "get" }),
-  useFetch(() => `/api/blog/list-pages${queryparam.value}`, { method: "get" }),
-  useFetch(() => `/api/blog/list-tags`, { method: "get" })
-]);
+const pagination = useLazyFetch(() => `/api/blog/pagination${queryparam.value}`, { method: "get" });
+const artilceList = useLazyFetch(() => `/api/blog/list-pages${queryparam.value}`, { method: "get" });
+const tagList = useLazyFetch(() => `/api/blog/list-tags`, { method: "get" });
 
 if (artilceList.error) {
   console.error(artilceList.error.value)
 }
 
-if (artilceList.status.value === "error") {
+if (artilceList.status.value === "error" && (route.query.page || route.query.tags || route.query.keyword)) {
   router.push("/notes")
 }
 
@@ -50,56 +48,63 @@ function getPrevContent() {
 </script>
 
 <template>
-  <div @click="isMenuShown = isMenuShown ? !isMenuShown : isMenuShown" class="page">
-    <div class="center- flex-vert gap-20">
-      <div class="content-box">
-        <h1>Notes</h1>
-        <Border></Border>
-        <p>new → old</p>
-        <div v-if='route.query["tags"]'>
-          <p>showing: {{ route.query["tags"] }}</p>
-          <NuxtLink to="/notes?page=1"> clear filter</NuxtLink>
-        </div>
-        <Border></Border>
+  <div class="center- flex-vert" @click="isMenuShown = isMenuShown = isMenuShown ? !isMenuShown : isMenuShown">
+    <div class="content-box">
+      <h1>Notes</h1>
+      <Border></Border>
+      <p>new → old</p>
+      <div v-if='route.query["tags"]'>
+        <p>showing: {{ route.query["tags"] }}</p>
+        <NuxtLink to="/notes?page=1"> clear filter</NuxtLink>
+      </div>
+      <Border></Border>
 
-        <div class="article-list">
+      <div class="article-list">
+        <template v-if="artilceList.status.value === 'pending' || !artilceList.data.value">
+          <ul v-for="i in 5" :key="i">
+            <li>
+              <NoteSkelton></NoteSkelton>
+            </li>
+          </ul>
+        </template>
+        <template v-else>
           <ul v-for="content in artilceList.data.value">
             <li :key="content.id">
               <NotePost :id="content.id" :title="content.title" :tags="content.tags" :created-at="content.createdAt">
               </NotePost>
             </li>
           </ul>
-        </div>
-        <div class="center--">
-          <div class="page-selector">
-            <div class="selector-flex center-">
-              <button class="" @click="getPrevContent()">back</button>
-              <p class="page-num">{{ `${page} / ${pagination.data.value?.totalPages}` }}</p>
-              <button class="" @click="getNextContent()">next</button>
-            </div>
+        </template>
+      </div>
+      <div class="center--">
+        <div class="page-selector">
+          <div class="selector-flex center-">
+            <button class="" @click="getPrevContent()">back</button>
+            <p class="page-num">{{ `${page} / ${pagination.data.value?.totalPages}` }}</p>
+            <button class="" @click="getNextContent()">next</button>
           </div>
         </div>
       </div>
-      <div class="bottom"></div>
     </div>
-    <Footer></Footer>
-    <Nav :close="isMenuShown" @isclose="(e) => isMenuShown = e">
-      <Menu></Menu>
-      <div>
-        <div @click.stop class="ui-box tags flex-vert gap-10" v-if="isShowTags">
-          <div class="tag-list" v-for="tag in tagList.data.value" :key="tag.name">
-            <TagButton :name="tag.name" @click="artilceList.refresh()" />
-          </div>
-        </div>
-        <div v-else class="ui-box relative">
-          <a @click.stop="isShowTags = !isShowTags">Tags</a>
-        </div>
-      </div>
-      <div v-if="isShowTags" class="ui-box">
-        <a @click.stop="isShowTags = !isShowTags">Close</a>
-      </div>
-    </Nav>
+    <div class="bottom"></div>
   </div>
+  <Footer></Footer>
+  <Nav :close="isMenuShown" @isclose="(e) => isMenuShown = e">
+    <Menu></Menu>
+    <div>
+      <div @click.stop class="ui-box tags flex-vert gap-10" v-if="isShowTags">
+        <div class="tag-list" v-for="tag in tagList.data.value" :key="tag.name">
+          <TagButton :name="tag.name" @click="artilceList.refresh()" />
+        </div>
+      </div>
+      <div v-else class="ui-box relative">
+        <a @click.stop="isShowTags = !isShowTags">Tags</a>
+      </div>
+    </div>
+    <div v-if="isShowTags" class="ui-box">
+      <a @click.stop="isShowTags = !isShowTags">Close</a>
+    </div>
+  </Nav>
 </template>
 
 <style scoped>

@@ -34,7 +34,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <NuxtLink class="event-post" :to="'events/' + props.id">
+  <NuxtLink class="event-post" :to="'/events/' + props.id">
     <div class="event-content">
       <h2>
         {{ props.title }}
@@ -43,7 +43,7 @@ onMounted(() => {
         <h3>
           開催日時:
           {{
-            dateToLocal(new Date(props.date))
+            dateToLocal(props.date)
           }}
         </h3>
         <h3>
@@ -60,26 +60,35 @@ onMounted(() => {
 <style scoped>
 .img-skelton {
   width: 100%;
+  max-width: 600px;
   height: 25svh;
   box-sizing: border-box;
   border-radius: 20px;
+  align-self: center;
 }
 
 .img-skelton.portrait {
   height: 40vh;
-  width: 100%;
+  width: 250px;
+  max-width: 100%;
+  align-self: center;
 }
 
 img {
-  width: 600px;
-  max-width: 90%;
+  width: 100%;
+  max-width: 600px;
   height: auto;
   box-sizing: border-box;
+  align-self: center;
 }
 
 img.portrait {
   height: 40vh;
+  max-height: 40vh;
   width: auto;
+  max-width: 100%;
+  align-self: center;
+  object-fit: contain;
 }
 
 .event-post {

@@ -10,15 +10,13 @@ useSeoMeta({
 </script>
 
 <template>
-  <div @click="isMenuShown = isMenuShown ? !isMenuShown : isMenuShown" class="page">
-    <div class="flex-vert center-">
-      <div class="playground">
-        <FmDrum></FmDrum>
-      </div>
-      <div class="bottom"></div>
+  <div class="flex-vert center-" @click="isMenuShown = isMenuShown = isMenuShown ? !isMenuShown : isMenuShown">
+    <div class="playground">
+      <FmDrum></FmDrum>
     </div>
-    <Footer></Footer>
+    <div class="bottom"></div>
   </div>
+  <Footer></Footer>
 
   <!-- nav box -->
   <Nav :close="isMenuShown" @isclose="(e) => (isMenuShown = e)">

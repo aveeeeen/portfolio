@@ -5,40 +5,38 @@ const isMenuShown = ref(false);
 </script>
 
 <template>
-  <div class="page" @click="!isMenuShown">
-    <div class="flex-vert center-">
-      <div class="content-box">
-        <div class="flex-vert center-">
-          <EventDetailHeader>
-            <template #title>
-              <Skelton class="title-skeleton" />
-            </template>
-            <div class="flex-vert gap-10">
-              <Skelton class="date-skeleton" />
-              <Skelton class="tag-skeleton" />
+  <div class="flex-vert center-" @click="isMenuShown = isMenuShown ? !isMenuShown : isMenuShown">
+    <div class="content-box">
+      <div class="flex-vert center-">
+        <EventDetailHeader>
+          <template #title>
+            <Skelton class="title-skeleton" />
+          </template>
+          <div class="flex-vert gap-10">
+            <Skelton class="date-skeleton" />
+            <Skelton class="tag-skeleton" />
+          </div>
+          <template #img>
+            <Skelton class="img-skeleton" />
+          </template>
+        </EventDetailHeader>
+        <main class="flex-vert center-">
+          <div class="event-box skeleton-body">
+            <div class="paragraph-skeleton" v-for="p in 3" :key="p">
+              <Skelton class="line-skeleton" />
+              <Skelton class="line-skeleton long" />
+              <Skelton class="line-skeleton short" />
+              <Skelton class="line-skeleton medium" />
             </div>
-            <template #img>
-              <Skelton class="img-skeleton" />
-            </template>
-          </EventDetailHeader>
-          <main class="flex-vert center-">
-            <div class="event-box skeleton-body">
-              <div class="paragraph-skeleton" v-for="p in 3" :key="p">
-                <Skelton class="line-skeleton" />
-                <Skelton class="line-skeleton long" />
-                <Skelton class="line-skeleton short" />
-                <Skelton class="line-skeleton medium" />
-              </div>
-            </div>
-          </main>
-        </div>
+          </div>
+        </main>
       </div>
     </div>
-    <Footer></Footer>
-    <Nav :close="isMenuShown" @isclose="(e) => (isMenuShown = e)">
-      <Menu></Menu>
-    </Nav>
   </div>
+  <Footer></Footer>
+  <Nav :close="isMenuShown" @isclose="(e) => (isMenuShown = e)">
+    <Menu></Menu>
+  </Nav>
 </template>
 
 <style scoped>

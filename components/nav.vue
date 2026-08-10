@@ -27,6 +27,13 @@ function toggleMenu() {
   emit('isclose', isMenuShown.value);
 }
 
+function handleParentClick(e: MouseEvent) {
+  if (isMenuShown.value) {
+    isMenuShown.value = false;
+    emit('isclose', false);
+  }
+}
+
 function checkMobile() {
   if (window.innerWidth > 800) {
     isMobile.value = false;
@@ -46,7 +53,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div v-if="isMobile" class="menu show-right flex-vert gap-10">
+  <div v-if="isMobile" class="menu show-right flex-vert gap-10" @click="handleParentClick">
     <div class="header-link" v-if="!props.notShowTitle">
       <NuxtLink class="page-title" to="/">
         <div class="line">
@@ -68,7 +75,7 @@ onUnmounted(() => {
     <ThemeToggle v-else />
   </div>
 
-  <div v-else class="menu show-right flex-vert gap-10">
+  <div v-else class="menu show-right flex-vert gap-10" @click="handleParentClick">
     <div class="header-link" v-if="!props.notShowTitle">
       <NuxtLink class="page-title" to="/">
         <div class="line">

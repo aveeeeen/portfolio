@@ -3,7 +3,7 @@ import * as BlogService from "../../service/blog.service"
 import z from 'zod';
 
 const getArticleSchema = z.object({
-  id: z.uuid()
+  id: z.string()
 })
 
 export default defineEventHandler(async (event) => {
