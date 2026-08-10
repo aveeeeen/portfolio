@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import EventDetailHeader from './EventDetailHeader.vue';
+const isMenuShown = ref(false);
 
 </script>
 
 <template>
-  <div class="page">
+  <div class="page" @click="!isMenuShown">
     <div class="flex-vert center-">
       <div class="content-box">
         <div class="flex-vert center-">
@@ -33,6 +34,10 @@ import EventDetailHeader from './EventDetailHeader.vue';
         </div>
       </div>
     </div>
+    <Footer></Footer>
+    <Nav :close="isMenuShown" @isclose="(e) => (isMenuShown = e)">
+      <Menu></Menu>
+    </Nav>
   </div>
 </template>
 
