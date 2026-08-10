@@ -128,8 +128,8 @@ function scrollToAbout() {
 }
 
 .bg-video {
-  width: 100vw;
-  height: 100vh;
+  width: 100svw;
+  height: 100svh;
   position: absolute;
   top: 0px;
   left: 0px;
@@ -139,7 +139,7 @@ function scrollToAbout() {
 
 .hero-box {
   width: 100%;
-  height: 100vh;
+  height: 100svh;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -155,8 +155,8 @@ function scrollToAbout() {
   margin: 0px;
   top: 0px;
   left: 0px;
-  width: 100vw;
-  height: 100vh;
+  width: 100svw;
+  height: 100svh;
   z-index: 2;
   background-color: transparent;
   display: flex;
