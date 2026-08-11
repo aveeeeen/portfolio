@@ -66,7 +66,8 @@ watch(isMenuShown, () => {
 </script>
 
 <template>
-  <div class="center- flex-vert" @click="isMenuShown = isMenuShown = isMenuShown ? !isMenuShown : isMenuShown">
+  <div class="center- flex-vert width-guard"
+    @click="isMenuShown = isMenuShown = isMenuShown ? !isMenuShown : isMenuShown">
     <div class="content-box">
       <h1>Events</h1>
       <Border></Border>

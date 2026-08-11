@@ -98,7 +98,7 @@ watch(isMenuShown, () => {
 <template>
   <EventDetailSkelton v-if="!event" />
   <template v-else>
-    <div class="flex-vert center-" @click.prevent="closeModal">
+    <div class="flex-vert center- width-guard" @click.prevent="closeModal">
       <div class="content-box">
         <div class="flex-vert center-">
           <EventDetailHeader :title="event.title" :date="event.date" :venue="event.venue" :image-url="event.imageUrl" />

@@ -50,3 +50,10 @@
 .block {
   display: block;
 }
+
+@media (max-width: 800px) {
+  .width-guard {
+    width: 100%;
+    overflow-x: hidden;
+  }
+}

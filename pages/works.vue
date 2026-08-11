@@ -16,7 +16,7 @@ function closeModal() {
 
 
 <template>
-  <div class="center- flex-vert" @click="isMenuShown = isMenuShown ? !isMenuShown : isMenuShown">
+  <div class="center- flex-vert width-guard" @click="isMenuShown = isMenuShown ? !isMenuShown : isMenuShown">
     <div id="projects" class="content-box content-box-noheight">
       <h1>Works</h1>
       <Border></Border>
