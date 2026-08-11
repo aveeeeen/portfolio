@@ -72,6 +72,7 @@ a {
 }
 
 .footer-area {
+  width: 100%;
   overflow-x: hidden;
   position: relative;
 }

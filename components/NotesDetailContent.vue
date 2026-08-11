@@ -9,7 +9,11 @@ import NoteDetailSkelton from '~/components/NoteDetailSkelton.vue';
 const isShowToC = ref(false);
 const isMenuShown = ref(true);
 const route = useRoute();
-const { data: article, error } = useLazyFetch<any>(() => `/api/article/${route.params.id}`);
+const articleId = computed(() => {
+  const id = route.params.id;
+  return id && id !== 'undefined' ? (Array.isArray(id) ? id[0] : id) : '';
+});
+const { data: article, error } = useLazyFetch<any>(() => (articleId.value ? `/api/article/${articleId.value}` : ''));
 
 useSeoMeta({
   title: () => article.value?.title || '',

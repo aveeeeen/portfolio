@@ -11,7 +11,11 @@ import { useDate } from '../composables/useDate';
 const isShowToC = ref(false);
 const isMenuShown = ref(true);
 const route = useRoute();
-const data = useLazyFetch<EventBlocksResult>(() => `/api/event/${route.params.id}`);
+const eventId = computed(() => {
+  const id = route.params.id;
+  return id && id !== 'undefined' ? (Array.isArray(id) ? id[0] : id) : '';
+});
+const data = useLazyFetch<EventBlocksResult>(() => (eventId.value ? `/api/event/${eventId.value}` : ''));
 const event = computed(() => data.data.value ?? undefined);
 
 useSeoMeta({

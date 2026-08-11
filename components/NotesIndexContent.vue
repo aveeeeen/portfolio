@@ -62,7 +62,7 @@ function getPrevContent() {
 
       <div class="article-list">
         <template v-if="artilceList.status.value === 'pending' || !artilceList.data.value">
-          <ul v-for="i in 5" :key="i">
+          <ul v-for="i in 10" :key="i">
             <li>
               <NoteSkelton></NoteSkelton>
             </li>
