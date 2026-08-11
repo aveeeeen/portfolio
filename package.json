@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "@notionhq/client": "^5.22.0",
-    "@nuxt/image": "^1.7.0",
     "highlight.js": "^11.11.1",
     "nuxt": "^4.4.8",
     "tone": "^15.0.4",

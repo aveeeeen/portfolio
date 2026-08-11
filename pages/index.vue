@@ -91,7 +91,7 @@ function scrollToAbout() {
       <pre class="code-block"><code class="hljs language-json code-padding" v-html="highlightedCode"></code></pre>
       <!-- picture box -->
       <div class="img-box center-vert margin-left">
-        <NuxtImg class="about-img" src="/img/matsumoto.png" format="webp" />
+        <img class="about-img" src="/img/matsumoto.png" alt="Matsumoto" />
       </div>
       <!-- description -->
     </div>

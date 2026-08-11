@@ -3,30 +3,6 @@ import { defineNuxtConfig } from 'nuxt/config'
 import { resolve } from "path";
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  modules: [
-    '@nuxt/image'
-  ],
-  image: {
-    provider: 'ipx',
-    format: ['webp'],
-    domains: [
-      's3.us-west-2.amazonaws.com',
-      'prod-files-secure.s3.us-west-2.amazonaws.com',
-      'www.notion.so',
-      'notion.so',
-      'images.unsplash.com',
-      'localhost:3000',
-      'braveeeeen.vercel.app'
-    ],
-    quality: 50,
-    screens: {
-      'sm': 640,
-      'md': 768,
-      'lg': 1024,
-      'xl': 1280,
-      '2xl': 1536
-    },
-  },
   plugins: [
     '~/plugins/directives',
     '~/plugins/scroll-to-top.client'
