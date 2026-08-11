@@ -15,7 +15,8 @@ const props = defineProps<Omit<ListArticleResult, "updatedAt">>()
           new Date(props.createdAt).toLocaleDateString('ja-JP', {
             year: 'numeric',
             month: '2-digit',
-            day: '2-digit'
+            day: '2-digit',
+            timeZone: 'Asia/Tokyo'
           }).replace(/\//g, '.')
         }}
       </p>

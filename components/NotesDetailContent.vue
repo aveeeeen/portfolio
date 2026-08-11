@@ -18,6 +18,7 @@ useSeoMeta({
   description: () => article.value?.excerpt || '',
   ogDescription: () => article.value?.excerpt || '',
   twitterDescription: () => article.value?.excerpt || '',
+  ogUrl: () => `https://braveeeeen.vercel.app${route.fullPath}`,
 });
 
 defineProps(["imgSrc"]);
@@ -110,7 +111,8 @@ watch(isMenuShown, () => {
                   new Date(article.createdAt).toLocaleDateString('ja-JP', {
                     year: 'numeric',
                     month: '2-digit',
-                    day: '2-digit'
+                    day: '2-digit',
+                    timeZone: 'Asia/Tokyo'
                   }).replace(/\//g, '.')
                 }}
               </p>

@@ -64,14 +64,12 @@ onMounted(() => {
   height: 25svh;
   box-sizing: border-box;
   border-radius: 20px;
-  align-self: center;
 }
 
 .img-skelton.portrait {
   height: 40vh;
   width: 250px;
   max-width: 100%;
-  align-self: center;
 }
 
 img {
