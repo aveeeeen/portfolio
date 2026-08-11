@@ -120,18 +120,18 @@ h2 {
   margin: 0px;
 }
 
-a:hover h2 {
-  color: #fff;
+@keyframes event-title-hover-reset {
+  0%, 85% {
+    color: #fff;
+  }
+  100% {
+    color: var(--text-color);
+  }
 }
 
-h3 {
-  font-size: 1rem;
-  line-height: 1.0;
-  margin: 0;
-}
-
+a:hover h2,
 a:hover h3 {
-  color: #fff;
+  animation: event-title-hover-reset var(--hover-animation-duration) forwards;
 }
 
 a {

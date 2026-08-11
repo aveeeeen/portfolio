@@ -126,10 +126,20 @@ h2 {
   margin: 5px;
 }
 
+@keyframes button-hover-reset {
+  0%, 85% {
+    color: white;
+    background-color: #0014FE;
+  }
+  100% {
+    color: var(--text-color-a);
+    background-color: transparent;
+  }
+}
+
 button:hover {
-  color: white;
   display: inline;
-  background-color: #0014FE;
+  animation: button-hover-reset var(--hover-animation-duration) forwards;
 }
 
 button {

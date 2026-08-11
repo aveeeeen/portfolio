@@ -122,9 +122,19 @@ onUnmounted(() => {
   /* border-left: solid 2px #aaa; */
 }
 
+@keyframes header-link-hover-reset {
+  0%, 85% {
+    background-color: #0014fe;
+    color: white;
+  }
+  100% {
+    background-color: transparent;
+    color: var(--text-color-a);
+  }
+}
+
 .header-link:hover>a>.line>h3>.string {
-  background-color: #0014fe;
-  color: white;
+  animation: header-link-hover-reset var(--hover-animation-duration) forwards;
 }
 
 .cursor {

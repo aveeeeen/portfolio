@@ -289,16 +289,43 @@ function scrollToAbout() {
   stroke: #eee;
 }
 
+@keyframes scroll-anchor-hover-reset {
+  0%, 85% {
+    background-color: #eee;
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+@keyframes scroll-arrow-hover-reset {
+  0%, 85% {
+    stroke: #0014fe;
+  }
+  100% {
+    stroke: #eee;
+  }
+}
+
+@keyframes scroll-text-hover-reset {
+  0%, 85% {
+    color: #0014fe;
+  }
+  100% {
+    color: #eee;
+  }
+}
+
 .scroll-indication-anchor:hover {
-  background-color: #eee;
+  animation: scroll-anchor-hover-reset var(--hover-animation-duration) forwards;
 }
 
 .scroll-indication-anchor:hover>.scroll-indication-arrow {
-  stroke: #0014fe;
+  animation: scroll-arrow-hover-reset var(--hover-animation-duration) forwards;
 }
 
 .scroll-indication-anchor:hover .scroll-indication {
-  color: #0014fe;
+  animation: scroll-text-hover-reset var(--hover-animation-duration) forwards;
 }
 
 .top-menu {

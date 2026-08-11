@@ -15,6 +15,7 @@
   --alpha-zero: rgba(0, 0, 0, 0);
   --box-radius: 10px;
   --content-radius: 0px;
+  --hover-animation-duration: 1s;
 }
 
 html.dark {
@@ -74,10 +75,21 @@ img {
   row-gap: 5px;
 }
 
+@keyframes hover-reset {
+  0%,
+  85% {
+    color: white;
+    background-color: #0014fe;
+  }
+  100% {
+    color: var(--text-color-a);
+    background-color: transparent;
+  }
+}
+
 a:hover {
-  color: white;
   display: inline;
-  background-color: #0014fe;
+  animation: hover-reset var(--hover-animation-duration) forwards;
 }
 
 a {
