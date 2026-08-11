@@ -13,18 +13,22 @@ const tags = computed(() => route.query.tags ? route.query.tags.toString().split
 const keyword = computed(() => route.query.keyword ? `&keyword=${route.query.keyword}` : "");
 const queryparam = computed(() => `?page=${page.value}${tags.value}${keyword.value}`);
 
-const pagination = useLazyFetch(() => `/api/event/pagination`, { method: "get" });
-const eventList = useLazyFetch<ListEventResult[]>(() => `/api/event/list-events${queryparam.value}`, { method: "get" });
+const pagination = useFetch(() => `/api/event/pagination${queryparam.value}`, { method: "get", lazy: true });
+const eventList = useFetch<ListEventResult[]>(() => `/api/event/list-events${queryparam.value}`, { method: "get", lazy: true });
 
 const events = computed(() => eventList.data.value ?? [])
 
-if (eventList.error) {
-  console.error(eventList.error.value)
-}
+watch(() => eventList.error.value, (err) => {
+  if (err) {
+    console.error(err);
+  }
+});
 
-if (eventList.status.value === "error" && (route.query.page || route.query.tags || route.query.keyword)) {
-  router.push("/events")
-}
+watch(() => eventList.status.value, (status) => {
+  if (status === "error" && (route.query.page || route.query.tags || route.query.keyword)) {
+    router.push("/events");
+  }
+});
 
 function getNextContent() {
   if (Number(page.value) >= (pagination.data.value?.totalPages ?? 1)) return;
