@@ -301,12 +301,6 @@ function scrollToAbout() {
   color: #0014fe;
 }
 
-.top-menu {
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-}
-
 .about-section {
   position: relative;
   width: 100%;
@@ -386,12 +380,6 @@ function scrollToAbout() {
 
   .scroll-indication-anchor {
     margin: 0;
-  }
-
-  .top-menu {
-    position: absolute;
-    left: 0%;
-    bottom: 10svh;
   }
 }
 </style>

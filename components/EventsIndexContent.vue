@@ -48,16 +48,6 @@ function getPrevContent() {
   });
 }
 
-function closeModal() {
-  if (isShowTags.value) {
-    isShowTags.value = false;
-  }
-
-  if (isMenuShown.value) {
-    isMenuShown.value = false;
-  }
-}
-
 watch(isMenuShown, () => {
   if (!isMenuShown.value) {
     isShowTags.value = false;

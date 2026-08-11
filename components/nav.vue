@@ -53,28 +53,34 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div v-if="isMobile" class="menu show-right flex-vert gap-10" @click="handleParentClick">
-    <div class="header-link" v-if="!props.notShowTitle">
-      <NuxtLink class="page-title" to="/">
-        <div class="line">
-          <h3>
-            <span class="string">
-              "Portfolio site of braven"
-            </span>
-            <span class="cursor"></span>
-          </h3>
+  <header v-if="isMobile">
+    <div class="menu-box" @click="handleParentClick">
+      <div v-if="!props.notShowTitle" class="menu">
+        <div class="header-link">
+          <NuxtLink class="page-title" to="/">
+            <div class="line">
+              <h3>
+                <span class="string">
+                  "Portfolio site of braven"
+                </span>
+                <span class="cursor"></span>
+              </h3>
+            </div>
+          </NuxtLink>
         </div>
-      </NuxtLink>
+        <div class="menu-group">
+          <ThemeToggle />
+          <Burger @click.stop="toggleMenu" class="burger" :isClose="isMenuShown"></Burger>
+        </div>
+      </div>
+      <div v-if="isMenuShown || props.notShowTitle" class="menu-slot show-right flex-vert gap-10">
+        <slot></slot>
+        <ThemeToggle> </ThemeToggle>
+      </div>
     </div>
-    <Burger @click.stop="toggleMenu" v-if="!props.notShowTitle" class="burger" :isClose="isMenuShown"></Burger>
-    <div v-if="isMenuShown || props.notShowTitle" class="show-right flex-vert gap-10">
-      <slot></slot>
-      <ThemeToggle />
-    </div>
-    <ThemeToggle v-else />
-  </div>
+  </header>
 
-  <div v-else class="menu show-right flex-vert gap-10" @click="handleParentClick">
+  <header v-else class="menu show-right flex-vert gap-10" @click="handleParentClick">
     <div class="header-link" v-if="!props.notShowTitle">
       <NuxtLink class="page-title" to="/">
         <div class="line">
@@ -90,7 +96,7 @@ onUnmounted(() => {
     </div>
     <slot></slot>
     <ThemeToggle />
-  </div>
+  </header>
 </template>
 
 <style scoped>
@@ -137,12 +143,22 @@ onUnmounted(() => {
 }
 
 .header-link {
+  width: fit-content;
+  height: fit-content;
+  display: block;
   background-color: var(--ui-bg-color);
   padding: 0px 8px;
   font-family: "Noto Sans Mono", monospace;
   font-optical-sizing: auto;
   letter-spacing: 0.01rch;
   border-radius: var(--box-radius);
+}
+
+.menu {
+  position: fixed;
+  top: 16px;
+  right: 5%;
+  z-index: 3;
 }
 
 @keyframes blink {
@@ -156,6 +172,7 @@ onUnmounted(() => {
 }
 
 @media (max-width: 800px) {
+
   .line-number {
     color: #aaa;
     font-size: 0.7rem;
@@ -168,13 +185,57 @@ onUnmounted(() => {
     letter-spacing: 0.001rch;
     font-weight: 500;
     font-size: 0.9rem;
-    padding: 4px 8px 4px 8px;
+    padding: 4px 4px 4px 4px;
     margin: 0;
     color: var(--text-color-a);
   }
 
   .header-link {
     max-width: 100%;
+  }
+
+  header {
+    position: fixed;
+    top: 16px;
+    left: 0px;
+    right: unset;
+    z-index: 3;
+    width: 100svw;
+    box-sizing: border-box;
+  }
+
+  .menu-box {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+    padding: 0 16px;
+    box-sizing: border-box;
+  }
+
+  .menu {
+    position: relative;
+    top: auto;
+    right: auto;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .menu-group {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .menu-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
   }
 }
 </style>
