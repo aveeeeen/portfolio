@@ -18,8 +18,16 @@ export default defineNuxtConfig({
       'localhost:3000',
       'braveeeeen.vercel.app'
     ],
+    quality: 50,
+    screens: {
+      'sm': 640,
+      'md': 768,
+      'lg': 1024,
+      'xl': 1280,
+      '2xl': 1536
+    },
     vercel: {
-      minimunCacheTTL: 6000
+      minimunCacheTTL: 2678400
     }
   },
   plugins: [
