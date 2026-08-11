@@ -75,7 +75,7 @@ onUnmounted(() => {
       </div>
       <div v-if="isMenuShown || props.notShowTitle" class="menu-slot show-right flex-vert gap-10">
         <slot></slot>
-        <ThemeToggle> </ThemeToggle>
+        <ThemeToggle v-if="props.notShowTitle"> </ThemeToggle>
       </div>
     </div>
   </header>
