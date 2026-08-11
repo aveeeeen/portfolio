@@ -61,7 +61,7 @@ onUnmounted(() => {
             <div class="line">
               <h3>
                 <span class="string">
-                  "Portfolio site of braven"
+                  "Portfolio of braven"
                 </span>
                 <span class="cursor"></span>
               </h3>
@@ -87,7 +87,7 @@ onUnmounted(() => {
           <!-- <span class="line-number">1</span> -->
           <h3>
             <span class="string">
-              "Portfolio site of braven"
+              "Portfolio of braven"
             </span>
             <span class="cursor"></span>
           </h3>
@@ -184,7 +184,7 @@ onUnmounted(() => {
     line-height: 2.0rem;
     letter-spacing: 0.001rch;
     font-weight: 500;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     padding: 4px 4px 4px 4px;
     margin: 0;
     color: var(--text-color-a);
@@ -196,7 +196,7 @@ onUnmounted(() => {
 
   header {
     position: fixed;
-    top: 16px;
+    top: 12px;
     left: 0px;
     right: unset;
     z-index: 3;
@@ -210,7 +210,7 @@ onUnmounted(() => {
     flex-direction: column;
     align-items: flex-end;
     gap: 12px;
-    padding: 0 16px;
+    padding: 0 12px;
     box-sizing: border-box;
   }
 
@@ -228,7 +228,7 @@ onUnmounted(() => {
   .menu-group {
     display: flex;
     flex-direction: row;
-    gap: 12px;
+    gap: 8px;
     align-items: center;
   }
 

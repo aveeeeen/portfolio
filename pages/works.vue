@@ -20,7 +20,6 @@ function closeModal() {
     <div id="projects" class="content-box content-box-noheight">
       <h1>Works</h1>
       <Border></Border>
-      <div class="space"></div>
       <div></div>
       <a>
         <h1>Projects / Reserch</h1>
