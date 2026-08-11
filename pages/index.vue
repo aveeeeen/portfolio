@@ -14,7 +14,16 @@ const { data } = await useFetch<string>("https://raw.githubusercontent.com/aveee
 const bio = JSON.stringify(JSON.parse(data?.value ?? "error occured while fetching... ;_;)"), null, 2);
 
 const highlightedCode = computed(() => {
-  return hljs.highlight(bio, { language: 'json' }).value;
+  const code = hljs.highlight(bio, { language: 'json' }).value;
+  return code.replace(
+    /<span class="hljs-string">(&quot;|")?(https?:\/\/[^"<\s]+?)(&quot;|")?<\/span>/g,
+    (match, q1, rawUrl, q2) => {
+      const quote1 = q1 || '';
+      const quote2 = q2 || '';
+      const href = rawUrl.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"');
+      return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="code-url-link"><span class="hljs-string">${quote1}${rawUrl}${quote2}</span></a>`;
+    }
+  );
 });
 
 const getIsUnder = () => {
@@ -108,6 +117,7 @@ function scrollToAbout() {
 .code-block {
   white-space: pre-wrap;
   word-break: break-all;
+  line-height: 1.6;
   overflow-wrap: anywhere;
   overflow-x: hidden;
   border-radius: 16px;
@@ -116,6 +126,17 @@ function scrollToAbout() {
 
 .code-padding {
   padding: 32px;
+}
+
+:deep(.code-url-link) {
+  text-decoration: underline;
+  color: #96C178;
+}
+
+:deep(.code-url-link:hover),
+:deep(.code-url-link:hover .hljs-string) {
+  color: white !important;
+  background-color: #0014fe !important;
 }
 
 .icon {

@@ -31,7 +31,9 @@ function closeModal() {
       <div class="flex-vert">
         <iframeYT url="https://www.youtube.com/embed/torxCXoCfh4?si=IN0-6k9W2skzpAaM"></iframeYT>
 
-        <NuxtLink :to="'/notes/214f0133-4f08-4cf0-b15d-4fa3a159de0f'">解説 / explaination</NuxtLink>
+        <p>
+          <NuxtLink :to="'/notes/214f0133-4f08-4cf0-b15d-4fa3a159de0f'">解説 / explaination</NuxtLink>
+        </p>
       </div>
     </div>
 
