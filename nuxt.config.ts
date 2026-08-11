@@ -7,7 +7,7 @@ export default defineNuxtConfig({
     '@nuxt/image'
   ],
   image: {
-    provider: 'vercel',
+    provider: 'ipx',
     format: ['webp'],
     domains: [
       's3.us-west-2.amazonaws.com',
@@ -26,9 +26,6 @@ export default defineNuxtConfig({
       'xl': 1280,
       '2xl': 1536
     },
-    vercel: {
-      minimunCacheTTL: 2678400
-    }
   },
   plugins: [
     '~/plugins/directives',
