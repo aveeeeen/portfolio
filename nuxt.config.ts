@@ -6,8 +6,14 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/image'
   ],
+  nitro: {
+    preset: 'cloudflare-module',
+    prerender: {
+      autoSubfolderIndex: false
+    },
+  },
   image: {
-    provider: 'vercel',
+    provider: 'ipx',
     format: ['webp'],
     domains: [
       's3.us-west-2.amazonaws.com',
@@ -26,16 +32,13 @@ export default defineNuxtConfig({
       'xl': 1280,
       '2xl': 1536
     },
-    vercel: {
-      minimunCacheTTL: 2678400
-    }
   },
   plugins: [
     '~/plugins/directives',
     '~/plugins/scroll-to-top.client'
   ],
   routeRules: {
-    '/': { prerender: true }
+    '/': { prerender: true },
   },
   app: {
     baseURL: '/',

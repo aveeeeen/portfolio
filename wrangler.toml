@@ -1,0 +1,6 @@
+name = "portfolio"
+main = "./.output/server/index.mjs"
+compatibility_date = "2024-07-12"
+
+[site]
+bucket = "./.output/public"
