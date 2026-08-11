@@ -73,14 +73,14 @@ onUnmounted(() => {
           <Burger @click.stop="toggleMenu" class="burger" :isClose="isMenuShown"></Burger>
         </div>
       </div>
-      <div v-if="isMenuShown || props.notShowTitle" class="menu-slot show-right flex-vert gap-10">
+      <div v-if="isMenuShown || props.notShowTitle" class="menu-slot show-right flex-vert">
         <slot></slot>
         <ThemeToggle v-if="props.notShowTitle"> </ThemeToggle>
       </div>
     </div>
   </header>
 
-  <header v-else class="menu show-right flex-vert gap-10" @click="handleParentClick">
+  <header v-else class="menu show-right flex-vert" @click="handleParentClick">
     <div class="header-link" v-if="!props.notShowTitle">
       <NuxtLink class="page-title" to="/">
         <div class="line">
@@ -156,9 +156,10 @@ onUnmounted(() => {
 
 .menu {
   position: fixed;
-  top: 16px;
+  top: var(--space-s);
   right: 5%;
   z-index: 3;
+  gap: var(--space-ms);
 }
 
 @keyframes blink {
@@ -196,7 +197,7 @@ onUnmounted(() => {
 
   header {
     position: fixed;
-    top: 12px;
+    top: var(--space-s);
     left: 0px;
     right: unset;
     z-index: 3;
@@ -209,8 +210,8 @@ onUnmounted(() => {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 12px;
-    padding: 0 12px;
+    gap: var(--space-s);
+    padding: 0 var(--space-s);
     box-sizing: border-box;
   }
 
@@ -228,7 +229,7 @@ onUnmounted(() => {
   .menu-group {
     display: flex;
     flex-direction: row;
-    gap: 8px;
+    gap: var(--space-s);
     align-items: center;
   }
 
@@ -236,6 +237,7 @@ onUnmounted(() => {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+    gap: var(--space-s)
   }
 }
 </style>

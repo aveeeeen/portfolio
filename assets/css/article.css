@@ -2,11 +2,15 @@
 
 .article {
   --p-margin: 1.5em;
-  --p-line-height: 1.75rem;
+  --p-line-height: 1.9;
   --p-font-weight: 320;
   --li-line-height: 1.5em;
   --code-bg-color: #555;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
+}
+
+.article [id] {
+  scroll-margin-top: 72px;
 }
 
 /* Typography & Direct Children */

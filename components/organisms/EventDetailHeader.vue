@@ -113,6 +113,7 @@ onMounted(() => {
   border: color-mix(in srgb, slateblue 60%, white 30%) solid;
   max-width: 800px;
   width: 90%;
+  box-sizing: border-box;
 }
 
 .note-header a {
@@ -155,6 +156,7 @@ img.portrait {
     border-radius: 20px;
     border: color-mix(in srgb, slateblue 60%, white 30%) solid;
     max-width: 700px;
+    width: 100%;
   }
 }
 </style>

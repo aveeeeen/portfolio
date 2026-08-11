@@ -16,6 +16,6 @@
 <style scoped>
 .menu-list {
   text-align: right;
-  padding: 10px 14px;
+  padding: calc(var(--space-s) / 2) var(--space-s);
 }
 </style>

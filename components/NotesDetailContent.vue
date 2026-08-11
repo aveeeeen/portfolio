@@ -81,7 +81,14 @@ function scrollToId(id: string) {
   if (process.client) {
     const targetElement = document.getElementById(id);
     if (targetElement) {
-      targetElement.scrollIntoView({ behavior: 'smooth' });
+      const headerOffset = 72;
+      const elementPosition = targetElement.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
       history.pushState(null, '', `#${id}`);
     }
   }
@@ -99,37 +106,35 @@ watch(isMenuShown, () => {
   <template v-else>
     <div class="flex-vert center- width-guard" @click.prevent="closeModal">
       <div class="content-box">
-        <div class="flex-vert center-">
-          <NoteHeader>
-            <template #title>
-              <h1>{{ article.title }}</h1>
-            </template>
-            <template #date>
-              <p>
-                作成日:
-                {{
-                  new Date(article.createdAt).toLocaleDateString('ja-JP', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    timeZone: 'Asia/Tokyo'
-                  }).replace(/\//g, '.')
-                }}
-              </p>
-            </template>
-            <template #tags>
-              <div v-for="tag in tags" :key="tag">
-                <TagButton :name="tag" />
-              </div>
-            </template>
-          </NoteHeader>
-          <main class="flex-vert center-">
-            <div class="article-box article" v-html="parsedHtml"></div>
-          </main>
-        </div>
+        <NoteHeader>
+          <template #title>
+            <h1>{{ article.title }}</h1>
+          </template>
+          <template #date>
+            <p>
+              作成日:
+              {{
+                new Date(article.createdAt).toLocaleDateString('ja-JP', {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                  timeZone: 'Asia/Tokyo'
+                }).replace(/\//g, '.')
+              }}
+            </p>
+          </template>
+          <template #tags>
+            <div v-for="tag in tags" :key="tag">
+              <TagButton :name="tag" />
+            </div>
+          </template>
+        </NoteHeader>
+        <main>
+          <div class="article-box article" v-html="parsedHtml"></div>
+        </main>
       </div>
-      <div class="bottom"></div>
     </div>
+    <div class="bottom"></div>
     <Footer></Footer>
     <Nav :close="isMenuShown" @isclose="(e) => isMenuShown = e">
       <Menu></Menu>

@@ -39,8 +39,8 @@ const props = defineProps<Omit<ListArticleResult, "updatedAt">>()
 
 .note-post {
   padding: 0;
-  margin-top: 16px;
-  gap: 8px;
+  margin-top: var(--space-s);
+  gap: var(--space-ms);
 }
 
 

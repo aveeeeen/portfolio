@@ -32,15 +32,15 @@
 }
 
 .gap-5 {
-  gap: 5px;
+  gap: 6px;
 }
 
 .gap-10 {
-  gap: 12px;
+  gap: var(--base-spacing);
 }
 
 .gap-20 {
-  gap: 24px;
+  gap: var(--space-m);
 }
 
 .relative {

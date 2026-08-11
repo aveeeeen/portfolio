@@ -79,14 +79,12 @@ function scrollToAbout() {
     <div class="content-box index-content-box">
       <h1>About Me</h1>
       <Border></Border>
-      <div class="spacing">
-        <pre class="code-block"><code class="hljs language-json code-padding" v-html="highlightedCode"></code></pre>
-        <!-- picture box -->
-        <div class="img-box center-vert margin-left">
-          <NuxtImg class="about-img" src="/img/matsumoto.png" format="webp" />
-        </div>
-        <!-- description -->
+      <pre class="code-block"><code class="hljs language-json code-padding" v-html="highlightedCode"></code></pre>
+      <!-- picture box -->
+      <div class="img-box center-vert margin-left">
+        <NuxtImg class="about-img" src="/img/matsumoto.png" format="webp" />
       </div>
+      <!-- description -->
     </div>
   </div>
   <Footer></Footer>
@@ -105,15 +103,6 @@ function scrollToAbout() {
 
 .img-box {
   margin: 0px;
-}
-
-.page-margin {
-  margin: 80px;
-}
-
-.wrapper {
-  margin-top: 10px;
-  margin-bottom: 10px;
 }
 
 .code-block {
@@ -190,12 +179,12 @@ function scrollToAbout() {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding: 32px;
+  padding: var(--space-s);
 }
 
 .intro {
   width: fit-content;
-  padding: 0 16px;
+  padding: 0 var(--space-s);
   font-family: "Noto Sans Mono", monospace;
   font-optical-sizing: auto;
   letter-spacing: 0.01rch;
@@ -310,8 +299,8 @@ function scrollToAbout() {
 }
 
 .index-content-box {
-  margin-top: 54px;
-  margin-bottom: 54px;
+  margin-top: 56px;
+  margin-bottom: 56px;
 }
 
 @media (max-width: 800px) {

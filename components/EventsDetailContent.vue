@@ -82,7 +82,14 @@ function scrollToId(id: string) {
   if (process.client) {
     const targetElement = document.getElementById(id);
     if (targetElement) {
-      targetElement.scrollIntoView({ behavior: 'smooth' });
+      const headerOffset = 72;
+      const elementPosition = targetElement.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
       history.pushState(null, '', `#${id}`);
     }
   }
@@ -100,15 +107,13 @@ watch(isMenuShown, () => {
   <template v-else>
     <div class="flex-vert center- width-guard" @click.prevent="closeModal">
       <div class="content-box">
-        <div class="flex-vert center-">
-          <EventDetailHeader :title="event.title" :date="event.date" :venue="event.venue" :image-url="event.imageUrl" />
-          <main class="flex-vert center-">
-            <div class="event-box article" v-html="parsedHtml"></div>
-          </main>
-        </div>
+        <EventDetailHeader :title="event.title" :date="event.date" :venue="event.venue" :image-url="event.imageUrl" />
+        <main>
+          <div class="article-box article" v-html="parsedHtml"></div>
+        </main>
       </div>
-      <div class="bottom"></div>
     </div>
+    <div class="bottom"></div>
     <Footer></Footer>
     <Nav :close="isMenuShown" @isclose="(e) => isMenuShown = e">
       <Menu></Menu>
