@@ -104,7 +104,7 @@ watch(isMenuShown, () => {
 <template>
   <NoteDetailSkelton v-if="!article" />
   <template v-else>
-    <div class="flex-vert center- width-guard" @click.prevent="closeModal">
+    <div class="flex-vert center- width-guard" @click="closeModal">
       <div class="content-box">
         <NoteHeader>
           <template #title>
