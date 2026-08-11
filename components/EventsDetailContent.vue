@@ -20,9 +20,10 @@ useSeoMeta({
   twitterTitle: () => event.value?.title || '',
   ogImage: () => event.value?.imageUrl || '',
   twitterImage: () => event.value?.imageUrl || '',
-  description: () => event.value ? `bravenは、${event.value.title}に出演いたします。\n開催日：${useDate(event.value.date)}\n会場：${event.value.venue}` : '',
-  ogDescription: () => event.value ? `bravenは、${event.value.title}に出演いたします。\n開催日：${useDate(event.value.date)}\n会場：${event.value.venue}` : '',
-  twitterDescription: () => event.value ? `bravenは、${event.value.title}に出演いたします。\n開催日：${useDate(event.value.date)}\n会場：${event.value.venue}` : '',
+  description: () => event.value ? `bravenは、${event.value.title}に出演いたします。\n開催日：${useDate(event.value.date)}。\n会場：${event.value.venue}。` : '',
+  ogDescription: () => event.value ? `bravenは、${event.value.title}に出演いたします。\n開催日：${useDate(event.value.date)}。\n会場：${event.value.venue}。` : '',
+  twitterDescription: () => event.value ? `bravenは、${event.value.title}に出演いたします。\n開催日：${useDate(event.value.date)}。\n会場：${event.value.venue}。` : '',
+  ogUrl: () => `https://braveeeeen.vercel.app${route.fullPath}`,
 });
 
 const { parse, getTableOfContents } = useNotionBlockParser();
@@ -100,8 +101,7 @@ watch(isMenuShown, () => {
     <div class="flex-vert center-" @click.prevent="closeModal">
       <div class="content-box">
         <div class="flex-vert center-">
-          <EventDetailHeader :title="event.title" :date="event.date" :venue="event.venue"
-            :image-url="event.imageUrl" />
+          <EventDetailHeader :title="event.title" :date="event.date" :venue="event.venue" :image-url="event.imageUrl" />
           <main class="flex-vert center-">
             <div class="event-box article" v-html="parsedHtml"></div>
           </main>

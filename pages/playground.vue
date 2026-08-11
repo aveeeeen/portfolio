@@ -5,6 +5,7 @@ const isMenuShown = ref(false)
 useSeoMeta({
   description: "Playground",
   ogDescription: "Playground",
+  ogUrl: "https://braveeeeen.vercel.app/playground",
 });
 
 </script>

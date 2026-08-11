@@ -6,6 +6,7 @@ const route = useRoute();
 useSeoMeta({
   description: "Upcoming Events and Archives",
   ogDescription: "Upcoming Events and Archives",
+  ogUrl: () => `https://braveeeeen.vercel.app${route.fullPath}`,
 });
 </script>
 

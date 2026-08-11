@@ -5,6 +5,7 @@ const isMenuShown = ref(false)
 useSeoMeta({
   description: "FmDrumkit",
   ogDescription: "FmDrumkit",
+  ogUrl: "https://braveeeeen.vercel.app/fmdrumpage",
 });
 
 </script>

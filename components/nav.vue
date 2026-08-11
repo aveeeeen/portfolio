@@ -79,7 +79,7 @@ onUnmounted(() => {
     <div class="header-link" v-if="!props.notShowTitle">
       <NuxtLink class="page-title" to="/">
         <div class="line">
-          <span class="line-number">1</span>
+          <!-- <span class="line-number">1</span> -->
           <h3>
             <span class="string">
               "Portfolio site of braven"
@@ -120,7 +120,7 @@ onUnmounted(() => {
   padding: 4px 8px 4px 8px;
   margin: 0;
   color: var(--text-color-a);
-  border-left: solid 2px #aaa;
+  /* border-left: solid 2px #aaa; */
 }
 
 .header-link:hover>a>.line>h3>.string {
