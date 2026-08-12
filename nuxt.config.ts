@@ -30,7 +30,12 @@ export default defineNuxtConfig({
         { name: 'twitter:description', content: '活動履歴やブログをまとめています。' },
         { name: 'twitter:image', content: 'https://braveeeeen.vercel.app/ogp.png' },
       ],
-    }
+    },
+  },
+  runtimeConfig: {
+    public: {
+      apiBase: '/api',
+    },
   },
   alias: {
     "@": resolve(__dirname, "/")
