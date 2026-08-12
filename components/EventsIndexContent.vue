@@ -13,8 +13,8 @@ const tags = computed(() => route.query.tags ? route.query.tags.toString().split
 const keyword = computed(() => route.query.keyword ? `&keyword=${route.query.keyword}` : "");
 const queryparam = computed(() => `?page=${page.value}${tags.value}${keyword.value}`);
 
-const pagination = useLazyFetch(() => `/api/event/pagination`, { method: "get" });
-const eventList = useLazyFetch<ListEventResult[]>(() => `/api/event/list-events${queryparam.value}`, { method: "get" });
+const pagination = await useLazyFetch(() => `/api/event/pagination`, { method: "get" });
+const eventList = await useLazyFetch<ListEventResult[]>(() => `/api/event/list-events${queryparam.value}`, { method: "get" });
 
 const events = computed(() => eventList.data.value ?? [])
 
