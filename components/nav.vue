@@ -35,7 +35,7 @@ function handleParentClick(e: MouseEvent) {
 }
 
 function checkMobile() {
-  if (window.innerWidth > 800) {
+  if (window.innerWidth > 1300) {
     isMobile.value = false;
   } else {
     isMobile.value = true;
@@ -224,6 +224,76 @@ onUnmounted(() => {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+  }
+
+  .menu-group {
+    display: flex;
+    flex-direction: row;
+    gap: var(--space-s);
+    align-items: center;
+  }
+
+  .menu-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-s)
+  }
+}
+
+@media (min-width: 800px) and (max-width: 1300px) {
+
+  .line-number {
+    color: #aaa;
+    font-size: 0.7rem;
+    margin-right: 16px;
+  }
+
+  .line>h3 {
+    width: fit-content;
+    line-height: 2.0rem;
+    letter-spacing: 0.001rch;
+    font-weight: 500;
+    font-size: 0.8rem;
+    padding: 4px 4px 4px 4px;
+    margin: 0;
+    color: var(--text-color-a);
+  }
+
+  .header-link {
+    max-width: 100%;
+  }
+
+  header {
+    position: fixed;
+    top: var(--space-s);
+    left: 0px;
+    right: unset;
+    z-index: 3;
+    width: 100svw;
+    box-sizing: border-box;
+  }
+
+  .menu-box {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-s);
+    padding: 0 var(--space-s);
+    box-sizing: border-box;
+  }
+
+  .menu {
+    position: relative;
+    top: auto;
+    right: auto;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
+    gap: var(--space-s);
   }
 
   .menu-group {

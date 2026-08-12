@@ -182,7 +182,7 @@ function scrollToAbout() {
   overflow: hidden;
 }
 
-.intro-box {
+:deep(.intro-box) {
   height: 25svh;
   width: 100%;
   display: flex;
