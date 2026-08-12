@@ -182,14 +182,14 @@ function scrollToAbout() {
   overflow: hidden;
 }
 
-:deep(.intro-box) {
+.intro-box {
   height: 25svh;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  backdrop-filter: blur(64px);
   -webkit-backdrop-filter: blur(64px);
+  backdrop-filter: blur(64px);
 }
 
 .intro-content {
