@@ -51,7 +51,7 @@
   display: block;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 1000px) {
   .width-guard {
     width: 100%;
     overflow-x: hidden;

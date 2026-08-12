@@ -4,7 +4,7 @@ const isMenuShown = ref(false);
 </script>
 
 <template>
-  <div class="flex-vert center-" @click="isMenuShown = isMenuShown ? !isMenuShown : isMenuShown">
+  <div class="flex-vert center- width-guard" @click="isMenuShown = isMenuShown ? !isMenuShown : isMenuShown">
     <div class="content-box">
       <NoteHeader>
         <template #title>
@@ -18,7 +18,7 @@ const isMenuShown = ref(false);
         </template>
       </NoteHeader>
       <main>
-        <div class="article-box skeleton-body">
+        <div class="article-box">
           <div class="paragraph-skeleton" v-for="p in 5" :key="p">
             <Skelton class="line-skeleton" />
             <Skelton class="line-skeleton long" />
@@ -40,15 +40,6 @@ main {
   margin-top: 32px;
   margin-bottom: 32px;
   width: 100%;
-}
-
-.article-box {
-  display: block;
-  background-color: var(--bg-color);
-  padding: 20px;
-  max-width: 700px;
-  overflow-x: hidden;
-  width: 90%;
 }
 
 .title-skeleton {
@@ -80,6 +71,7 @@ main {
   width: 100%;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 12px;
   margin-bottom: 30px;
 }

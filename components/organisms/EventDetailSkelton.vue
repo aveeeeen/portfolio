@@ -5,7 +5,7 @@ const isMenuShown = ref(false);
 </script>
 
 <template>
-  <div class="flex-vert center-" @click="isMenuShown = isMenuShown ? !isMenuShown : isMenuShown">
+  <div class="flex-vert center- width-guard" @click="isMenuShown = isMenuShown ? !isMenuShown : isMenuShown">
     <div class="content-box">
       <EventDetailHeader>
         <template #title>
@@ -19,8 +19,8 @@ const isMenuShown = ref(false);
           <Skelton class="img-skeleton" />
         </template>
       </EventDetailHeader>
-      <main class="flex-vert center-">
-        <div class="event-box skeleton-body">
+      <main>
+        <div class="article-box">
           <div class="paragraph-skeleton" v-for="p in 10" :key="p">
             <Skelton class="line-skeleton" />
             <Skelton class="line-skeleton long" />
@@ -39,6 +39,7 @@ const isMenuShown = ref(false);
 
 <style scoped>
 main {
+  position: relative;
   margin-top: 32px;
   margin-bottom: 32px;
   width: 100%;
@@ -76,9 +77,11 @@ main {
 }
 
 .paragraph-skeleton {
+  position: relative;
   width: 100%;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 12px;
   margin-bottom: 30px;
 }
