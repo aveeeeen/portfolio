@@ -2,7 +2,6 @@ import { APIResponseError, Client } from "@notionhq/client";
 import type { EventBlocksResult, NotionBlock, ListEventResult, ListEventInput, Pagination, PaginationInput } from "./event.service.types";
 import type { PropertyFilter } from "@notionhq/client/build/src/api-endpoints";
 import { shouldBypassCache } from "../utils/cache";
-import { syncEventFlyerImage } from "./supabase-image.service";
 
 const notion = new Client({
   auth: process.env.NOTION_API_KEY
@@ -97,28 +96,21 @@ export const getManyEvents = defineCachedFunction(
 
     const sliced = rawEvents.slice(startIndex, startIndex + 10);
 
-    return await Promise.all(
-      sliced.map(async result => {
-        const props = (result as any).properties ?? {};
-        const files = props["Image"]?.files;
-        const rawImageUrl = files && files.length > 0 ? (files[0].file?.url ?? files[0].external?.url ?? "") : "";
-        const lastEditedTime = (result as any)["last_edited_time"] ?? "";
+    return sliced.map(result => {
+      const props = (result as any).properties ?? {};
+      const files = props["Image"]?.files;
+      const imageUrl = files && files.length > 0 ? (files[0].file?.url ?? files[0].external?.url ?? "") : "";
 
-        const imageUrl = rawImageUrl
-          ? await syncEventFlyerImage(result.id, rawImageUrl, lastEditedTime)
-          : "";
-
-        return {
-          id: result.id,
-          title: props["Name"]?.title?.[0]?.plain_text ?? "",
-          date: props["Date"]?.date?.start ?? "",
-          venue: props["Venue"]?.rich_text?.[0]?.plain_text ?? "",
-          imageUrl: imageUrl,
-          createdAt: (result as any)["created_time"],
-          updatedAt: (result as any)["last_edited_time"],
-        } as ListEventResult;
-      })
-    );
+      return {
+        id: result.id,
+        title: props["Name"]?.title?.[0]?.plain_text ?? "",
+        date: props["Date"]?.date?.start ?? "",
+        venue: props["Venue"]?.rich_text?.[0]?.plain_text ?? "",
+        imageUrl: imageUrl,
+        createdAt: (result as any)["created_time"],
+        updatedAt: (result as any)["last_edited_time"],
+      } as ListEventResult;
+    });
   },
   {
     maxAge: 60,
@@ -225,12 +217,7 @@ export const getEventBlocksById = defineCachedFunction(
 
     const props = (event as any).properties ?? {};
     const files = props["Image"]?.files;
-    const rawImageUrl = files && files.length > 0 ? (files[0].file?.url ?? files[0].external?.url ?? "") : "";
-    const lastEditedTime = (event as any)["last_edited_time"] ?? "";
-
-    const imageUrl = rawImageUrl
-      ? await syncEventFlyerImage(id, rawImageUrl, lastEditedTime)
-      : "";
+    const imageUrl = files && files.length > 0 ? (files[0].file?.url ?? files[0].external?.url ?? "") : "";
 
     return {
       id: id,
