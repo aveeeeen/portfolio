@@ -10,6 +10,11 @@ export default defineNuxtConfig({
   routeRules: {
     '/': { prerender: true },
   },
+  nitro: {
+    prerender: {
+      autoSubfolderIndex: false
+    }
+  },
   app: {
     baseURL: '/',
     head: {
