@@ -11,9 +11,9 @@ const tags = computed(() => route.query.tags ? route.query.tags.toString().split
 const keyword = computed(() => route.query.keyword ? `&keyword=${route.query.keyword}` : "");
 const queryparam = computed(() => `?page=${page.value}${tags.value}${keyword.value}`);
 
-const pagination = await useLazyFetch(() => `/api/blog/pagination${queryparam.value}`, { method: "get" });
-const artilceList = await useLazyFetch(() => `/api/blog/list-pages${queryparam.value}`, { method: "get" });
-const tagList = await useLazyFetch(() => `/api/blog/list-tags`, { method: "get" });
+const pagination = useFetch(() => `/api/blog/pagination${queryparam.value}`, { method: "get" });
+const artilceList = useFetch(() => `/api/blog/list-pages${queryparam.value}`, { method: "get" });
+const tagList = useFetch(() => `/api/blog/list-tags`, { method: "get" });
 
 // if (artilceList.error) {
 //   console.error(artilceList.error.value)
@@ -61,7 +61,7 @@ function getPrevContent() {
       <Border></Border>
 
       <div class="article-list">
-        <template v-if="artilceList.status.value === 'pending' || !artilceList.data.value">
+        <template v-if="!artilceList.data.value">
           <ul v-for="i in 10" :key="i">
             <li>
               <NoteSkelton></NoteSkelton>
@@ -93,7 +93,7 @@ function getPrevContent() {
   <Nav :close="isMenuShown" @isclose="(e) => isMenuShown = e">
     <Menu></Menu>
     <div>
-      <div @click.stop class="ui-box tags flex-vert gap-10" v-if="isShowTags">
+      <div @click.stop class="ui-box tags flex-vert gap-10" v-if="isShowTags || tagList.data.value">
         <div class="tag-list" v-for="tag in tagList.data.value" :key="tag.name">
           <TagButton :name="tag.name" @click="artilceList.refresh()" />
         </div>
