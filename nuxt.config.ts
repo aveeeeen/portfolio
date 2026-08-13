@@ -11,7 +11,7 @@ export default defineNuxtConfig({
     '/': { prerender: true },
   },
   nitro: {
-    preset: "cloudflare-worker",
+    preset: "cloudflare_module",
     prerender: {
       autoSubfolderIndex: false
     }
