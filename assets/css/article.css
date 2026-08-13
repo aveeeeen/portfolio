@@ -178,7 +178,7 @@
 /* Code & Syntax Highlighting Container & Language Badge */
 .article .notion-code-block-container {
   position: relative;
-  margin: 12px 0;
+  margin: 16px 0;
 }
 
 .article .notion-code-block-container pre {
@@ -187,11 +187,11 @@
 
 .article .notion-code-language {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 4px;
+  right: 4px;
   background-color: #282c34;
   color: #abb2bf;
-  padding: var(--space-s);
+  padding: var(--space-xs);
   border-radius: 8px;
   font-family: "Noto Sans Mono", monospace;
   font-size: 0.75em;
@@ -203,7 +203,7 @@
 
 .article pre {
   background-color: #282c34;
-  padding: 16px;
+  padding: 24px 8px;
   border-radius: 8px;
   font-family: "Noto Sans Mono", monospace;
   font-size: 0.9em;
