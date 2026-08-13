@@ -21,12 +21,9 @@ const event = computed(() => data.data.value ?? undefined);
 useSeoMeta({
   title: () => event.value?.title || '',
   ogTitle: () => event.value?.title || '',
-  twitterTitle: () => event.value?.title || '',
   ogImage: () => event.value?.imageUrl || '',
-  twitterImage: () => event.value?.imageUrl || '',
-  description: () => event.value ? `bravenは、${event.value.title}に出演いたします。\n開催日：${useDate(event.value.date)}。\n会場：${event.value.venue}。` : '',
-  ogDescription: () => event.value ? `bravenは、${event.value.title}に出演いたします。\n開催日：${useDate(event.value.date)}。\n会場：${event.value.venue}。` : '',
-  twitterDescription: () => event.value ? `bravenは、${event.value.title}に出演いたします。\n開催日：${useDate(event.value.date)}。\n会場：${event.value.venue}。` : '',
+  description: () => event.value ? `bravenは、${event.value.title}に出演いたします。\n開催日：${useDate(event.value.date)}\n会場：${event.value.venue}` : '',
+  ogDescription: () => event.value ? `bravenは、${event.value.title}に出演いたします。\n開催日：${useDate(event.value.date)}\n会場：${event.value.venue}` : '',
   ogUrl: () => `https://braveeeeen.vercel.app${route.fullPath}`,
 });
 
