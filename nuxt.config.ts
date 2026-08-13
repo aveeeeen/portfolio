@@ -26,9 +26,6 @@ export default defineNuxtConfig({
 
         // X (Twitter) Card 共通設定
         { name: 'twitter:card', content: 'summary_large_image' },
-        { name: 'twitter:title', content: 'portfolio site of braven' },
-        { name: 'twitter:description', content: '活動履歴やブログをまとめています。' },
-        { name: 'twitter:image', content: 'https://braveeeeen.vercel.app/ogp.png' },
       ],
     },
   },
