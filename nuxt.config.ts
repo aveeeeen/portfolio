@@ -10,12 +10,6 @@ export default defineNuxtConfig({
   routeRules: {
     '/': { prerender: true },
   },
-  nitro: {
-    preset: "cloudflare-worker",
-    prerender: {
-      autoSubfolderIndex: false
-    }
-  },
   app: {
     baseURL: '/',
     head: {
