@@ -234,7 +234,7 @@
 .article .notion-mermaid-block pre.mermaid {
   background-color: transparent;
   border: none;
-  padding: 0;
+  padding: 24px 0px;
   margin: 0;
   overflow-x: visible;
   display: flex;
