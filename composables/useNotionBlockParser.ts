@@ -5,6 +5,33 @@
  * Designed to work with blocks fetched via blocks.children.list() API.
  */
 
+import hljs from 'highlight.js';
+
+const NOTION_LANGUAGE_MAP: Record<string, string> = {
+  "c++": "cpp",
+  "c#": "csharp",
+  "f#": "fsharp",
+  "docker": "dockerfile",
+  "markup": "xml",
+  "plain text": "plaintext",
+  "objective-c": "objectivec",
+  "vb.net": "vbnet",
+  "visual basic": "vbnet",
+  "webassembly": "wasm",
+  "java/c/c++/c#": "java",
+  "reason": "reasonml",
+  "flow": "javascript",
+  "shell": "bash",
+};
+
+const mapNotionLanguageToHljs = (lang: string): string => {
+  const normalized = (lang || "").toLowerCase().trim();
+  if (NOTION_LANGUAGE_MAP[normalized]) {
+    return NOTION_LANGUAGE_MAP[normalized];
+  }
+  return normalized;
+};
+
 // Re-use a minimal type that matches what the server sends
 // (BlockObjectResponse + children). We don't import from @notionhq/client
 // because this runs on the client side.
@@ -376,12 +403,29 @@ export function useNotionBlockParser() {
   };
 
   const renderCode = (data: any): string => {
-    const richText = (data?.rich_text || []).map((rt: RichTextItem) => rt.plain_text).join("");
-    const escaped = escapeHtml(richText);
-    const language = data?.language || "";
+    const rawCode = (data?.rich_text || []).map((rt: RichTextItem) => rt.plain_text).join("");
+    const rawLanguage = (data?.language || "").toLowerCase().trim();
     const caption = renderRichText(data?.caption || []);
 
-    let html = `<pre><code class="language-${language}">${escaped}</code></pre>\n`;
+    let codeContentHtml: string;
+
+    if (rawLanguage === "mermaid") {
+      codeContentHtml = `<div class="notion-mermaid-block"><pre class="mermaid">${escapeHtml(rawCode)}</pre></div>`;
+    } else {
+      const hljsLang = mapNotionLanguageToHljs(rawLanguage);
+      if (hljsLang && hljs.getLanguage(hljsLang)) {
+        try {
+          const highlighted = hljs.highlight(rawCode, { language: hljsLang }).value;
+          codeContentHtml = `<pre class="notion-code-block"><code class="hljs language-${rawLanguage}">${highlighted}</code></pre>`;
+        } catch {
+          codeContentHtml = `<pre class="notion-code-block"><code class="hljs language-${rawLanguage}">${escapeHtml(rawCode)}</code></pre>`;
+        }
+      } else {
+        codeContentHtml = `<pre class="notion-code-block"><code class="hljs language-${rawLanguage}">${escapeHtml(rawCode)}</code></pre>`;
+      }
+    }
+
+    let html = `${codeContentHtml}\n`;
 
     if (caption) {
       html += `<div class="notion-caption">${caption}</div>\n`;

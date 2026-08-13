@@ -176,26 +176,48 @@
 }
 
 .article pre {
-  background-color: var(--code-bg-color);
+  background-color: #282c34;
   padding: 16px;
   border-radius: 8px;
   font-family: "Noto Sans Mono", monospace;
   font-size: 0.9em;
   overflow-x: auto;
-  border: 1px solid rgba(15, 15, 15, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   margin: 12px 0;
 }
 
 .article pre > code {
   background-color: transparent;
   padding: 0;
+  color: inherit;
 }
 
-.article .shiki {
+/* Mermaid Diagram Container */
+.article .notion-mermaid-block {
+  display: flex;
+  justify-content: center;
+  margin: 16px 0;
+  padding: 16px;
+  background-color: #1e1e1e;
+  border-radius: 8px;
   overflow-x: auto;
-  padding: 20px;
-  border: 1px black solid;
-  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.article .notion-mermaid-block pre.mermaid {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  overflow-x: visible;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.article .notion-mermaid-block svg {
+  max-width: 100%;
+  height: auto;
 }
 
 /* Images & Figures */
