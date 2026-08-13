@@ -189,7 +189,7 @@
 .article pre > code {
   background-color: transparent;
   padding: 0;
-  color: inherit;
+  color: #ccc;
 }
 
 /* Mermaid Diagram Container */
