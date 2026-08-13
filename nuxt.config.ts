@@ -2,6 +2,7 @@
 import { defineNuxtConfig } from 'nuxt/config'
 import { resolve } from "path";
 export default defineNuxtConfig({
+  ssr: true,
   devtools: { enabled: true },
   plugins: [
     '~/plugins/directives',
@@ -35,6 +36,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiBase: '/api',
+      siteUrl: 'https://braveeeeen.vercel.app/',
     },
   },
   alias: {
