@@ -5,6 +5,33 @@
  * Designed to work with blocks fetched via blocks.children.list() API.
  */
 
+import hljs from 'highlight.js';
+
+const NOTION_LANGUAGE_MAP: Record<string, string> = {
+  "c++": "cpp",
+  "c#": "csharp",
+  "f#": "fsharp",
+  "docker": "dockerfile",
+  "markup": "xml",
+  "plain text": "plaintext",
+  "objective-c": "objectivec",
+  "vb.net": "vbnet",
+  "visual basic": "vbnet",
+  "webassembly": "wasm",
+  "java/c/c++/c#": "java",
+  "reason": "reasonml",
+  "flow": "javascript",
+  "shell": "bash",
+};
+
+const mapNotionLanguageToHljs = (lang: string): string => {
+  const normalized = (lang || "").toLowerCase().trim();
+  if (NOTION_LANGUAGE_MAP[normalized]) {
+    return NOTION_LANGUAGE_MAP[normalized];
+  }
+  return normalized;
+};
+
 // Re-use a minimal type that matches what the server sends
 // (BlockObjectResponse + children). We don't import from @notionhq/client
 // because this runs on the client side.
@@ -81,7 +108,6 @@ export function useNotionBlockParser() {
         text = escapeHtml(item.text?.content || "");
         if (item.text?.link) {
           text = `<a href="${item.text.link.url}" target="_blank" rel="noopener noreferrer">${text}</a>`;
-          if (escapeHtml(item.text.link.url).includes("embed")) text = `<div class="notion-embed">\n  <iframe src="${item.text.link.url || ""}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
         }
       } else if (item.type === "mention") {
         text = renderMention(item);
@@ -376,12 +402,33 @@ export function useNotionBlockParser() {
   };
 
   const renderCode = (data: any): string => {
-    const richText = (data?.rich_text || []).map((rt: RichTextItem) => rt.plain_text).join("");
-    const escaped = escapeHtml(richText);
-    const language = data?.language || "";
+    const rawCode = (data?.rich_text || []).map((rt: RichTextItem) => rt.plain_text).join("");
+    const displayLanguage = (data?.language || "").trim();
+    const rawLanguage = displayLanguage.toLowerCase();
     const caption = renderRichText(data?.caption || []);
 
-    let html = `<pre><code class="language-${language}">${escaped}</code></pre>\n`;
+    const langBadgeHtml = displayLanguage ? `<span class="notion-code-language">${escapeHtml(displayLanguage)}</span>` : "";
+
+    let codeContentHtml: string;
+
+    if (rawLanguage === "mermaid") {
+      codeContentHtml = `<div class="notion-mermaid-block">${langBadgeHtml}<pre class="mermaid">${escapeHtml(rawCode)}</pre></div>`;
+    } else {
+      const hljsLang = mapNotionLanguageToHljs(rawLanguage);
+      let highlightedCode: string;
+      if (hljsLang && hljs.getLanguage(hljsLang)) {
+        try {
+          highlightedCode = hljs.highlight(rawCode, { language: hljsLang }).value;
+        } catch {
+          highlightedCode = escapeHtml(rawCode);
+        }
+      } else {
+        highlightedCode = escapeHtml(rawCode);
+      }
+      codeContentHtml = `<div class="notion-code-block-container">${langBadgeHtml}<pre class="notion-code-block"><code class="hljs language-${rawLanguage}">${highlightedCode}</code></pre></div>`;
+    }
+
+    let html = `${codeContentHtml}\n`;
 
     if (caption) {
       html += `<div class="notion-caption">${caption}</div>\n`;
@@ -696,28 +743,16 @@ export function useNotionBlockParser() {
     return `<div class="notion-embed">\n  <iframe src="${escapeHtml(targetSrc)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div class="notion-caption">${caption}</div>` : ""}\n</div>\n`;
   };
 
-  const renderLinkPreview = (data: any, ogpData?: any, embedData?: any): string => {
+  const renderLinkPreview = (data: any, ogpData?: any): string => {
     const url = data?.url || "";
     if (!url) return "";
     const caption = renderRichText(data?.caption || []);
-
-    if (url.includes("embed")) {
-      return `<div class="notion-embed">\n  <iframe src="${escapeHtml(url)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div class="notion-caption">${caption}</div>` : ""}\n</div>\n`;
-    }
 
     if (ogpData) {
       return renderOgpCard(ogpData, caption);
     }
 
-    if (embedData) {
-      return renderEmbedResult(embedData, caption, url, false);
-    }
-
-    const formatted = formatEmbedUrl(url);
-    if (formatted && formatted !== url) {
-      return `<div class="notion-embed">\n  <iframe src="${escapeHtml(formatted)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div class="notion-caption">${caption}</div>` : ""}\n</div>\n`;
-    }
-    return `<div class="notion-embed notion-bookmark-card"><a href="${url}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a>${caption ? `<div class="notion-caption">${caption}</div>` : ""}</div>\n`;
+    return `<div class="notion-embed notion-bookmark-card"><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a>${caption ? `<div class="notion-caption">${caption}</div>` : ""}</div>\n`;
   };
 
   const renderEquation = (data: any): string => {

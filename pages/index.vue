@@ -188,8 +188,8 @@ function scrollToAbout() {
   display: flex;
   flex-direction: column;
   align-items: center;
-  backdrop-filter: blur(64px);
   -webkit-backdrop-filter: blur(64px);
+  backdrop-filter: blur(64px);
 }
 
 .intro-content {

@@ -32,14 +32,9 @@ export default defineNuxtConfig({
       ],
     },
   },
-  runtimeConfig: {
-    public: {
-      apiBase: '/api',
-    },
-  },
   alias: {
     "@": resolve(__dirname, "/")
   },
-  css: ['~/assets/css/main.css', '~/assets/css/article.css', '~/assets/css/utils.css', '~/assets/css/fmdrums.css'],
+  css: ['~/assets/css/main.css', '~/assets/css/article.css', '~/assets/css/utils.css', '~/assets/css/fmdrums.css', 'highlight.js/styles/atom-one-dark.css'],
   compatibilityDate: '2024-07-12',
 })

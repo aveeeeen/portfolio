@@ -47,6 +47,10 @@ const tocLinks = computed(() => {
 
 const isToCEmpty = computed(() => tocLinks.value.length === 0);
 
+import { useMermaid } from '../composables/useMermaid';
+
+const { renderMermaid } = useMermaid();
+
 const loadTwitterWidgets = () => {
   if (process.client && parsedHtml.value?.includes('twitter-tweet')) {
     if ((window as any).twttr) {
@@ -63,11 +67,13 @@ const loadTwitterWidgets = () => {
 
 onMounted(() => {
   loadTwitterWidgets();
+  renderMermaid();
 });
 
 watch(parsedHtml, () => {
   nextTick(() => {
     loadTwitterWidgets();
+    renderMermaid();
   });
 });
 
