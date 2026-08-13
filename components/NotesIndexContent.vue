@@ -11,21 +11,17 @@ const tags = computed(() => route.query.tags ? route.query.tags.toString().split
 const keyword = computed(() => route.query.keyword ? `&keyword=${route.query.keyword}` : "");
 const queryparam = computed(() => `?page=${page.value}${tags.value}${keyword.value}`);
 
-const pagination = useFetch(() => `/api/blog/pagination${queryparam.value}`, { method: "get", lazy: true });
-const artilceList = useFetch(() => `/api/blog/list-pages${queryparam.value}`, { method: "get", lazy: true });
-const tagList = useFetch(() => `/api/blog/list-tags`, { method: "get", lazy: true });
+const pagination = await useLazyFetch(() => `/api/blog/pagination${queryparam.value}`, { method: "get" });
+const artilceList = await useLazyFetch(() => `/api/blog/list-pages${queryparam.value}`, { method: "get" });
+const tagList = await useLazyFetch(() => `/api/blog/list-tags`, { method: "get" });
 
-watch(() => artilceList.error.value, (err) => {
-  if (err) {
-    console.error(err);
-  }
-});
+// if (artilceList.error) {
+//   console.error(artilceList.error.value)
+// }
 
-watch(() => artilceList.status.value, (status) => {
-  if (status === "error" && (route.query.page || route.query.tags || route.query.keyword)) {
-    router.push("/notes");
-  }
-});
+// if (artilceList.status.value === "error" && (route.query.page || route.query.tags || route.query.keyword)) {
+//   router.push("/notes")
+// }
 
 function getNextContent() {
   if (Number(page.value) >= (pagination.data.value?.totalPages ?? 1)) return;

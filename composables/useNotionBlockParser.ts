@@ -46,8 +46,6 @@ interface NotionBlock {
 }
 
 export function useNotionBlockParser() {
-  const $img = useImage();
-
   // ─── Color helpers ───
 
   const getTextColorClass = (color: string): string => {
@@ -395,12 +393,7 @@ export function useNotionBlockParser() {
   const renderImage = (data: any): string => {
     const url = getFileUrl(data);
     const caption = renderRichText(data?.caption || []);
-    let imgUrl = url;
-    try {
-      imgUrl = $img(url, { format: 'webp' });
-    } catch {
-      imgUrl = url;
-    }
+    const imgUrl = url;
 
     return `<figure class="notion-image-figure">\n  <img src="${imgUrl}" alt="${caption ? caption.replace(/<[^>]*>/g, "") : ""}" loading="lazy" decoding="async">\n  ${caption ? `<figcaption>${caption}</figcaption>` : ""}\n</figure>\n`;
   };

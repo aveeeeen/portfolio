@@ -15,7 +15,7 @@ const eventId = computed(() => {
   const id = route.params.id;
   return id && id !== 'undefined' ? (Array.isArray(id) ? id[0] : id) : '';
 });
-const data = useFetch<EventBlocksResult>(() => (eventId.value ? `/api/event/${eventId.value}` : ''), { lazy: true });
+const data = await useLazyFetch<EventBlocksResult>(() => (eventId.value ? `/api/event/${eventId.value}` : ''));
 const event = computed(() => data.data.value ?? undefined);
 
 useSeoMeta({

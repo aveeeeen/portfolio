@@ -10,7 +10,7 @@ const isImageLoaded = ref(false);
 const imgRef = ref<HTMLImageElement | null>(null);
 
 function handleImageLoad(event?: Event) {
-  const img = (event?.target as HTMLImageElement) || ((imgRef.value as any)?.$el ?? imgRef.value);
+  const img = (event?.target as HTMLImageElement) || imgRef.value;
   if (img && img.naturalWidth && img.naturalHeight) {
     isPortrait.value = img.naturalHeight > img.naturalWidth;
   }
@@ -26,7 +26,7 @@ onMounted(() => {
     isImageLoaded.value = true;
     return;
   }
-  const imgEl = (imgRef.value as any)?.$el || imgRef.value;
+  const imgEl = imgRef.value;
   if (imgEl && imgEl.complete && imgEl.naturalWidth) {
     handleImageLoad({ target: imgEl } as any);
   }
@@ -52,8 +52,8 @@ onMounted(() => {
       </div>
     </div>
     <Skelton v-if="!isImageLoaded" class="img-skelton" :class="{ portrait: isPortrait }" />
-    <NuxtImg v-show="isImageLoaded" ref="imgRef" :src="props.imageUrl" format="webp" :class="{ portrait: isPortrait }"
-      @load="handleImageLoad" @error="handleImageError" />
+    <img v-show="isImageLoaded" ref="imgRef" :src="props.imageUrl" :class="{ portrait: isPortrait }"
+      @load="handleImageLoad" @error="handleImageError" alt="" />
   </NuxtLink>
 </template>
 

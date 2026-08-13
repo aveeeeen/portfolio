@@ -3,36 +3,6 @@ import { defineNuxtConfig } from 'nuxt/config'
 import { resolve } from "path";
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  modules: [
-    '@nuxt/image'
-  ],
-  nitro: {
-    preset: 'cloudflare-module',
-    prerender: {
-      autoSubfolderIndex: false
-    },
-  },
-  image: {
-    provider: 'ipx',
-    format: ['webp'],
-    domains: [
-      's3.us-west-2.amazonaws.com',
-      'prod-files-secure.s3.us-west-2.amazonaws.com',
-      'www.notion.so',
-      'notion.so',
-      'images.unsplash.com',
-      'localhost:3000',
-      'braveeeeen.vercel.app'
-    ],
-    quality: 50,
-    screens: {
-      'sm': 640,
-      'md': 768,
-      'lg': 1024,
-      'xl': 1280,
-      '2xl': 1536
-    },
-  },
   plugins: [
     '~/plugins/directives',
     '~/plugins/scroll-to-top.client'
@@ -60,7 +30,12 @@ export default defineNuxtConfig({
         { name: 'twitter:description', content: '活動履歴やブログをまとめています。' },
         { name: 'twitter:image', content: 'https://braveeeeen.vercel.app/ogp.png' },
       ],
-    }
+    },
+  },
+  runtimeConfig: {
+    public: {
+      apiBase: '/api',
+    },
   },
   alias: {
     "@": resolve(__dirname, "/")
