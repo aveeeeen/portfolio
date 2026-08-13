@@ -175,6 +175,32 @@
   color: #7ee787;
 }
 
+/* Code & Syntax Highlighting Container & Language Badge */
+.article .notion-code-block-container {
+  position: relative;
+  margin: 12px 0;
+}
+
+.article .notion-code-block-container pre {
+  margin: 0;
+}
+
+.article .notion-code-language {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background-color: #282c34;
+  color: #abb2bf;
+  padding: var(--space-s);
+  border-radius: 8px;
+  font-family: "Noto Sans Mono", monospace;
+  font-size: 0.75em;
+  line-height: 1;
+  user-select: none;
+  z-index: 2;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 .article pre {
   background-color: #282c34;
   padding: 16px;
@@ -194,6 +220,7 @@
 
 /* Mermaid Diagram Container */
 .article .notion-mermaid-block {
+  position: relative;
   display: flex;
   justify-content: center;
   margin: 16px 0;

@@ -404,25 +404,29 @@ export function useNotionBlockParser() {
 
   const renderCode = (data: any): string => {
     const rawCode = (data?.rich_text || []).map((rt: RichTextItem) => rt.plain_text).join("");
-    const rawLanguage = (data?.language || "").toLowerCase().trim();
+    const displayLanguage = (data?.language || "").trim();
+    const rawLanguage = displayLanguage.toLowerCase();
     const caption = renderRichText(data?.caption || []);
+
+    const langBadgeHtml = displayLanguage ? `<span class="notion-code-language">${escapeHtml(displayLanguage)}</span>` : "";
 
     let codeContentHtml: string;
 
     if (rawLanguage === "mermaid") {
-      codeContentHtml = `<div class="notion-mermaid-block"><pre class="mermaid">${escapeHtml(rawCode)}</pre></div>`;
+      codeContentHtml = `<div class="notion-mermaid-block">${langBadgeHtml}<pre class="mermaid">${escapeHtml(rawCode)}</pre></div>`;
     } else {
       const hljsLang = mapNotionLanguageToHljs(rawLanguage);
+      let highlightedCode: string;
       if (hljsLang && hljs.getLanguage(hljsLang)) {
         try {
-          const highlighted = hljs.highlight(rawCode, { language: hljsLang }).value;
-          codeContentHtml = `<pre class="notion-code-block"><code class="hljs language-${rawLanguage}">${highlighted}</code></pre>`;
+          highlightedCode = hljs.highlight(rawCode, { language: hljsLang }).value;
         } catch {
-          codeContentHtml = `<pre class="notion-code-block"><code class="hljs language-${rawLanguage}">${escapeHtml(rawCode)}</code></pre>`;
+          highlightedCode = escapeHtml(rawCode);
         }
       } else {
-        codeContentHtml = `<pre class="notion-code-block"><code class="hljs language-${rawLanguage}">${escapeHtml(rawCode)}</code></pre>`;
+        highlightedCode = escapeHtml(rawCode);
       }
+      codeContentHtml = `<div class="notion-code-block-container">${langBadgeHtml}<pre class="notion-code-block"><code class="hljs language-${rawLanguage}">${highlightedCode}</code></pre></div>`;
     }
 
     let html = `${codeContentHtml}\n`;
