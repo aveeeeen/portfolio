@@ -108,7 +108,6 @@ export function useNotionBlockParser() {
         text = escapeHtml(item.text?.content || "");
         if (item.text?.link) {
           text = `<a href="${item.text.link.url}" target="_blank" rel="noopener noreferrer">${text}</a>`;
-          if (escapeHtml(item.text.link.url).includes("embed")) text = `<div class="notion-embed">\n  <iframe src="${item.text.link.url || ""}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
         }
       } else if (item.type === "mention") {
         text = renderMention(item);
@@ -744,28 +743,16 @@ export function useNotionBlockParser() {
     return `<div class="notion-embed">\n  <iframe src="${escapeHtml(targetSrc)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div class="notion-caption">${caption}</div>` : ""}\n</div>\n`;
   };
 
-  const renderLinkPreview = (data: any, ogpData?: any, embedData?: any): string => {
+  const renderLinkPreview = (data: any, ogpData?: any): string => {
     const url = data?.url || "";
     if (!url) return "";
     const caption = renderRichText(data?.caption || []);
-
-    if (url.includes("embed")) {
-      return `<div class="notion-embed">\n  <iframe src="${escapeHtml(url)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div class="notion-caption">${caption}</div>` : ""}\n</div>\n`;
-    }
 
     if (ogpData) {
       return renderOgpCard(ogpData, caption);
     }
 
-    if (embedData) {
-      return renderEmbedResult(embedData, caption, url, false);
-    }
-
-    const formatted = formatEmbedUrl(url);
-    if (formatted && formatted !== url) {
-      return `<div class="notion-embed">\n  <iframe src="${escapeHtml(formatted)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div class="notion-caption">${caption}</div>` : ""}\n</div>\n`;
-    }
-    return `<div class="notion-embed notion-bookmark-card"><a href="${url}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a>${caption ? `<div class="notion-caption">${caption}</div>` : ""}</div>\n`;
+    return `<div class="notion-embed notion-bookmark-card"><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a>${caption ? `<div class="notion-caption">${caption}</div>` : ""}</div>\n`;
   };
 
   const renderEquation = (data: any): string => {
