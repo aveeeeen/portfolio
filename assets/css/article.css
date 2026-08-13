@@ -242,6 +242,10 @@
   width: 100%;
 }
 
+pre.mermaid p {
+  color: #ccc;
+}
+
 .article .notion-mermaid-block svg {
   max-width: 100%;
   height: auto;
