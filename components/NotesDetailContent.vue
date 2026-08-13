@@ -18,10 +18,8 @@ const { data: article, status } = useFetch<any>(() => (articleId.value ? `/api/a
 useSeoMeta({
   title: () => article.value?.title || '',
   ogTitle: () => article.value?.title || '',
-  twitterTitle: () => article.value?.title || '',
   description: () => article.value?.excerpt || '',
   ogDescription: () => article.value?.excerpt || '',
-  twitterDescription: () => article.value?.excerpt || '',
   ogUrl: () => `https://braveeeeen.vercel.app${route.fullPath}`,
 });
 
