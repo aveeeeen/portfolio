@@ -66,12 +66,22 @@ export async function convertBufferToWebp(inputBuffer: ArrayBuffer | Buffer): Pr
     }
 
     const webpBytes = imageToConvert.get_bytes_webp();
+
+    // CRITICAL: Immediately release WASM memory as soon as WebP bytes are extracted!
+    imageToConvert.free();
+    if (resizedImage) {
+      resizedImage = null;
+    }
+    if (photonImage) {
+      photonImage = null;
+    }
+
     return Buffer.from(webpBytes);
   } catch (err) {
     console.error("Photon WebP conversion error:", err);
     throw err;
   } finally {
-    // CRITICAL: Ensure any remaining WASM images are freed
+    // CRITICAL: Fallback cleanup if error occurred before manual free
     if (resizedImage) {
       resizedImage.free();
       resizedImage = null;
