@@ -72,6 +72,13 @@ interface NotionBlock {
   [key: string]: any;
 }
 
+export interface TocItem {
+  id: string;
+  text: string;
+  depth: number;
+  children: TocItem[];
+}
+
 export function useNotionBlockParser() {
   // ─── Color helpers ───
 
@@ -801,7 +808,7 @@ export function useNotionBlockParser() {
 
   // ─── Table of Contents extraction ───
 
-  const getTableOfContents = (blocks: NotionBlock[]) => {
+  const getTableOfContents = (blocks: NotionBlock[]): TocItem[] => {
     const flat: { id: string; text: string; depth: number }[] = [];
 
     const extractHeadings = (blockList: NotionBlock[]) => {
@@ -814,22 +821,34 @@ export function useNotionBlockParser() {
           const id = block.id;
           flat.push({ id, text: plainText, depth });
         }
-        // Don't recurse into children for TOC (headings are top-level)
       }
     };
 
     extractHeadings(blocks);
 
-    const rootLinks: any[] = [];
-    let currentRoot: any = null;
+    const rootLinks: TocItem[] = [];
+    const stack: TocItem[] = [];
 
     for (const item of flat) {
-      if (item.depth === 1 || item.depth === 2) {
-        currentRoot = { id: item.id, text: item.text, children: [] };
-        rootLinks.push(currentRoot);
-      } else if (item.depth === 3 && currentRoot) {
-        currentRoot.children.push({ id: item.id, text: item.text });
+      const node: TocItem = {
+        id: item.id,
+        text: item.text,
+        depth: item.depth,
+        children: []
+      };
+
+      // Pop ancestors that have depth >= current item's depth
+      while (stack.length > 0 && stack[stack.length - 1].depth >= item.depth) {
+        stack.pop();
       }
+
+      if (stack.length === 0) {
+        rootLinks.push(node);
+      } else {
+        stack[stack.length - 1].children.push(node);
+      }
+
+      stack.push(node);
     }
 
     return rootLinks;
