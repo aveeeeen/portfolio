@@ -1,7 +1,4 @@
-import decodePng, { init as initPngDecode } from "@jsquash/png/decode.js";
-import decodeJpeg, { init as initJpegDecode } from "@jsquash/jpeg/decode.js";
-import decodeWebp, { init as initWebpDecode } from "@jsquash/webp/decode.js";
-import encodeWebp, { init as initWebpEncode } from "@jsquash/webp/encode.js";
+import { PhotonImage } from "@cf-wasm/photon";
 import { getSupabaseClient } from "./supabase";
 
 const BUCKET_NAME = "event-images";
@@ -11,86 +8,46 @@ export interface ProcessedFlyerResult {
   publicUrl: string;
 }
 
-let isWasmInitialized = false;
-
 /**
- * Manually initializes jSquash WASM modules with explicitly imported WASM binaries.
- * Ensures compatibility with Cloudflare Workers (where Wrangler requires WASM imports)
- * as well as Node.js development environments.
- */
-export async function initCodecs(): Promise<void> {
-  if (isWasmInitialized) return;
-
-  try {
-    const [pngWasm, jpegWasm, webpDecWasm, webpEncWasm] = await Promise.all([
-      import("@jsquash/png/codec/pkg/squoosh_png_bg.wasm"),
-      import("@jsquash/jpeg/codec/dec/mozjpeg_dec.wasm"),
-      import("@jsquash/webp/codec/dec/webp_dec.wasm"),
-      import("@jsquash/webp/codec/enc/webp_enc.wasm")
-    ]);
-
-    await Promise.all([
-      initPngDecode(pngWasm.default || pngWasm),
-      initJpegDecode(jpegWasm.default || jpegWasm),
-      initWebpDecode(webpDecWasm.default || webpDecWasm),
-      initWebpEncode(webpEncWasm.default || webpEncWasm)
-    ]);
-    isWasmInitialized = true;
-  } catch {
-    // In standalone Node.js test environment where .wasm extension imports require explicit initialization:
-    isWasmInitialized = true;
-  }
-}
-
-/**
- * Converts an image buffer (PNG, JPEG, WebP) to WebP format using jSquash (WASM).
- * Fully compatible with Cloudflare Workers, Vercel Edge, and Node.js environments.
+ * Converts an image buffer (PNG, JPEG, WebP) to WebP format using @cf-wasm/photon.
+ * Explicitly manages WebAssembly linear memory via photonImage.free() to ensure strict compliance
+ * with Cloudflare Workers' 128MB RAM limit.
  */
 export async function convertBufferToWebp(inputBuffer: ArrayBuffer | Buffer): Promise<Buffer> {
-  await initCodecs();
-
-  let arrayBuffer: ArrayBuffer;
-  if (inputBuffer instanceof ArrayBuffer) {
-    arrayBuffer = inputBuffer;
+  let uint8: Uint8Array;
+  if (inputBuffer instanceof Uint8Array) {
+    uint8 = inputBuffer;
+  } else if (inputBuffer instanceof ArrayBuffer) {
+    uint8 = new Uint8Array(inputBuffer);
   } else if (Buffer.isBuffer(inputBuffer)) {
-    arrayBuffer = inputBuffer.buffer.slice(
+    uint8 = new Uint8Array(
+      inputBuffer.buffer,
       inputBuffer.byteOffset,
-      inputBuffer.byteOffset + inputBuffer.byteLength
+      inputBuffer.byteLength
     );
   } else {
-    arrayBuffer = new Uint8Array(inputBuffer).buffer;
+    uint8 = new Uint8Array(inputBuffer);
   }
 
-  const uint8 = new Uint8Array(arrayBuffer);
-  let imageData: ImageData;
-
-  // Magic bytes format detection
-  const isPng = uint8[0] === 0x89 && uint8[1] === 0x50 && uint8[2] === 0x4e && uint8[3] === 0x47;
-  const isJpeg = uint8[0] === 0xff && uint8[1] === 0xd8 && uint8[2] === 0xff;
-  const isWebp = uint8[0] === 0x52 && uint8[1] === 0x49 && uint8[2] === 0x46 && uint8[3] === 0x46; // RIFF
-
-  if (isPng) {
-    imageData = await decodePng(arrayBuffer);
-  } else if (isJpeg) {
-    imageData = await decodeJpeg(arrayBuffer);
-  } else if (isWebp) {
-    imageData = await decodeWebp(arrayBuffer);
-  } else {
-    // Try JPEG first, then PNG as fallback
-    try {
-      imageData = await decodeJpeg(arrayBuffer);
-    } catch {
-      imageData = await decodePng(arrayBuffer);
+  let photonImage: PhotonImage | null = null;
+  try {
+    photonImage = PhotonImage.new_from_byteslice(uint8);
+    const webpBytes = photonImage.get_bytes_webp();
+    return Buffer.from(webpBytes);
+  } catch (err) {
+    console.error("Photon WebP conversion error:", err);
+    throw err;
+  } finally {
+    // CRITICAL: Explicitly release WebAssembly linear memory to prevent RAM leaks
+    if (photonImage) {
+      photonImage.free();
     }
   }
-
-  const webpArrayBuffer = await encodeWebp(imageData, { quality: 80 });
-  return Buffer.from(webpArrayBuffer);
 }
 
 /**
  * Utility / Infrastructure Layer for Media Side-Effects.
- * Fetches image buffers from Notion, converts them to WebP via jSquash (WASM),
+ * Fetches image buffers from Notion, converts them to WebP via @cf-wasm/photon,
  * and uploads them to Supabase Storage.
  */
 export async function convertAndUploadFlyer(
@@ -116,13 +73,13 @@ export async function convertAndUploadFlyer(
 
     const arrayBuffer = await response.arrayBuffer();
 
-    // 2. Convert buffer to WebP using jSquash (WASM)
+    // 2. Convert buffer to WebP using @cf-wasm/photon
     let webpBuffer: Buffer;
     let contentType = "image/webp";
     try {
       webpBuffer = await convertBufferToWebp(arrayBuffer);
     } catch (conversionErr) {
-      console.error(`Failed to convert image to WebP using jSquash for event ${eventId}:`, conversionErr);
+      console.error(`Failed to convert image to WebP using Photon for event ${eventId}:`, conversionErr);
       webpBuffer = Buffer.from(arrayBuffer);
       contentType = response.headers.get("content-type") || "image/jpeg";
     }

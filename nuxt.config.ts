@@ -1,7 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import { defineNuxtConfig } from 'nuxt/config'
 import { resolve } from "path";
-import wasm from 'vite-plugin-wasm';
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
@@ -11,11 +10,6 @@ export default defineNuxtConfig({
   ],
   routeRules: {
     '/': { prerender: true },
-  },
-  vite: {
-    plugins: [
-      wasm()
-    ]
   },
   nitro: {
     preset: "cloudflare_module",
