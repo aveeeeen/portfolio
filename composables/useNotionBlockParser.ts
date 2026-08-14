@@ -449,7 +449,7 @@ export function useNotionBlockParser() {
     const caption = renderRichText(data?.caption || []);
     const imgUrl = url;
 
-    return `<figure class="notion-image-figure">\n  <img src="${imgUrl}" alt="${caption ? caption.replace(/<[^>]*>/g, "") : ""}" loading="lazy" decoding="async" onload="if(this.naturalHeight>this.naturalWidth)this.classList.add('portrait')">\n  ${caption ? `<figcaption>${caption}</figcaption>` : ""}\n</figure>\n`;
+    return `<figure class="notion-image-figure">\n  <img src="${imgUrl}" alt="${caption ? caption.replace(/<[^>]*>/g, "") : ""}" loading="lazy" decoding="async" onload="if(this.naturalHeight>this.naturalWidth&&this.naturalHeight>600)this.classList.add('portrait')">\n  ${caption ? `<figcaption>${caption}</figcaption>` : ""}\n</figure>\n`;
   };
 
   const parseTimestampToSeconds = (ts: string): number | null => {

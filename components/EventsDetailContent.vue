@@ -54,12 +54,12 @@ const checkArticleImagesPortrait = () => {
     const images = document.querySelectorAll<HTMLImageElement>('.article img');
     images.forEach(img => {
       if (img.complete && img.naturalWidth && img.naturalHeight) {
-        if (img.naturalHeight > img.naturalWidth) {
+        if (img.naturalHeight > img.naturalWidth && img.naturalHeight > 600) {
           img.classList.add('portrait');
         }
       } else {
         img.addEventListener('load', () => {
-          if (img.naturalHeight > img.naturalWidth) {
+          if (img.naturalHeight > img.naturalWidth && img.naturalHeight > 600) {
             img.classList.add('portrait');
           }
         }, { once: true });
