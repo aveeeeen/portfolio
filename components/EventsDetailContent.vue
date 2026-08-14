@@ -153,7 +153,7 @@ watch(isMenuShown, () => {
   </template>
 </template>
 
-<style>
+<style scoped>
 .toc {
   max-width: 300px;
   max-height: 250px;
@@ -177,7 +177,7 @@ watch(isMenuShown, () => {
   list-style: none;
 }
 
-li {
+.table-li {
   padding-top: 6px;
 }
 
