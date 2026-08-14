@@ -70,6 +70,10 @@ img {
   height: auto;
 }
 
+.mermaidTooltip {
+  display: none;
+}
+
 .border {
   width: 2000px;
   height: 2px;
