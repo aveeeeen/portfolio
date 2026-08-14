@@ -12,7 +12,7 @@ export interface ProcessedFlyerResult {
 /**
  * Converts an image buffer (PNG, JPEG, WebP) to WebP format using @cf-wasm/photon.
  * - If the long edge (width or height) is 1200px or greater, it resizes the image to 1200px long edge while preserving aspect ratio.
- * - Explicitly manages WebAssembly linear memory via photonImage.free() to ensure strict compliance with Cloudflare Workers' 128MB RAM limit.
+ * - CRITICAL: Immediately frees the original large image from WASM memory right after resizing to minimize memory peak and avoid Cloudflare Workers' 128MB RAM limit.
  */
 export async function convertBufferToWebp(inputBuffer: ArrayBuffer | Buffer): Promise<Buffer> {
   let uint8: Uint8Array;
@@ -55,7 +55,13 @@ export async function convertBufferToWebp(inputBuffer: ArrayBuffer | Buffer): Pr
         targetWidth = Math.round((origWidth * MAX_LONG_EDGE) / origHeight);
       }
 
-      resizedImage = resize(photonImage, targetWidth, targetHeight, SamplingFilter.Lanczos3);
+      // Resize using Triangle (bilinear) filter for optimal memory footprint and speed
+      resizedImage = resize(photonImage, targetWidth, targetHeight, SamplingFilter.Triangle);
+
+      // CRITICAL: Free original large image from WASM memory IMMEDIATELY before generating WebP!
+      photonImage.free();
+      photonImage = null;
+
       imageToConvert = resizedImage;
     }
 
@@ -65,12 +71,14 @@ export async function convertBufferToWebp(inputBuffer: ArrayBuffer | Buffer): Pr
     console.error("Photon WebP conversion error:", err);
     throw err;
   } finally {
-    // CRITICAL: Explicitly release WebAssembly linear memory heap to prevent memory leaks in Workers
+    // CRITICAL: Ensure any remaining WASM images are freed
     if (resizedImage) {
       resizedImage.free();
+      resizedImage = null;
     }
     if (photonImage) {
       photonImage.free();
+      photonImage = null;
     }
   }
 }
