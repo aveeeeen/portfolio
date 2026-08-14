@@ -8,16 +8,20 @@
     "preview": "nuxt preview"
   },
   "dependencies": {
+    "@jsquash/jpeg": "^1.6.0",
+    "@jsquash/png": "^3.1.1",
+    "@jsquash/webp": "^1.5.0",
     "@notionhq/client": "^5.24.0",
     "@supabase/supabase-js": "^2.112.3",
     "highlight.js": "^11.11.2",
     "mermaid": "^11.16.1",
     "nuxt": "^4.5.2",
-    "sharp": "^0.35.3",
     "tone": "^15.1.22",
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "typescript": "^5.9.3"
+    "tsx": "^4.23.12",
+    "typescript": "^5.9.3",
+    "vite-plugin-wasm": "^3.6.0"
   }
 }

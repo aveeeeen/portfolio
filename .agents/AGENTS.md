@@ -12,3 +12,7 @@
    - **Pure Filtering**: Compare timestamps in memory to produce a clear list of valid cached items vs items requiring update.
    - **Targeted Side-Effects**: Execute heavy side-effects (image processing & storage uploads) ONLY on the filtered subset requiring update.
    - **Bulk Write**: Upsert updated metadata records in a single bulk operation.
+
+## Package Management Rule
+
+- Always use `pnpm` (`pnpm add <package>`, `pnpm install`) for package installation and management in this repository.
