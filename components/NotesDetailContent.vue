@@ -49,6 +49,25 @@ import { useMermaid } from '../composables/useMermaid';
 
 const { renderMermaid } = useMermaid();
 
+const checkArticleImagesPortrait = () => {
+  if (process.client) {
+    const images = document.querySelectorAll<HTMLImageElement>('.article img');
+    images.forEach(img => {
+      if (img.complete && img.naturalWidth && img.naturalHeight) {
+        if (img.naturalHeight > img.naturalWidth) {
+          img.classList.add('portrait');
+        }
+      } else {
+        img.addEventListener('load', () => {
+          if (img.naturalHeight > img.naturalWidth) {
+            img.classList.add('portrait');
+          }
+        }, { once: true });
+      }
+    });
+  }
+};
+
 const loadTwitterWidgets = () => {
   if (process.client && parsedHtml.value?.includes('twitter-tweet')) {
     if ((window as any).twttr) {
@@ -66,12 +85,14 @@ const loadTwitterWidgets = () => {
 onMounted(() => {
   loadTwitterWidgets();
   renderMermaid();
+  checkArticleImagesPortrait();
 });
 
 watch(parsedHtml, () => {
   nextTick(() => {
     loadTwitterWidgets();
     renderMermaid();
+    checkArticleImagesPortrait();
   });
 });
 
