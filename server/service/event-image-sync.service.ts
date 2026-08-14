@@ -14,7 +14,7 @@ export interface SyncTargetEvent {
  * 1. Bulk query Supabase DB for all event IDs in single SELECT (1 query).
  * 2. Compare timestamps in pure business logic.
  * 3. Separate cached valid items vs stale/missing items requiring upload.
- * 4. Execute image processing (WebP conversion + Storage upload) ONLY on stale items.
+ * 4. Execute image processing (WebP conversion + Storage upload) SEQUENTIALLY to keep memory usage under 128MB limit in Cloudflare Workers.
  * 5. Bulk upsert updated metadata records into DB.
  */
 export const EventImageSyncService = {
@@ -58,27 +58,25 @@ export const EventImageSyncService = {
       staleEvents.push(event);
     }
 
-    // 4. Side-Effects: Process media conversion and Storage uploads for stale events only
+    // 4. Side-Effects: Process media conversion sequentially to protect Cloudflare Workers 128MB RAM limit
     if (staleEvents.length > 0) {
       const dbRecordsToUpsert: EventImageRecord[] = [];
 
-      await Promise.all(
-        staleEvents.map(async event => {
-          const processed = await convertAndUploadFlyer(event.id, event.rawImageUrl);
-          if (processed) {
-            urlMap.set(event.id, processed.publicUrl);
-            dbRecordsToUpsert.push({
-              event_id: event.id,
-              storage_path: processed.storagePath,
-              public_url: processed.publicUrl,
-              notion_updated_at: new Date(event.updatedAt).toISOString()
-            });
-          } else {
-            // Fallback to raw Notion URL if upload fails
-            urlMap.set(event.id, event.rawImageUrl);
-          }
-        })
-      );
+      for (const event of staleEvents) {
+        const processed = await convertAndUploadFlyer(event.id, event.rawImageUrl);
+        if (processed) {
+          urlMap.set(event.id, processed.publicUrl);
+          dbRecordsToUpsert.push({
+            event_id: event.id,
+            storage_path: processed.storagePath,
+            public_url: processed.publicUrl,
+            notion_updated_at: new Date(event.updatedAt).toISOString()
+          });
+        } else {
+          // Fallback to raw Notion URL if upload fails
+          urlMap.set(event.id, event.rawImageUrl);
+        }
+      }
 
       // 5. Bulk upsert updated metadata records into Supabase DB
       if (dbRecordsToUpsert.length > 0) {
