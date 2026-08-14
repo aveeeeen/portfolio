@@ -67,8 +67,8 @@ onMounted(() => {
     <slot name="img">
       <template v-if="props.imageUrl">
         <Skelton v-if="!isImageLoaded" class="img-skelton" :class="{ portrait: isPortrait }" />
-        <img v-show="isImageLoaded" ref="imgRef" :src="props.imageUrl"
-          :class="{ portrait: isPortrait }" @load="handleImageLoad" @error="handleImageError" alt="" />
+        <img v-show="isImageLoaded" ref="imgRef" :src="props.imageUrl" :class="{ portrait: isPortrait }"
+          @load="handleImageLoad" @error="handleImageError" alt="" />
       </template>
     </slot>
   </div>
@@ -124,8 +124,8 @@ onMounted(() => {
 }
 
 .note-header p,
-.note-header h1 {
-  line-height: 1.3;
+h1 {
+  line-height: 100%;
   margin: 0;
 }
 

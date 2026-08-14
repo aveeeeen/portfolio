@@ -11,7 +11,7 @@
   </div>
 </template>
 
-<style scoped>
+<style>
 .note-header {
   padding: 30px 20px;
   border-radius: 20px;
@@ -21,8 +21,8 @@
 }
 
 .note-header p,
-.note-header h1 {
-  line-height: 1.3;
+h1 {
+  line-height: 100%;
   margin: 0;
 }
 
