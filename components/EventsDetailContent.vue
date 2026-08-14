@@ -126,21 +126,21 @@ watch(isMenuShown, () => {
       <Menu></Menu>
       <div v-if="!isToCEmpty">
         <div @click.stop class="ui-box toc relative" v-if="isShowToC">
-          <ul class="table-ul">
-            <li class="table-li" v-for="h1 of tocLinks" :key="h1.id">
+          <ol class="root-table-ul">
+            <li class="table-li toc-spacing" v-for="h1 of tocLinks" :key="h1.id">
               <a @click.prevent="scrollToId(h1.id)" :href="`#${h1.id}`">{{ h1.text }}</a>
-              <ul v-if="h1.children && h1.children.length > 0" class="table-ul">
+              <ol v-if="h1.children && h1.children.length > 0" class="table-ul">
                 <li class="table-li" v-for="h2 of h1.children" :key="h2.id">
                   <a @click.prevent="scrollToId(h2.id)" :href="`#${h2.id}`">{{ h2.text }}</a>
-                  <ul v-if="h2.children && h2.children.length > 0" class="table-ul">
+                  <ol v-if="h2.children && h2.children.length > 0" class="table-ul">
                     <li class="table-li" v-for="h3 of h2.children" :key="h3.id">
                       <a @click.prevent="scrollToId(h3.id)" :href="`#${h3.id}`">{{ h3.text }}</a>
                     </li>
-                  </ul>
+                  </ol>
                 </li>
-              </ul>
+              </ol>
             </li>
-          </ul>
+          </ol>
         </div>
         <div v-else class="ui-box relative">
           <a @click.stop="isShowToC = !isShowToC">Table of Contents</a>
@@ -161,14 +161,24 @@ watch(isMenuShown, () => {
   overflow-x: scroll;
 }
 
-.table-ul {
-  padding-left: 15px;
+.toc-spacing {
+  padding: 8px 0;
+  margin: 0;
+}
+
+.root-table-ul {
+  padding-left: 12px;
   list-style: none;
   margin: 0;
 }
 
-.table-li {
-  padding-bottom: 5px;
+.table-ul {
+  padding-left: 24px;
+  list-style: none;
+}
+
+li {
+  padding-top: 6px;
 }
 
 main {
