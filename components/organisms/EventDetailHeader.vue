@@ -124,8 +124,8 @@ onMounted(() => {
 }
 
 .note-header p,
-h1 {
-  line-height: 100%;
+.note-header h1 {
+  line-height: 1.3;
   margin: 0;
 }
 
