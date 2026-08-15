@@ -21,7 +21,7 @@
   box-sizing: border-box;
 }
 
-.note-header p,
+.note-header :deep(p),
 h1 {
   line-height: 100%;
   margin: 0;

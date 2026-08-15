@@ -123,8 +123,7 @@ onMounted(() => {
   border-color: color-mix(in srgb, slateblue 60%, white 30%);
 }
 
-.note-header p,
-h1 {
+.note-header p {
   line-height: 100%;
   margin: 0;
 }

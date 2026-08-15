@@ -4,8 +4,8 @@
 @import url("./article.css");
 
 :root {
-  --html-bg-color: #ededfd;
-  --bg-color: #ededfd;
+  --html-bg-color: #ededf8;
+  --bg-color: #ededf8;
   --tile-bg-color: #ddd;
   --ui-bg-color: white;
   --text-color: #222;
@@ -163,12 +163,14 @@ iframe {
   padding: var(--space-s);
   max-width: calc(var(--base-spacing) * 10 * 11);
   width: 90%;
-  min-height: 60svh;
+  min-height: calc(100svh - 32px - 108px - 258px);
+  /* min-height: 80svh; */
   margin: 0 0px;
   overflow-x: hidden;
   word-break: break-all;
   border-radius: var(--content-radius);
   margin-top: 56px;
+  box-sizing: border-box;
 }
 
 .content-box h1 {
@@ -240,7 +242,7 @@ li {
     margin: 0px 0px;
     padding: var(--space-m);
     overflow-x: hidden;
-    width: 90%;
+    width: 100%;
     margin-top: 56px;
   }
 

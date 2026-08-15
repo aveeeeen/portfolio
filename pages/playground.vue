@@ -1,5 +1,4 @@
 <script setup>
-import FmDrumPage from './FmDrumPage.vue';
 const isMenuShown = ref(false)
 
 useSeoMeta({
@@ -19,10 +18,7 @@ useSeoMeta({
       <p>
         実験や趣味で作っているものです。
       </p>
-      <ContentCard>
-        <h3>Fm Drum Kit</h3>
-        <p>tone.jsで作られているfmベースのドラムシンセです。意外と遊べます。</p>
-        <NuxtLink to="./fmdrumpage"> Fm Drum</NuxtLink>
+      <ContentCard title="Fm Drim Kit" description="tone.jsで作られているfmベースのドラムシンセです。意外と遊べます。" path="./fmdrumkit">
       </ContentCard>
 
     </div>
