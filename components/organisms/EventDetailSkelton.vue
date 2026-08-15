@@ -26,7 +26,7 @@ function closeModal() {
       </EventDetailHeader>
       <main>
         <div class="article-box">
-          <div class="paragraph-skeleton" v-for="p in 10" :key="p">
+          <div class="paragraph-skeleton" v-for="p in 5" :key="p">
             <Skelton class="line-skeleton" />
             <Skelton class="line-skeleton long" />
             <Skelton class="line-skeleton short" />
