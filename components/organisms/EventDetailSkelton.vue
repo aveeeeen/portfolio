@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import EventDetailHeader from './EventDetailHeader.vue';
-const isMenuShown = ref(false);
+const isMenuShown = ref(true);
 
+function closeModal() {
+  if (isMenuShown.value) {
+    isMenuShown.value = false;
+  }
+}
 </script>
 
 <template>
-  <div class="flex-vert center- width-guard" @click="isMenuShown = isMenuShown ? !isMenuShown : isMenuShown">
-    <div class="content-box">
+  <div class="flex-vert center- width-guard" @click="closeModal">
+    <div class="content-box flex-vert center-">
       <EventDetailHeader>
         <template #title>
           <Skelton class="title-skeleton" />
@@ -31,6 +36,7 @@ const isMenuShown = ref(false);
       </main>
     </div>
   </div>
+  <div class="bottom"></div>
   <Footer></Footer>
   <Nav :close="isMenuShown" @isclose="(e) => (isMenuShown = e)">
     <Menu></Menu>
@@ -43,6 +49,7 @@ main {
   margin-top: 32px;
   margin-bottom: 32px;
   width: 100%;
+  max-width: 800px;
 }
 
 .title-skeleton {

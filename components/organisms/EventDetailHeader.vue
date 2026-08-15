@@ -112,7 +112,7 @@ onMounted(() => {
   border-radius: 20px;
   border: color-mix(in srgb, slateblue 60%, white 30%) solid;
   max-width: 800px;
-  width: 90%;
+  width: 100%;
   box-sizing: border-box;
 }
 

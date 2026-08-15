@@ -201,7 +201,7 @@ iframe {
   padding: var(--space-s);
   max-width: 800px;
   overflow-x: hidden;
-  width: 90%;
+  width: 100%;
 }
 
 .center-hori {

@@ -104,7 +104,7 @@ img.portrait {
   flex-direction: row;
   justify-content: space-between;
   gap: 60px;
-  padding: 16px 4px;
+  padding: 16px 0 16px 4px;
   box-sizing: border-box;
 }
 
@@ -114,12 +114,14 @@ img.portrait {
   gap: 8px;
   align-items: flex-start;
   width: 242px;
+  max-width: 100%;
 }
 
 h2 {
   line-height: 1.0;
   margin: 0px;
   width: 420px;
+  max-width: 100%;
 }
 
 a:hover h2 {
@@ -130,6 +132,7 @@ h3 {
   font-size: 1rem;
   line-height: 1.0;
   margin: 0;
+  max-width: 100%;
 }
 
 a:hover h3 {

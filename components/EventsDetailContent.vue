@@ -134,7 +134,7 @@ watch(isMenuShown, () => {
   <EventDetailSkelton v-if="!event" />
   <template v-else>
     <div class="flex-vert center- width-guard" @click="closeModal">
-      <div class="content-box">
+      <div class="content-box flex-vert center-">
         <EventDetailHeader :title="event.title" :date="event.date" :venue="event.venue" :image-url="event.imageUrl" />
         <main>
           <div class="article-box article" v-html="parsedHtml"></div>
@@ -206,5 +206,6 @@ main {
   margin-top: 32px;
   margin-bottom: 32px;
   width: 100%;
+  max-width: 800px;
 }
 </style>

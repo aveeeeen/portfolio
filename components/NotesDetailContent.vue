@@ -134,7 +134,7 @@ watch(isMenuShown, () => {
   <NoteDetailSkelton v-if="status === 'pending'" />
   <template v-else>
     <div class="flex-vert center- width-guard" @click="closeModal">
-      <div class="content-box">
+      <div class="content-box flex-vert center-">
         <NoteHeader>
           <template #title>
             <h1>{{ article.title }}</h1>
@@ -228,5 +228,6 @@ main {
   margin-top: 32px;
   margin-bottom: 32px;
   width: 100%;
+  max-width: 800px;
 }
 </style>
