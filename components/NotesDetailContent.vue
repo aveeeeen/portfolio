@@ -20,7 +20,7 @@ useSeoMeta({
   ogTitle: () => article.value?.title || '',
   description: () => article.value?.excerpt || '',
   ogDescription: () => article.value?.excerpt || '',
-  ogUrl: () => `https://braveeeeen.vercel.app${route.fullPath}`,
+  ogUrl: () => `https://braveeeeen.com${route.fullPath}`,
 });
 
 defineProps(["imgSrc"]);

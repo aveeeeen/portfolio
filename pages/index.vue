@@ -7,7 +7,7 @@ const isMenuShown = ref(false);
 useTheme();
 
 useSeoMeta({
-  ogUrl: 'https://braveeeeen.vercel.app/',
+  ogUrl: 'https://braveeeeen.com/',
 });
 
 const { data } = await useFetch<string>("https://raw.githubusercontent.com/aveeeeen/about-me/refs/heads/main/about-me.json");
