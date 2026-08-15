@@ -4,7 +4,7 @@ const isMenuShown = ref(false);
 useSeoMeta({
   description: "Works and Development",
   ogDescription: "Works and Development",
-  ogUrl: "https://braveeeeen.vercel.app/works",
+  ogUrl: "https://braveeeeen.com/works",
 });
 
 function closeModal() {

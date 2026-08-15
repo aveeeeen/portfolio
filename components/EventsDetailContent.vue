@@ -24,7 +24,7 @@ useSeoMeta({
   ogImage: () => event.value?.imageUrl || '',
   description: () => event.value ? `bravenは、${event.value.title}に出演いたします。\n開催日：${useDate(event.value.date)}\n会場：${event.value.venue}` : '',
   ogDescription: () => event.value ? `bravenは、${event.value.title}に出演いたします。\n開催日：${useDate(event.value.date)}\n会場：${event.value.venue}` : '',
-  ogUrl: () => `https://braveeeeen.vercel.app${route.fullPath}`,
+  ogUrl: () => `https://braveeeeen.com${route.fullPath}`,
 });
 
 const { parse, getTableOfContents } = useNotionBlockParser();

@@ -6,7 +6,8 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   plugins: [
     '~/plugins/directives',
-    '~/plugins/scroll-to-top.client'
+    '~/plugins/scroll-to-top.client',
+    '~/plugins/domain-redirect.client'
   ],
   routeRules: {
     '/': { prerender: true },
@@ -22,8 +23,8 @@ export default defineNuxtConfig({
         { property: 'og:type', content: 'website' },
         { property: 'og:title', content: 'portfolio site of braven' },
         { property: 'og:description', content: '活動履歴やブログをまとめています。' },
-        { property: 'og:url', content: 'https://braveeeeen.vercel.app/' },
-        { property: 'og:image', content: 'https://braveeeeen.vercel.app/ogp.png?v=1' }, // 絶対パスで指定
+        { property: 'og:url', content: 'https://braveeeeen.com/' },
+        { property: 'og:image', content: 'https://braveeeeen.com/ogp.png' }, // 絶対パスで指定
 
         // X (Twitter) Card 共通設定
         { name: 'twitter:card', content: 'summary_large_image' },
