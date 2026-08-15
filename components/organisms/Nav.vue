@@ -81,8 +81,8 @@ onUnmounted(() => {
   </header>
 
   <header v-else class="menu show-right flex-vert" @click="handleParentClick">
-    <NuxtLink class="header-link" to="/">
-      <div class="page-title" v-if="!props.notShowTitle">
+    <NuxtLink class="header-link" to="/" v-if="!props.notShowTitle">
+      <div class="page-title">
         <div class="line">
           <!-- <span class="line-number">1</span> -->
           <h3>

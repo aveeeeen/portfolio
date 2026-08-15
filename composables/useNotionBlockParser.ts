@@ -105,6 +105,37 @@ export function useNotionBlockParser() {
       .replace(/"/g, "&quot;");
   };
 
+  const formatNotionUuid = (id: string): string => {
+    const clean = id.replace(/-/g, "");
+    if (/^[0-9a-fA-F]{32}$/.test(clean)) {
+      return `${clean.slice(0, 8)}-${clean.slice(8, 12)}-${clean.slice(12, 16)}-${clean.slice(16, 20)}-${clean.slice(20)}`;
+    }
+    return id;
+  };
+
+  const transformNotionLink = (url: string): { href: string; isInternal: boolean } => {
+    if (!url) return { href: "", isInternal: false };
+
+    try {
+      const isNotionUrl = /^https?:\/\/(www\.)?notion\.(so|site)/i.test(url) || url.startsWith("/");
+      const hashIndex = url.indexOf("#");
+
+      if (hashIndex !== -1) {
+        const hashPart = url.slice(hashIndex + 1);
+        const cleanHash = hashPart.replace(/-/g, "");
+        if (/^[0-9a-fA-F]{32}$/.test(cleanHash)) {
+          return { href: `#${formatNotionUuid(cleanHash)}`, isInternal: true };
+        } else if (isNotionUrl) {
+          return { href: `#${hashPart}`, isInternal: true };
+        }
+      }
+    } catch {
+      // ignore
+    }
+
+    return { href: url, isInternal: false };
+  };
+
   const renderRichText = (richTextItems: RichTextItem[]): string => {
     if (!richTextItems || richTextItems.length === 0) return "";
 
@@ -114,7 +145,13 @@ export function useNotionBlockParser() {
       if (item.type === "text") {
         text = escapeHtml(item.text?.content || "");
         if (item.text?.link) {
-          text = `<a href="${item.text.link.url}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+          const rawUrl = item.text.link.url;
+          const { href, isInternal } = transformNotionLink(rawUrl);
+          if (isInternal) {
+            text = `<a href="${href}">${text}</a>`;
+          } else {
+            text = `<a href="${href}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+          }
         }
       } else if (item.type === "mention") {
         text = renderMention(item);

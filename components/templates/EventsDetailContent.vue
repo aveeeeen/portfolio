@@ -122,6 +122,21 @@ function scrollToId(id: string) {
   }
 }
 
+function handleArticleClick(e: MouseEvent) {
+  const target = e.target as HTMLElement | null;
+  const anchor = target?.closest('a[href^="#"]') as HTMLAnchorElement | null;
+  if (anchor) {
+    const href = anchor.getAttribute('href');
+    if (href && href.startsWith('#')) {
+      const id = href.slice(1);
+      if (id) {
+        e.preventDefault();
+        scrollToId(id);
+      }
+    }
+  }
+}
+
 watch(isMenuShown, () => {
   if (!isMenuShown.value) {
     isShowToC.value = false;
@@ -136,7 +151,7 @@ watch(isMenuShown, () => {
       <div class="content-box flex-vert center-">
         <EventDetailHeader :title="event.title" :date="event.date" :venue="event.venue" :image-url="event.imageUrl" />
         <main>
-          <div class="article-box article" v-html="parsedHtml"></div>
+          <div class="article-box article" v-html="parsedHtml" @click="handleArticleClick"></div>
         </main>
       </div>
     </div>
