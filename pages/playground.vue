@@ -19,13 +19,11 @@ useSeoMeta({
       <p>
         実験や趣味で作っているものです。
       </p>
-      <div class="flex-vert">
-        <ContentTile>
-          <h3>Fm Drum Kit</h3>
-          <p>tone.jsで作られているfmベースのドラムシンセです。意外と遊べます。</p>
-          <NuxtLink to="./fmdrumpage"> Fm Drum</NuxtLink>
-        </ContentTile>
-      </div>
+      <ContentCard>
+        <h3>Fm Drum Kit</h3>
+        <p>tone.jsで作られているfmベースのドラムシンセです。意外と遊べます。</p>
+        <NuxtLink to="./fmdrumpage"> Fm Drum</NuxtLink>
+      </ContentCard>
 
     </div>
     <div class="bottom"></div>

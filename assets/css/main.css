@@ -6,7 +6,7 @@
 :root {
   --html-bg-color: #ededfd;
   --bg-color: #ededfd;
-  --tile-bg-color: #ccc;
+  --tile-bg-color: #ddd;
   --ui-bg-color: white;
   --text-color: #222;
   --text-color-a: #0014fe;
@@ -51,7 +51,6 @@ html {
   font-optical-sizing: auto;
   letter-spacing: 0.05rch;
   scroll-behavior: smooth;
-  box-sizing: border-box;
 }
 
 body {

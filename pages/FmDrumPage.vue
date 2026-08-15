@@ -1,6 +1,8 @@
 <script setup>
 import FmDrum from '~/components/fm-dumkit/FmDrum.vue';
 const isMenuShown = ref(false)
+const theme = useTheme();
+theme.setTheme("light");
 
 useSeoMeta({
   description: "FmDrumkit",
@@ -28,6 +30,7 @@ useSeoMeta({
 
 <style scoped>
 .playground {
-  z-index: 1;
+  color: #222;
+  margin: 72px 0;
 }
 </style>
