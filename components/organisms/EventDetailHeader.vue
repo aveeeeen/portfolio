@@ -114,6 +114,7 @@ onMounted(() => {
   max-width: 800px;
   width: 100%;
   box-sizing: border-box;
+  margin-top: 16px;
 }
 
 .note-header a {
