@@ -478,7 +478,7 @@ export async function resolveEmbed(url: string): Promise<EmbedResult> {
       }
 
       // OpenGraph / Bookmark metadata scraping
-      const og = parseOpenGraphMeta(htmlContent, cleanUrl);
+      const og = extractOpenGraphMetadata(htmlContent, cleanUrl);
       if (og.title) {
         return {
           type: "bookmark",
