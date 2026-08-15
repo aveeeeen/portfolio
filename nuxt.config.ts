@@ -3,6 +3,12 @@ import { defineNuxtConfig } from 'nuxt/config'
 import { resolve } from "path";
 
 export default defineNuxtConfig({
+  components: [
+    {
+      path: '~/components',
+      pathPrefix: false,
+    },
+  ],
   devtools: { enabled: true },
   plugins: [
     '~/plugins/directives',

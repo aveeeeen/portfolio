@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import EventCard from './organisms/EventCard.vue';
-import EvnetCardSkelton from './organisms/EvnetCardSkelton.vue';
-import { type ListEventResult } from "../server/service/event.service.types"
+import EventCard from '~/components/organisms/EventCard.vue';
+import EventCardSkeleton from '~/components/organisms/EventCardSkeleton.vue';
+import Pagination from '~/components/organisms/Pagination.vue';
+import { type ListEventResult } from "~/server/service/event.service.types";
 
 const isShowTags = ref(false);
 const isMenuShown = ref(true);
@@ -16,7 +17,7 @@ const queryparam = computed(() => `?page=${page.value}${tags.value}${keyword.val
 const pagination = useFetch(() => `/api/event/pagination`, { method: "get" });
 const eventList = useFetch<ListEventResult[]>(() => `/api/event/list-events${queryparam.value}`, { method: "get" });
 
-const events = computed(() => eventList.data.value ?? [])
+const events = computed(() => eventList.data.value ?? []);
 
 watch(() => eventList.error.value, (err) => {
   if (err) {
@@ -61,7 +62,7 @@ watch(isMenuShown, () => {
 
 <template>
   <div class="center- flex-vert width-guard"
-    @click="isMenuShown = isMenuShown = isMenuShown ? !isMenuShown : isMenuShown">
+    @click="isMenuShown = isMenuShown ? !isMenuShown : isMenuShown">
     <div class="content-box">
       <h1>Events</h1>
       <Border></Border>
@@ -70,7 +71,7 @@ watch(isMenuShown, () => {
 
       <div class="flex-vert gap-20 article-list">
         <template v-if="eventList.status.value === 'pending' || !eventList.data.value">
-          <EvnetCardSkelton v-for="i in 5" :key="i" />
+          <EventCardSkeleton v-for="i in 5" :key="i" />
         </template>
         <template v-else>
           <EventCard v-for="event in events" :key="event.id" :id="event.id" :title="event.title" :date="event.date"
@@ -78,15 +79,12 @@ watch(isMenuShown, () => {
           </EventCard>
         </template>
       </div>
-      <div class="center--">
-        <div class="page-selector">
-          <div class="selector-flex center-">
-            <button class="" @click="getPrevContent()">back</button>
-            <p class="page-num">{{ `${page} / ${pagination.data.value?.totalPages}` }}</p>
-            <button class="" @click="getNextContent()">next</button>
-          </div>
-        </div>
-      </div>
+      <Pagination
+        :current-page="page"
+        :total-pages="pagination.data.value?.totalPages"
+        @prev="getPrevContent"
+        @next="getNextContent"
+      />
     </div>
     <div class="bottom"></div>
   </div>
@@ -97,23 +95,6 @@ watch(isMenuShown, () => {
 </template>
 
 <style scoped>
-button:hover {
-  color: white;
-  display: inline;
-  background-color: #0014FE;
-}
-
-button {
-  font-size: 1rem;
-  display: inline;
-  color: var(--text-color-a);
-  text-decoration: none;
-  background: none;
-  background-color: transparent;
-  border: none;
-}
-
-
 ul {
   padding-left: 20px;
   display: block;
@@ -122,20 +103,6 @@ ul {
 h2 {
   text-decoration: none;
   font-size: 2rem;
-}
-
-.page-selector {
-  position: relative;
-}
-
-.page-selector div {
-  margin: 5px;
-}
-
-.selector-flex {
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
 }
 
 .tags {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import NotesIndexContent from '~/components/NotesIndexContent.vue';
+import NotesIndexContent from '~/components/templates/NotesIndexContent.vue';
 
 const route = useRoute();
 

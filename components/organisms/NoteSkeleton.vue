@@ -1,16 +1,16 @@
 <template>
   <div class="flex-vert gap-20 note-post">
-    <Skelton class="post"></Skelton>
+    <Skeleton class="post"></Skeleton>
     <div class="flex-vert gap-10">
-      <Skelton class="update"></Skelton>
+      <Skeleton class="update"></Skeleton>
       <div class="flex-hori gap-10 tags">
-        <Skelton class="tag" v-for="i in 5"></Skelton>
+        <Skeleton class="tag" v-for="i in 5" :key="i"></Skeleton>
       </div>
     </div>
   </div>
 </template>
 
-<style>
+<style scoped>
 .note-post {
   margin: 10px 0px;
   padding: 10px;
@@ -38,6 +38,6 @@
 
 .tags {
   flex-wrap: wrap;
-  align-items: baseline
+  align-items: baseline;
 }
 </style>

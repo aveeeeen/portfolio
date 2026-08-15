@@ -41,7 +41,7 @@ onMounted(() => {
   <div class="flex-vert note-header gap-20">
     <slot name="title">
       <h1 v-if="props.title">{{ props.title }}</h1>
-      <Skelton v-else class="title-skeleton" />
+      <Skeleton v-else class="title-skeleton" />
     </slot>
 
     <div class="flex-vert gap-10">
@@ -52,21 +52,21 @@ onMounted(() => {
             dateToLocal(props.date)
           }}
         </p>
-        <Skelton v-else class="date-skeleton" />
+        <Skeleton v-else class="date-skeleton" />
       </slot>
 
       <slot name="venue">
         <p v-if="props.venue">
           会場: {{ props.venue }}
         </p>
-        <Skelton v-else class="venue-skeleton" />
+        <Skeleton v-else class="venue-skeleton" />
       </slot>
       <slot></slot>
     </div>
 
     <slot name="img">
       <template v-if="props.imageUrl">
-        <Skelton v-if="!isImageLoaded" class="img-skelton" :class="{ portrait: isPortrait }" />
+        <Skeleton v-if="!isImageLoaded" class="img-skelton" :class="{ portrait: isPortrait }" />
         <img v-show="isImageLoaded" ref="imgRef" :src="props.imageUrl" :class="{ portrait: isPortrait }"
           @load="handleImageLoad" @error="handleImageError" alt="" />
       </template>

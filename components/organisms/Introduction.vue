@@ -29,7 +29,6 @@ h3 {
   margin-left: 64px;
 }
 
-
 @media (max-width: 800px) {
   h1 {
     line-height: 150%;

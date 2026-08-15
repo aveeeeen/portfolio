@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import EventsIndexContent from '~/components/EventsIndexContent.vue';
+import EventsIndexContent from '~/components/templates/EventsIndexContent.vue';
 
 const route = useRoute();
 

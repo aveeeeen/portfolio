@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { boolean } from 'zod';
-import ThemeToggle from './ThemeToggle.vue';
+import ThemeToggle from '~/components/atoms/ThemeToggle.vue';
+import Burger from '~/components/atoms/Burger.vue';
 
 type NavProps = {
   close: boolean;

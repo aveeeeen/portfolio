@@ -1,13 +1,13 @@
 <template>
   <div class="event-post">
     <div class="event-content">
-      <Skelton class="h1-skelton"></Skelton>
+      <Skeleton class="h1-skelton"></Skeleton>
       <div class="event-details">
-        <Skelton class="h3-skelton"></Skelton>
-        <Skelton class="h3-skelton"></Skelton>
+        <Skeleton class="h3-skelton"></Skeleton>
+        <Skeleton class="h3-skelton"></Skeleton>
       </div>
     </div>
-    <Skelton class="img-skelton"></Skelton>
+    <Skeleton class="img-skelton"></Skeleton>
   </div>
 </template>
 

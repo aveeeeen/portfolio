@@ -2,9 +2,10 @@
 import { ref, computed, onMounted, watch, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useFetch, useSeoMeta } from '#app';
-import { useNotionBlockParser } from '../composables/useNotionBlockParser';
+import { useNotionBlockParser } from '~/composables/useNotionBlockParser';
 import TagButton from '~/components/atoms/TagButton.vue';
-import NoteDetailSkelton from '~/components/NoteDetailSkelton.vue';
+import NoteDetailSkeleton from '~/components/organisms/NoteDetailSkeleton.vue';
+import { useMermaid } from '~/composables/useMermaid';
 
 const isShowToC = ref(false);
 const isMenuShown = ref(true);
@@ -44,8 +45,6 @@ const tocLinks = computed(() => {
 });
 
 const isToCEmpty = computed(() => tocLinks.value.length === 0);
-
-import { useMermaid } from '../composables/useMermaid';
 
 const { renderMermaid } = useMermaid();
 
@@ -131,7 +130,7 @@ watch(isMenuShown, () => {
 </script>
 
 <template>
-  <NoteDetailSkelton v-if="status === 'pending'" />
+  <NoteDetailSkeleton v-if="status === 'pending'" />
   <template v-else>
     <div class="flex-vert center- width-guard" @click="closeModal">
       <div class="content-box flex-vert center-">

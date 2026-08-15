@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import EventsDetailContent from '~/components/EventsDetailContent.vue';
+import EventsDetailContent from '~/components/templates/EventsDetailContent.vue';
 
 const route = useRoute();
 </script>

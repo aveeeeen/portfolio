@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import TagButton from '~/components/atoms/TagButton.vue';
+import Pagination from '~/components/organisms/Pagination.vue';
 
 const isShowTags = ref(false);
 const isMenuShown = ref(false);
@@ -14,14 +15,6 @@ const queryparam = computed(() => `?page=${page.value}${tags.value}${keyword.val
 const pagination = useFetch(() => `/api/blog/pagination${queryparam.value}`, { method: "get" });
 const artilceList = useFetch(() => `/api/blog/list-pages${queryparam.value}`, { method: "get" });
 const tagList = useFetch(() => `/api/blog/list-tags`, { method: "get" });
-
-// if (artilceList.error) {
-//   console.error(artilceList.error.value)
-// }
-
-// if (artilceList.status.value === "error" && (route.query.page || route.query.tags || route.query.keyword)) {
-//   router.push("/notes")
-// }
 
 function getNextContent() {
   if (Number(page.value) >= (pagination.data.value?.totalPages ?? 1)) return;
@@ -44,12 +37,11 @@ function getPrevContent() {
     }
   });
 }
-
 </script>
 
 <template>
   <div class="center- flex-vert width-guard"
-    @click="isMenuShown = isMenuShown = isMenuShown ? !isMenuShown : isMenuShown">
+    @click="isMenuShown = isMenuShown ? !isMenuShown : isMenuShown">
     <div class="content-box">
       <h1>Notes</h1>
       <Border></Border>
@@ -64,28 +56,25 @@ function getPrevContent() {
         <template v-if="!artilceList.data.value">
           <ul v-for="i in 10" :key="i">
             <li>
-              <NoteSkelton></NoteSkelton>
+              <NoteSkeleton></NoteSkeleton>
             </li>
           </ul>
         </template>
         <template v-else>
-          <ul v-for="content in artilceList.data.value">
-            <li :key="content.id">
+          <ul v-for="content in artilceList.data.value" :key="content.id">
+            <li>
               <NotePost :id="content.id" :title="content.title" :tags="content.tags" :created-at="content.createdAt">
               </NotePost>
             </li>
           </ul>
         </template>
       </div>
-      <div class="center--">
-        <div class="page-selector">
-          <div class="selector-flex center-">
-            <button class="" @click="getPrevContent()">back</button>
-            <p class="page-num">{{ `${page} / ${pagination.data.value?.totalPages}` }}</p>
-            <button class="" @click="getNextContent()">next</button>
-          </div>
-        </div>
-      </div>
+      <Pagination
+        :current-page="page"
+        :total-pages="pagination.data.value?.totalPages"
+        @prev="getPrevContent"
+        @next="getNextContent"
+      />
     </div>
     <div class="bottom"></div>
   </div>
@@ -117,36 +106,6 @@ ul {
 h2 {
   text-decoration: none;
   font-size: 2rem;
-}
-
-.page-selector {
-  position: relative;
-}
-
-.page-selector div {
-  margin: 5px;
-}
-
-button:hover {
-  color: white;
-  display: inline;
-  background-color: #0014FE;
-}
-
-button {
-  font-size: 1rem;
-  display: inline;
-  color: var(--text-color-a);
-  text-decoration: none;
-  background: none;
-  background-color: transparent;
-  border: none;
-}
-
-.selector-flex {
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
 }
 
 .tags {

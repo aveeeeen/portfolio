@@ -43,7 +43,6 @@ const props = defineProps<Omit<ListArticleResult, "updatedAt">>()
   gap: var(--space-ms);
 }
 
-
 p {
   line-height: 1.0;
   margin: 0 0;

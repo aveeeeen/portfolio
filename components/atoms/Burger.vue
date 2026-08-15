@@ -14,10 +14,10 @@
   </div>
 </template>
 
-<script setup>
-defineProps({
-  isClose: Boolean,
-});
+<script setup lang="ts">
+defineProps<{
+  isClose?: boolean;
+}>();
 </script>
 
 <style scoped>

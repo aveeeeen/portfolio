@@ -11,7 +11,7 @@
   </div>
 </template>
 
-<style>
+<style scoped>
 .note-header {
   padding: 30px 20px;
   border-radius: 20px;

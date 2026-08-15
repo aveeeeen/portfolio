@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import EventDetailHeader from './EventDetailHeader.vue';
 const isMenuShown = ref(true);
 
 function closeModal() {
@@ -11,24 +12,25 @@ function closeModal() {
 <template>
   <div class="flex-vert center- width-guard" @click="closeModal">
     <div class="content-box flex-vert center-">
-      <NoteHeader>
+      <EventDetailHeader>
         <template #title>
-          <Skelton class="title-skeleton" />
+          <Skeleton class="title-skeleton" />
         </template>
-        <template #date>
-          <Skelton class="date-skeleton" />
+        <div class="flex-vert gap-10">
+          <Skeleton class="date-skeleton" />
+          <Skeleton class="tag-skeleton" />
+        </div>
+        <template #img>
+          <Skeleton class="img-skeleton" />
         </template>
-        <template #tags>
-          <Skelton class="tag-skeleton" v-for="i in 3" :key="i" />
-        </template>
-      </NoteHeader>
+      </EventDetailHeader>
       <main>
         <div class="article-box">
           <div class="paragraph-skeleton" v-for="p in 5" :key="p">
-            <Skelton class="line-skeleton" />
-            <Skelton class="line-skeleton long" />
-            <Skelton class="line-skeleton short" />
-            <Skelton class="line-skeleton medium" />
+            <Skeleton class="line-skeleton" />
+            <Skeleton class="line-skeleton long" />
+            <Skeleton class="line-skeleton short" />
+            <Skeleton class="line-skeleton medium" />
           </div>
         </div>
       </main>
@@ -43,6 +45,7 @@ function closeModal() {
 
 <style scoped>
 main {
+  position: relative;
   margin-top: 32px;
   margin-bottom: 32px;
   width: 100%;
@@ -68,6 +71,12 @@ main {
   border-radius: 10px;
 }
 
+.img-skeleton {
+  width: 100%;
+  height: 25svh;
+  border-radius: 10px;
+}
+
 .skeleton-body {
   display: flex;
   flex-direction: column;
@@ -75,6 +84,7 @@ main {
 }
 
 .paragraph-skeleton {
+  position: relative;
   width: 100%;
   display: flex;
   flex-direction: column;

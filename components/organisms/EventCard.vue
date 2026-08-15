@@ -51,7 +51,7 @@ onMounted(() => {
         </h3>
       </div>
     </div>
-    <Skelton v-if="!isImageLoaded" class="img-skelton" :class="{ portrait: isPortrait }" />
+    <Skeleton v-if="!isImageLoaded" class="img-skelton" :class="{ portrait: isPortrait }" />
     <img v-show="isImageLoaded" ref="imgRef" :src="props.imageUrl" :class="{ portrait: isPortrait }"
       @load="handleImageLoad" @error="handleImageError" alt="" />
   </NuxtLink>
