@@ -338,8 +338,8 @@ function scrollToAbout() {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 24px;
-    padding: 16px 0 40px 0;
+    gap: 16px;
+    padding: 24px 0 24px 0;
   }
 
   .intro {
@@ -360,10 +360,11 @@ function scrollToAbout() {
   }
 
   .line>h3 {
+    /* height: calc(1.5rem * 1.2 + 32px); */
     line-height: 1.0;
     font-weight: 400;
     font-size: 0.8rem;
-    padding: 0px 16px;
+    padding: 8px 16px;
     flex-direction: row;
     align-items: baseline;
     flex-wrap: wrap;

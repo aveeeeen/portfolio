@@ -56,8 +56,8 @@ onUnmounted(() => {
   <header v-if="isMobile">
     <div class="menu-box" @click="handleParentClick">
       <div v-if="!props.notShowTitle" class="menu">
-        <div class="header-link">
-          <NuxtLink class="page-title" to="/">
+        <NuxtLink class="header-link" to="/">
+          <div class="page-title">
             <div class="line">
               <h3>
                 <span class="string">
@@ -66,8 +66,8 @@ onUnmounted(() => {
                 <span class="cursor"></span>
               </h3>
             </div>
-          </NuxtLink>
-        </div>
+          </div>
+        </NuxtLink>
         <div class="menu-group">
           <ThemeToggle />
           <Burger @click.stop="toggleMenu" class="burger" :isClose="isMenuShown"></Burger>
@@ -81,8 +81,8 @@ onUnmounted(() => {
   </header>
 
   <header v-else class="menu show-right flex-vert" @click="handleParentClick">
-    <div class="header-link" v-if="!props.notShowTitle">
-      <NuxtLink class="page-title" to="/">
+    <NuxtLink class="header-link" to="/">
+      <div class="page-title" v-if="!props.notShowTitle">
         <div class="line">
           <!-- <span class="line-number">1</span> -->
           <h3>
@@ -92,8 +92,8 @@ onUnmounted(() => {
             <span class="cursor"></span>
           </h3>
         </div>
-      </NuxtLink>
-    </div>
+      </div>
+    </NuxtLink>
     <slot></slot>
     <ThemeToggle />
   </header>
@@ -128,7 +128,7 @@ onUnmounted(() => {
   /* border-left: solid 2px #aaa; */
 }
 
-.header-link:hover>a>.line>h3>.string {
+.header-link:hover>div>.line>h3>.string {
   background-color: #0014fe;
   color: white;
 }
