@@ -113,11 +113,13 @@ img.portrait {
   flex-direction: column;
   gap: 8px;
   align-items: flex-start;
+  width: 242px;
 }
 
 h2 {
   line-height: 1.0;
   margin: 0px;
+  width: 420px;
 }
 
 a:hover h2 {

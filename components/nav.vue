@@ -144,8 +144,10 @@ onUnmounted(() => {
 
 .header-link {
   width: fit-content;
-  height: fit-content;
-  display: block;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   background-color: var(--ui-bg-color);
   padding: 0px 8px;
   font-family: "Noto Sans Mono", monospace;
