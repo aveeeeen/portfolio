@@ -25,13 +25,21 @@ const props = defineProps<{
   height: fit-content
 }
 
+p {
+  font-size: 0.95rem;
+}
+
+a {
+  font-size: 0.95rem;
+}
+
 .tile {
-  padding: var(--space-s) var(--space-l);
+  padding: var(--space-m) var(--space-l);
   border-radius: var(--space-s);
-  border: solid 1.2px var(--text-color);
+  border: solid 1.5px color-mix(in srgb, var(--text-color) 30%, var(--bg-color) 100%);
   box-sizing: border-box;
   width: 80%;
-  margin-bottom: var(--space-s);
+  margin-bottom: var(--space-m);
 }
 
 .tile-anchor:hover {
@@ -56,7 +64,10 @@ const props = defineProps<{
 }
 
 h3 {
-  margin: var(--space-xs) 0;
+  font-size: 1.5rem;
+  margin-bottom: var(--space-s);
+  margin-top: var(--space-xxs);
+  line-height: 1.0;
   padding: 0;
   width: fit-content;
 }
@@ -74,9 +85,8 @@ span {
 
 @media (max-width: 800px) {
   .tile {
-    padding: var(--space-s) var(--space-s);
+    padding: var(--space-m) var(--space-m);
     border-radius: var(--space-s);
-    border: solid 1px var(--text-color);
     width: 100%;
   }
 }

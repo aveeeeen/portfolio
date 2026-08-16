@@ -33,7 +33,7 @@ watch(() => snippetsList.status.value, (status) => {
 function getNextContent() {
   if (Number(page.value) >= (pagination.data.value?.totalPages ?? 1)) return;
   router.push({
-    path: '/strudel-snippets',
+    path: '/playground/strudel-snippets',
     query: {
       ...route.query,
       page: Number(page.value) + 1
@@ -44,7 +44,7 @@ function getNextContent() {
 function getPrevContent() {
   if (Number(page.value) <= 1) return;
   router.push({
-    path: '/strudel-snippets',
+    path: '/playground/strudel-snippets',
     query: {
       ...route.query,
       page: Number(page.value) - 1
@@ -58,18 +58,28 @@ function getPrevContent() {
   <div class="center- flex-vert width-guard" @click="isMenuShown = isMenuShown ? !isMenuShown : isMenuShown">
     <div class="content-box">
       <h1>Strudel Snippets</h1>
+      <p>Java SciptのライブコーディングライブラリStrudelで作った断片的なスニペットを日記的に載せています。</p>
       <Border></Border>
       <p>new → old</p>
       <Border></Border>
-
-      <div class="flex-vert gap-20 article-list">
+      <div class="article-list">
         <template v-if="snippetsList.status.value === 'pending' || !snippetsList.data.value">
-          <Skeleton class="snippetItemSkeleton" v-for="i in 5" :key="i" />
+          <ul v-for="i in 10" :key="i">
+            <li>
+              <div class="snippet-item-skeleton">
+                <Skeleton class="snippet-text-skeleton" />
+                <Skeleton class="snippet-date-skeleton" />
+              </div>
+            </li>
+          </ul>
         </template>
         <template v-else>
-          <StrudelSnippetsItem v-for="snippet in snippets" :key="snippet.id" :id="snippet.id" :title="snippet.title"
-            :date="snippet.date">
-          </StrudelSnippetsItem>
+          <ul v-for="snippet in snippets" :key="snippet.id">
+            <li>
+              <StrudelSnippetsItem :path="route.fullPath" :id="snippet.id" :title="snippet.title" :date="snippet.date">
+              </StrudelSnippetsItem>
+            </li>
+          </ul>
         </template>
       </div>
       <Pagination :current-page="page" :total-pages="pagination.data.value?.totalPages" @prev="getPrevContent"
@@ -107,11 +117,25 @@ h2 {
 
 .article-list {
   max-width: 800px;
-  min-height: 60svh;
+  min-height: 50svh;
 }
 
-.snippetItemSkeleton {
+.snippet-text-skeleton {
+  width: 30%;
+  height: 1rem;
+  margin: 8px 0;
+  border-radius: 6px;
+}
+
+.snippet-date-skeleton {
+  width: 40%;
+  height: 1rem;
+  border-radius: 6px;
+}
+
+.snippet-item-skeleton {
+  margin-top: 32px;
+  padding: 0 10px;
   width: 100%;
-  height: 86px;
 }
 </style>

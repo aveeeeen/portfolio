@@ -3,7 +3,7 @@ import { ref, computed, onMounted, watch, nextTick } from 'vue';
 import { useRoute } from 'vue-router';
 import { useFetch, useSeoMeta } from '#app';
 import { useNotionBlockParser } from '~/composables/useNotionBlockParser';
-import EventDetailSkeleton from '~/components/organisms/EventDetailSkeleton.vue';
+import StrudeSnippetsContentSkeleton from '~/components/organisms/StrudeSnippetsContentSkeleton.vue';
 import { useDate } from '~/composables/useDate';
 import { useMermaid } from '~/composables/useMermaid';
 import type { StrudelSnippetsBlocksResult } from '~/server/service/strudel-snippets.service.types';
@@ -141,7 +141,7 @@ watch(isMenuShown, () => {
 </script>
 
 <template>
-  <EventDetailSkeleton v-if="!snippet" />
+  <StrudeSnippetsContentSkeleton v-if="!snippet" />
   <template v-else>
     <div class="flex-vert center- width-guard" @click="closeModal">
       <div class="content-box flex-vert center-">

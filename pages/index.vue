@@ -56,18 +56,8 @@ function scrollToAbout() {
 </script>
 
 <template>
-  <video
-    ref="videoRef"
-    class="bg-video"
-    src="~/assets/vid/bgVideo.mp4"
-    autoplay
-    playsinline
-    webkit-playsinline
-    :muted="true"
-    muted
-    loop
-    preload="auto"
-  ></video>
+  <video ref="videoRef" class="bg-video" src="~/assets/vid/bgVideo.mp4" autoplay playsinline webkit-playsinline
+    :muted="true" loop preload="auto"></video>
   <div class="intro-area">
     <div class="intro-box">
       <div class="intro-content">

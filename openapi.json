@@ -1,0 +1,1044 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Portfolio API",
+    "description": "OpenAPI v3 specification for braveeeeen.com portfolio API endpoints, running on Nuxt 4 and Cloudflare Workers.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "braveeeeen",
+      "url": "https://braveeeeen.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://braveeeeen.com",
+      "description": "Production server"
+    },
+    {
+      "url": "http://localhost:3000",
+      "description": "Development server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Blog",
+      "description": "Blog articles, tags, and pagination"
+    },
+    {
+      "name": "Event",
+      "description": "Event schedules, details, flyers, and pagination"
+    },
+    {
+      "name": "Strudel Snippets",
+      "description": "Live coding Strudel audio snippets and blocks"
+    },
+    {
+      "name": "Embed & OGP",
+      "description": "URL embedding and OpenGraph protocol metadata extraction"
+    }
+  ],
+  "paths": {
+    "/api/article/{id}": {
+      "get": {
+        "tags": ["Blog"],
+        "summary": "Get blog article details by ID",
+        "description": "Fetches a single blog article with its metadata and recursively resolved Notion blocks.",
+        "operationId": "getArticleById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Notion Page ID of the article",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "example": "19b5f543-9828-80f2-b883-fa4c0cfb439c"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Article details with block tree",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArticleBlocksResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid article ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/blog/list-pages": {
+      "get": {
+        "tags": ["Blog"],
+        "summary": "List blog articles",
+        "description": "Retrieves a paginated list of blog articles with optional tag and keyword search filters.",
+        "operationId": "listBlogArticles",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "description": "Page number (1-indexed)",
+            "schema": {
+              "type": "string",
+              "default": "1",
+              "example": "1"
+            }
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "required": false,
+            "description": "Tag IDs to filter articles by (single string or multiple array values)",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": false,
+            "description": "Keyword search string across titles and tags",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of articles for the given page",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListArticleResult"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Page number out of bound or invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/blog/list-tags": {
+      "get": {
+        "tags": ["Blog"],
+        "summary": "List all blog tags",
+        "description": "Retrieves all available unique tags from the blog Notion database.",
+        "operationId": "listBlogTags",
+        "responses": {
+          "200": {
+            "description": "List of all blog tags",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Tag"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/blog/pagination": {
+      "get": {
+        "tags": ["Blog"],
+        "summary": "Get blog pagination metadata",
+        "description": "Returns total page count and page-to-cursor mappings based on active tag and keyword filters.",
+        "operationId": "getBlogPagination",
+        "parameters": [
+          {
+            "name": "tags",
+            "in": "query",
+            "required": false,
+            "description": "Tag IDs filter",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": false,
+            "description": "Keyword search filter",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pagination metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pagination"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/event/{id}": {
+      "get": {
+        "tags": ["Event"],
+        "summary": "Get event details by ID",
+        "description": "Fetches a single event with date, venue, synchronized flyer image URL, and block contents.",
+        "operationId": "getEventById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Notion Page ID of the event",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "example": "19b5f543-9828-80f2-b883-fa4c0cfb439c"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Event details with block tree",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventBlocksResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid event ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/event/list-events": {
+      "get": {
+        "tags": ["Event"],
+        "summary": "List events",
+        "description": "Retrieves a paginated list of events with synchronized flyer images and venues.",
+        "operationId": "listEvents",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "description": "Page number (1-indexed)",
+            "schema": {
+              "type": "string",
+              "default": "1",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of events",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListEventResult"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Page out of bound or invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/event/pagination": {
+      "get": {
+        "tags": ["Event"],
+        "summary": "Get event pagination metadata",
+        "description": "Returns total page count and page-to-cursor mappings for events.",
+        "operationId": "getEventPagination",
+        "responses": {
+          "200": {
+            "description": "Pagination metadata for events",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pagination"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/strudel-snippets/{id}": {
+      "get": {
+        "tags": ["Strudel Snippets"],
+        "summary": "Get Strudel snippet details by ID",
+        "description": "Fetches a single Strudel live coding snippet with metadata and block contents.",
+        "operationId": "getStrudelSnippetById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Notion Page ID of the Strudel snippet",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "example": "19b5f543-9828-80f2-b883-fa4c0cfb439c"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Strudel snippet details with block tree",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StrudelSnippetsBlocksResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid snippet ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/strudel-snippets/list-strudel-snippets": {
+      "get": {
+        "tags": ["Strudel Snippets"],
+        "summary": "List Strudel snippets",
+        "description": "Retrieves a paginated list of Strudel live coding snippets.",
+        "operationId": "listStrudelSnippets",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "description": "Page number (1-indexed)",
+            "schema": {
+              "type": "string",
+              "default": "1",
+              "example": "1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of Strudel snippets",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListStrudelSnippetsResult"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Page out of bound or invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/strudel-snippets/pagination": {
+      "get": {
+        "tags": ["Strudel Snippets"],
+        "summary": "Get Strudel snippets pagination metadata",
+        "description": "Returns total page count and page-to-cursor mappings for Strudel snippets.",
+        "operationId": "getStrudelSnippetsPagination",
+        "responses": {
+          "200": {
+            "description": "Pagination metadata for Strudel snippets",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pagination"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/embed": {
+      "get": {
+        "tags": ["Embed & OGP"],
+        "summary": "Resolve embed data for external URLs",
+        "description": "Resolves rich embed representations (oEmbed, iframe, bookmark cards, or fallback) for third-party media and links (YouTube, Spotify, Soundcloud, Twitter/X, Apple Music, Google Maps, etc.). Cached for 7 days.",
+        "operationId": "resolveEmbed",
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "required": true,
+            "description": "Target external URL to resolve embed data for",
+            "schema": {
+              "type": "string",
+              "format": "uri",
+              "example": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Resolved embed metadata object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EmbedResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ogp": {
+      "get": {
+        "tags": ["Embed & OGP"],
+        "summary": "Fetch OpenGraph metadata",
+        "description": "Fetches and extracts OpenGraph Protocol metadata (title, site name, description, image) for a given target URL. Cached for 7 days.",
+        "operationId": "fetchOgpMeta",
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "required": true,
+            "description": "Target URL to extract OGP tags from",
+            "schema": {
+              "type": "string",
+              "format": "uri",
+              "example": "https://github.com"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Extracted OGP metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OgpData"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/test-embed3": {
+      "get": {
+        "tags": ["Embed & OGP"],
+        "summary": "Debug/Test embed resolution",
+        "description": "Debug endpoint to test embed resolution against arbitrary URLs.",
+        "operationId": "testEmbed",
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "required": false,
+            "description": "Test URL (defaults to Google Maps shortlink if omitted)",
+            "schema": {
+              "type": "string",
+              "example": "https://maps.app.goo.gl/qrHSk33iToWZJpX58"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Test execution result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestEmbedResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Tag": {
+        "type": "object",
+        "required": ["id", "name"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Notion multi-select tag ID",
+            "example": "5a4d46bf-2144-4861-bfdf-b118012674e2"
+          },
+          "name": {
+            "type": "string",
+            "description": "Tag display name",
+            "example": "TypeScript"
+          }
+        }
+      },
+      "Pagination": {
+        "type": "object",
+        "required": ["totalPages", "cursorMap"],
+        "properties": {
+          "totalPages": {
+            "type": "integer",
+            "description": "Total number of available pages",
+            "example": 5
+          },
+          "cursorMap": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Map of page number (key) to Notion cursor string (value)",
+            "example": {
+              "2": "c33f2e1a-821f-4ff0-bba7-dfbb652b4129",
+              "3": "9a8b7c6d-5e4f-3a2b-1c0d-e9f8a7b6c5d4"
+            }
+          }
+        }
+      },
+      "ListArticleResult": {
+        "type": "object",
+        "required": ["id", "title", "tags", "createdAt", "updatedAt"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Article ID (Notion Page ID)",
+            "example": "19b5f543-9828-80f2-b883-fa4c0cfb439c"
+          },
+          "title": {
+            "type": "string",
+            "description": "Article title",
+            "example": "Nuxt 4 と Cloudflare Workers によるモダンWeb開発"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            },
+            "description": "Associated tags"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Article creation date (YYYY-MM-DD or ISO 8601)",
+            "example": "2024-08-01"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Article last updated date (YYYY-MM-DD or ISO 8601)",
+            "example": "2024-08-10"
+          }
+        }
+      },
+      "ArticleBlocksResult": {
+        "type": "object",
+        "required": ["id", "title", "tags", "blocks", "createdAt", "updatedAt"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Article ID",
+            "example": "19b5f543-9828-80f2-b883-fa4c0cfb439c"
+          },
+          "title": {
+            "type": "string",
+            "description": "Article title",
+            "example": "Nuxt 4 と Cloudflare Workers によるモダンWeb開発"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            }
+          },
+          "blocks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NotionBlock"
+            },
+            "description": "Hierarchical Notion blocks representing full content"
+          },
+          "excerpt": {
+            "type": "string",
+            "description": "Plain text summary/excerpt extracted from article content",
+            "example": "この記事ではNuxt 4の最新機能とCloudflareでの運用について..."
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2024-08-01"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "2024-08-10"
+          }
+        }
+      },
+      "ListEventResult": {
+        "type": "object",
+        "required": ["id", "title", "date", "venue", "imageUrl", "createdAt", "updatedAt"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Event ID",
+            "example": "28e5f543-9828-80f2-b883-fa4c0cfb439d"
+          },
+          "title": {
+            "type": "string",
+            "description": "Event title",
+            "example": "Live Audio Session @ Tokyo"
+          },
+          "date": {
+            "type": "string",
+            "description": "Event date/time string",
+            "example": "2024-09-15"
+          },
+          "venue": {
+            "type": "string",
+            "description": "Venue name or location",
+            "example": "Shibuya WWW"
+          },
+          "imageUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "Flyer image URL (served from Supabase Storage / WebP)",
+            "example": "https://xxx.supabase.co/storage/v1/object/public/event-flyers/event-123.webp"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2024-08-05"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "2024-08-05"
+          }
+        }
+      },
+      "EventBlocksResult": {
+        "type": "object",
+        "required": ["id", "title", "date", "venue", "imageUrl", "createdAt", "updatedAt", "blocks"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Event ID",
+            "example": "28e5f543-9828-80f2-b883-fa4c0cfb439d"
+          },
+          "title": {
+            "type": "string",
+            "description": "Event title",
+            "example": "Live Audio Session @ Tokyo"
+          },
+          "date": {
+            "type": "string",
+            "example": "2024-09-15"
+          },
+          "venue": {
+            "type": "string",
+            "example": "Shibuya WWW"
+          },
+          "imageUrl": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://xxx.supabase.co/storage/v1/object/public/event-flyers/event-123.webp"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2024-08-05"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "2024-08-05"
+          },
+          "blocks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NotionBlock"
+            },
+            "description": "Hierarchical Notion blocks representing event description and details"
+          }
+        }
+      },
+      "ListStrudelSnippetsResult": {
+        "type": "object",
+        "required": ["id", "title", "date", "createdAt", "updatedAt"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Snippet ID",
+            "example": "37f5f543-9828-80f2-b883-fa4c0cfb439e"
+          },
+          "title": {
+            "type": "string",
+            "description": "Snippet title",
+            "example": "Algorave Beat Pattern 01"
+          },
+          "date": {
+            "type": "string",
+            "description": "Snippet creation / performance date",
+            "example": "2024-08-12"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2024-08-12"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "2024-08-12"
+          }
+        }
+      },
+      "StrudelSnippetsBlocksResult": {
+        "type": "object",
+        "required": ["id", "title", "date", "createdAt", "updatedAt", "blocks"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Snippet ID",
+            "example": "37f5f543-9828-80f2-b883-fa4c0cfb439e"
+          },
+          "title": {
+            "type": "string",
+            "description": "Snippet title",
+            "example": "Algorave Beat Pattern 01"
+          },
+          "date": {
+            "type": "string",
+            "example": "2024-08-12"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2024-08-12"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "2024-08-12"
+          },
+          "blocks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NotionBlock"
+            },
+            "description": "Hierarchical Notion blocks including Strudel JavaScript / TidalCycles code blocks"
+          }
+        }
+      },
+      "NotionBlock": {
+        "type": "object",
+        "required": ["id", "type", "object"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique Notion Block UUID",
+            "example": "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d"
+          },
+          "type": {
+            "type": "string",
+            "description": "Block type identifier (paragraph, heading_1, heading_2, code, image, video, embed, etc.)",
+            "example": "paragraph"
+          },
+          "object": {
+            "type": "string",
+            "enum": ["block"],
+            "description": "Type of Notion object",
+            "example": "block"
+          },
+          "created_time": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-08-01T12:00:00.000Z"
+          },
+          "last_edited_time": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-08-01T12:30:00.000Z"
+          },
+          "has_children": {
+            "type": "boolean",
+            "description": "Whether the block has nested child blocks"
+          },
+          "archived": {
+            "type": "boolean"
+          },
+          "in_trash": {
+            "type": "boolean"
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NotionBlock"
+            },
+            "description": "Recursively fetched child blocks"
+          }
+        },
+        "additionalProperties": true
+      },
+      "OgpData": {
+        "type": "object",
+        "required": ["url"],
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "Resolved canonical target URL",
+            "example": "https://github.com"
+          },
+          "siteName": {
+            "type": "string",
+            "description": "Site name extracted from og:site_name",
+            "example": "GitHub"
+          },
+          "title": {
+            "type": "string",
+            "description": "Title extracted from og:title or html title tag",
+            "example": "GitHub: Let’s build from here"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description extracted from og:description",
+            "example": "GitHub is where over 100 million developers shape the future of software..."
+          },
+          "image": {
+            "type": "string",
+            "format": "uri",
+            "description": "Absolute URL to the preview image from og:image",
+            "example": "https://github.githubassets.com/images/modules/site/social-cards/campaign-social.png"
+          }
+        }
+      },
+      "EmbedResult": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/OEmbedResult"
+          },
+          {
+            "$ref": "#/components/schemas/IframeEmbedResult"
+          },
+          {
+            "$ref": "#/components/schemas/BookmarkEmbedResult"
+          },
+          {
+            "$ref": "#/components/schemas/FallbackEmbedResult"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "type"
+        }
+      },
+      "OEmbedResult": {
+        "type": "object",
+        "required": ["type", "html"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["oembed"]
+          },
+          "html": {
+            "type": "string",
+            "description": "Embedded HTML snippet provided by the service"
+          },
+          "provider": {
+            "type": "string",
+            "description": "Provider name (e.g. YouTube, Twitter, Spotify)",
+            "example": "YouTube"
+          },
+          "title": {
+            "type": "string",
+            "description": "Media title"
+          },
+          "resolvedUrl": {
+            "type": "string",
+            "description": "Resolved canonical URL"
+          }
+        }
+      },
+      "IframeEmbedResult": {
+        "type": "object",
+        "required": ["type", "iframeUrl"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["iframe"]
+          },
+          "iframeUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "Embeddable iframe target URL (e.g. Spotify embed player, Apple Music, Google Maps embed)"
+          },
+          "provider": {
+            "type": "string",
+            "description": "Provider identifier",
+            "example": "Spotify"
+          },
+          "resolvedUrl": {
+            "type": "string",
+            "description": "Resolved canonical URL"
+          }
+        }
+      },
+      "BookmarkEmbedResult": {
+        "type": "object",
+        "required": ["type", "title", "url"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["bookmark"]
+          },
+          "title": {
+            "type": "string",
+            "description": "Bookmark card title"
+          },
+          "description": {
+            "type": "string",
+            "description": "Bookmark description snippet"
+          },
+          "image": {
+            "type": "string",
+            "format": "uri",
+            "description": "Preview image URL"
+          },
+          "siteName": {
+            "type": "string",
+            "description": "Website name"
+          },
+          "favicon": {
+            "type": "string",
+            "format": "uri",
+            "description": "Website favicon URL"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Target web page URL"
+          },
+          "resolvedUrl": {
+            "type": "string",
+            "description": "Resolved canonical URL"
+          }
+        }
+      },
+      "FallbackEmbedResult": {
+        "type": "object",
+        "required": ["type", "url"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["fallback"]
+          },
+          "url": {
+            "type": "string",
+            "description": "Target URL"
+          },
+          "resolvedUrl": {
+            "type": "string",
+            "description": "Resolved canonical URL"
+          }
+        }
+      },
+      "TestEmbedResult": {
+        "type": "object",
+        "required": ["testUrl", "result"],
+        "properties": {
+          "testUrl": {
+            "type": "string",
+            "description": "Input test URL"
+          },
+          "result": {
+            "$ref": "#/components/schemas/EmbedResult"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "integer",
+            "example": 400
+          },
+          "statusMessage": {
+            "type": "string",
+            "example": "Out of Bound"
+          },
+          "message": {
+            "type": "string",
+            "example": "Invalid parameter"
+          }
+        }
+      }
+    }
+  }
+}

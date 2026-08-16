@@ -689,3 +689,11 @@ pre.mermaid p {
   border-radius: 6px;
   margin: 4px 0;
 }
+
+@media (max-width: 800px) {
+  .article > .notion-strudel iframe {
+    width: 125%;
+    height: 60svh;
+    max-width: 100%;
+  }
+}

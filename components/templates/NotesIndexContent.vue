@@ -40,8 +40,7 @@ function getPrevContent() {
 </script>
 
 <template>
-  <div class="center- flex-vert width-guard"
-    @click="isMenuShown = isMenuShown ? !isMenuShown : isMenuShown">
+  <div class="center- flex-vert width-guard" @click="isMenuShown = isMenuShown ? !isMenuShown : isMenuShown">
     <div class="content-box">
       <h1>Notes</h1>
       <Border></Border>
@@ -69,12 +68,8 @@ function getPrevContent() {
           </ul>
         </template>
       </div>
-      <Pagination
-        :current-page="page"
-        :total-pages="pagination.data.value?.totalPages"
-        @prev="getPrevContent"
-        @next="getNextContent"
-      />
+      <Pagination :current-page="page" :total-pages="pagination.data.value?.totalPages" @prev="getPrevContent"
+        @next="getNextContent" />
     </div>
     <div class="bottom"></div>
   </div>
@@ -123,6 +118,6 @@ h2 {
 
 .article-list {
   max-width: 800px;
-  min-height: 80svh;
+  min-height: 50svh;
 }
 </style>

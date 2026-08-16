@@ -10,7 +10,9 @@ const formattedTitle = computed(() => props.title?.replace(/[\.(]/g, '-').replac
 <template>
   <div class="snippet-header">
     <div class="path-like">
-      <NuxtLink to="/strudel-snippets">strudel-snippets</NuxtLink><span>/</span><span>{{ formattedTitle }}</span>
+      <NuxtLink to="/playground/strudel-snippets">strudel-snippets</NuxtLink>
+      <span>/</span>
+      <span>{{ formattedTitle }}</span>
     </div>
     <p>date: <span>{{ props.date ?? '' }}</span></p>
   </div>
@@ -21,7 +23,7 @@ const formattedTitle = computed(() => props.title?.replace(/[\.(]/g, '-').replac
   display: flex;
   flex-direction: column;
   gap: 4px;
-  padding: var(--space-s) 0;
+  padding: var(--space-m) 0;
   width: 100%;
   border-bottom: solid 2px var(--text-color);
 }
@@ -30,10 +32,15 @@ p {
   margin: 0;
 }
 
+span {
+  color: var(--text-color)
+}
+
 .path-like {
   display: flex;
   flex-direction: row;
   align-items: baseline;
+  flex-wrap: wrap;
   gap: var(--space-xs)
 }
 </style>

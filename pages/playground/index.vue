@@ -1,9 +1,10 @@
 <script setup>
+const route = useRoute();
 const isMenuShown = ref(false)
 
 useSeoMeta({
-  description: "Playground",
-  ogDescription: "Playground",
+  description: "Playground, 実験や趣味で作っているものです。",
+  ogDescription: "Playground, 実験や趣味で作っているものです。",
   ogUrl: "https://braveeeeen.com/playground",
 });
 
@@ -18,10 +19,12 @@ useSeoMeta({
       <p>
         実験や趣味で作っているものです。
       </p>
-      <ContentCard title="Fm Drim Kit" description="tone.jsで作られているfmベースのドラムシンセです。意外と遊べます。" path="./fmdrumkit">
+      <ContentCard title="Fm Drim Kit" description="tone.jsで作られているfmベースのドラムシンセです。意外と遊べます。"
+        :path="`${route.fullPath}/fmdrumkit`">
       </ContentCard>
       <ContentCard title="Strudel Snippets"
-        description="日記的に作ったJavaScriptのライブコーディング環境Strudelのコードです。Embedされているのでそのまま、編集できます。" path="./strudel-snippets">
+        description="日記的に作ったJavaScriptのライブコーディング環境Strudelのコードです。Embedされているのでそのまま、編集できます。"
+        :path="`${route.fullPath}/strudel-snippets`">
       </ContentCard>
 
     </div>

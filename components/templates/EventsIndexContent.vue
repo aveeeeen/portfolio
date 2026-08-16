@@ -61,8 +61,7 @@ watch(isMenuShown, () => {
 </script>
 
 <template>
-  <div class="center- flex-vert width-guard"
-    @click="isMenuShown = isMenuShown ? !isMenuShown : isMenuShown">
+  <div class="center- flex-vert width-guard" @click="isMenuShown = isMenuShown ? !isMenuShown : isMenuShown">
     <div class="content-box">
       <h1>Events</h1>
       <Border></Border>
@@ -71,7 +70,7 @@ watch(isMenuShown, () => {
 
       <div class="flex-vert gap-20 article-list">
         <template v-if="eventList.status.value === 'pending' || !eventList.data.value">
-          <EventCardSkeleton v-for="i in 5" :key="i" />
+          <EventCardSkeleton v-for="i in 10" :key="i" />
         </template>
         <template v-else>
           <EventCard v-for="event in events" :key="event.id" :id="event.id" :title="event.title" :date="event.date"
@@ -79,12 +78,8 @@ watch(isMenuShown, () => {
           </EventCard>
         </template>
       </div>
-      <Pagination
-        :current-page="page"
-        :total-pages="pagination.data.value?.totalPages"
-        @prev="getPrevContent"
-        @next="getNextContent"
-      />
+      <Pagination :current-page="page" :total-pages="pagination.data.value?.totalPages" @prev="getPrevContent"
+        @next="getNextContent" />
     </div>
     <div class="bottom"></div>
   </div>
@@ -118,6 +113,6 @@ h2 {
 
 .article-list {
   max-width: 800px;
-  min-height: 80svh;
+  min-height: 50svh;
 }
 </style>

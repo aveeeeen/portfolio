@@ -12,7 +12,7 @@
 
 <style scoped>
 .note-post {
-  margin: 10px 0px;
+  margin: 32px 0px;
   padding: 10px;
   border-radius: 10px;
   /* background-color: color-mix(in srgb, gray 10%, white 20%) */
