@@ -35,11 +35,9 @@ a {
 
 .tile {
   padding: var(--space-m) var(--space-l);
-  border-radius: var(--space-s);
-  border: solid 1.5px color-mix(in srgb, var(--text-color) 30%, var(--bg-color) 100%);
+  border-left: solid 2px var(--text-color);
   box-sizing: border-box;
-  width: 80%;
-  margin-bottom: var(--space-m);
+  width: 90%;
 }
 
 .tile-anchor:hover {
@@ -47,7 +45,7 @@ a {
 }
 
 .tile-anchor:hover .tile {
-  background-color: color-mix(#00f 2%, var(--bg-color) 100%);
+  background-color: color-mix(#00f 10%, var(--bg-color) 100%);
 }
 
 .tile-anchor:hover span {
@@ -65,8 +63,7 @@ a {
 
 h3 {
   font-size: 1.5rem;
-  margin-bottom: var(--space-s);
-  margin-top: var(--space-xxs);
+  margin-top: 0px;
   line-height: 1.0;
   padding: 0;
   width: fit-content;
@@ -85,8 +82,7 @@ span {
 
 @media (max-width: 800px) {
   .tile {
-    padding: var(--space-m) var(--space-m);
-    border-radius: var(--space-s);
+    padding: var(--space-s) var(--space-m);
     width: 100%;
   }
 }

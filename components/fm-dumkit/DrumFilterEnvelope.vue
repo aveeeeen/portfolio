@@ -1,6 +1,6 @@
 <script setup>
 import DrumEnvelope from './DrumEnvelope.vue';
-const props = defineProps({filterEnv: Object})
+const props = defineProps({ filterEnv: Object })
 const emit = defineEmits(["update"])
 
 function onChange() {
@@ -10,21 +10,20 @@ function onChange() {
 </script>
 
 <template>
-    <div @change="onChange()" class="env">
-      <div class="flex-vert">
-        <p>cutoff</p>
-        <input class="cutoff-slider" type="range" min="0" max="127" step="1" v-model.number="filterEnv.cutoff"></input>
+  <div @change="onChange()" class="env">
+    <div class="flex-vert">
+      <p>cutoff</p>
+      <input class="cutoff-slider" type="range" min="0" max="127" step="1" v-model.number="filterEnv.cutoff"></input>
       <DrumEnvelope :envelope="filterEnv.envelope" @update="e => filterEnv.envelope = e"></DrumEnvelope>
-      </div>
     </div>
+  </div>
 </template>
 
 <style scoped>
-
-.env{
+.env {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   max-width: 20svw;
   height: fit-content;
   border: 0;

@@ -4,7 +4,7 @@ const props = defineProps<{
   date: string,
 }>();
 
-const formattedTitle = computed(() => props.title?.replace(/[\.(]/g, '-').replace(/[\s)]/g, '').toLowerCase() ?? '');
+// const formattedTitle = computed(() => props.title?.replace(/[\.(]/g, '-').replace(/[\s)]/g, '').toLowerCase() ?? '');
 </script>
 
 <template>
@@ -12,7 +12,7 @@ const formattedTitle = computed(() => props.title?.replace(/[\.(]/g, '-').replac
     <div class="path-like">
       <NuxtLink to="/playground/strudel-snippets">strudel-snippets</NuxtLink>
       <span>/</span>
-      <span>{{ formattedTitle }}</span>
+      <span>{{ props.title ?? '' }}</span>
     </div>
     <p><span>{{ props.date ?? '' }}</span></p>
   </div>
@@ -22,7 +22,7 @@ const formattedTitle = computed(() => props.title?.replace(/[\.(]/g, '-').replac
 .snippet-header {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
   padding: var(--space-m) 0;
   width: 100%;
   border-bottom: solid 2px var(--text-color);
@@ -37,6 +37,8 @@ span {
 }
 
 .path-like {
+  font-size: 1.5rem;
+  line-height: 1;
   display: flex;
   flex-direction: row;
   align-items: baseline;

@@ -19,13 +19,15 @@ useSeoMeta({
       <p>
         実験や趣味で作っているものです。
       </p>
-      <ContentCard title="Fm Drim Kit" description="tone.jsで作られているfmベースのドラムシンセです。意外と遊べます。"
-        :path="`${route.fullPath}/fmdrumkit`">
-      </ContentCard>
-      <ContentCard title="Strudel Snippets"
-        description="日記的に作ったJavaScriptのライブコーディング環境Strudelのコードです。Embedされているのでそのまま、編集できます。"
-        :path="`${route.fullPath}/strudel-snippets`">
-      </ContentCard>
+      <div class="playground-box">
+        <ContentCard title="Fm Drim Kit" description="tone.jsで作られているfmベースのドラムシンセです。意外と遊べます。"
+          :path="`${route.fullPath}/fmdrumkit`">
+        </ContentCard>
+        <ContentCard title="Strudel Snippets"
+          description="日記的に作ったJavaScriptのライブコーディング環境Strudelのコードです。Embedされているのでそのまま、編集できます。"
+          :path="`${route.fullPath}/strudel-snippets`">
+        </ContentCard>
+      </div>
 
     </div>
     <div class="bottom"></div>
@@ -36,3 +38,15 @@ useSeoMeta({
     <Menu></Menu>
   </Nav>
 </template>
+
+<style lang="css" scoped>
+p {
+  margin: var(--space-m) 0;
+}
+
+.playground-box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-l);
+}
+</style>

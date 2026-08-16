@@ -1,12 +1,12 @@
-.slider{
+.slider {
   width: fit-content;
 }
 
-.cutoff-slider{
+.cutoff-slider {
   width: 7rem;
 }
 
-.pitch-slider{
+.pitch-slider {
   width: 6rem;
 }
 
@@ -59,21 +59,40 @@ input[type="range"]::-moz-range-track {
   display: block;
   border-color: black;
   background-color: wheat;
-  padding: 15px;
+  padding: 16px;
   border-radius: 20px;
   width: 38svw;
   max-width: 260px;
   height: fit-content;
 }
 
+.container h2 {
+  line-height: 2;
+  margin: 0;
+}
+
+.container p {
+  line-height: 1;
+  margin: 8px 0;
+}
+
 .larger-container {
   display: block;
   background-color: antiquewhite;
-  padding: 15px;
+  padding: 16px;
   border-radius: 20px;
   width: 90svw;
   max-width: 600px;
   overflow-x: hidden;
+}
+
+.synth-kit {
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  grid-template-rows: repeat(auto, 200px);
+  gap: 16px;
+  margin: 0%;
+  align-items: center;
 }
 
 @media (max-width: 760px) {
@@ -81,12 +100,12 @@ input[type="range"]::-moz-range-track {
     display: block;
     border-color: black;
     background-color: wheat;
-    padding: 15px;
+    padding: 16px;
     border-radius: 20px;
     width: 35svw;
     height: fit-content;
   }
-  
+
   .larger-container {
     display: block;
     background-color: antiquewhite;

@@ -61,14 +61,4 @@ function onChange() {
 
 </template>
 
-<style scoped>
-.synth-kit {
-  display: grid;
-  grid-template-columns: repeat(2, max-content);
-  grid-template-rows: repeat(auto, 200px);
-  gap: 10px;
-  margin: 0%;
-  align-items: center;
-  justify-content: center;
-}
-</style>
+<style scoped></style>

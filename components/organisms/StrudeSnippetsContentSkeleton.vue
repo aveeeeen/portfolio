@@ -36,7 +36,7 @@ function closeModal() {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
   padding: var(--space-m) 0;
   width: 100%;
   border-bottom: solid 2px var(--text-color);
@@ -52,7 +52,7 @@ function closeModal() {
 
 .path-skeleton {
   width: 50%;
-  height: 1.2rem;
+  height: 1.5rem;
   border-radius: 6px;
 }
 
@@ -112,18 +112,6 @@ main {
 
   .date-skeleton {
     width: 40%;
-  }
-
-  .iframe-skeleton {
-    height: 50svh;
-  }
-
-  .article-box {
-    display: block;
-    background-color: var(--bg-color);
-    padding: 10px;
-    overflow-x: hidden;
-    width: 90%;
   }
 }
 </style>
