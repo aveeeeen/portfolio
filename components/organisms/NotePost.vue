@@ -20,7 +20,7 @@ const props = defineProps<Omit<ListArticleResult, "updatedAt">>()
           }).replace(/\//g, '.')
         }}
       </p>
-      <div class="flex-hori gap-10 tags">
+      <div class="flex-hori gap-5 tags">
         <p>Tags:</p>
         <div v-for="tag in props.tags" :key="tag.name">
           <TagButton :name="tag.name" />

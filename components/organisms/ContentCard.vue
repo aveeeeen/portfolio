@@ -62,7 +62,7 @@ a {
 }
 
 h3 {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   margin-top: 0px;
   line-height: 1.0;
   padding: 0;

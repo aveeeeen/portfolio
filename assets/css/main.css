@@ -134,26 +134,27 @@ ul {
 }
 
 p {
-  font-weight: 360;
+  font-size: 1rem;
+  font-weight: 340;
 }
 
 h1 {
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   line-height: 1;
   font-weight: 480;
 }
 
 h2 {
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   line-height: 1;
   font-weight: 480;
   margin: 1.5rem 0;
 }
 
 h3 {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   line-height: 1;
-  font-weight: 360;
+  font-weight: 340;
   margin-block: 0.8rem;
   margin-top: 1.5rem;
 }
@@ -187,7 +188,7 @@ iframe {
 .ui-box {
   display: block;
   background-color: var(--ui-bg-color);
-  padding: calc(var(--space-s) / 2) var(--space-ms);
+  padding: calc(var(--space-s)) var(--space-s);
   border-radius: var(--box-radius);
   line-height: 1.4;
 }
@@ -208,7 +209,7 @@ iframe {
   box-sizing: border-box;
 }
 
-.content-box h1 {
+/* .content-box h1 {
   font-size: 1.8rem;
 }
 
@@ -218,7 +219,7 @@ iframe {
 
 .content-box h3 {
   font-size: 1.2rem;
-}
+} */
 
 .event-box {
   position: relative;

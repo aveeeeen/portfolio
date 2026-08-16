@@ -120,17 +120,19 @@ function scrollToAbout() {
 }
 
 .code-block {
+  font-size: 0.95rem;
   white-space: pre-wrap;
   word-break: break-all;
-  line-height: 1.6;
+  line-height: 1.75;
   overflow-wrap: anywhere;
   overflow-x: hidden;
   border-radius: 16px;
   max-width: 800px;
+  margin: 24px 0;
 }
 
 .code-padding {
-  padding: 32px;
+  padding: 24px;
 }
 
 :deep(.code-url-link) {

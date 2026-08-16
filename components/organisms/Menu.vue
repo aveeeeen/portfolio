@@ -3,7 +3,7 @@
 
 <template>
   <div class="ui-box menu-list">
-    <div class="flex-vert gap-5 show-right">
+    <div class="flex-vert gap-5 ">
       <NuxtLink to="/works">works</NuxtLink>
       <NuxtLink to="/events">events</NuxtLink>
       <NuxtLink to="/playground">playground</NuxtLink>
@@ -13,8 +13,8 @@
 </template>
 
 <style scoped>
-.menu-list {
+/* .menu-list {
   text-align: right;
-  padding: calc(var(--space-s) / 2) var(--space-s);
-}
+  padding: calc(var(--space-ms)) var(--space-s);
+} */
 </style>

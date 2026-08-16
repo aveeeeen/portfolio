@@ -22,14 +22,14 @@ defineProps<{
 
 <style scoped>
 #burger {
-  width: 2rem;
-  height: 2rem;
+  width: 1.6rem;
+  height: 1.6rem;
   display: block;
 }
 
 #close {
-  width: 2rem;
-  height: 2rem;
+  width: 1.6rem;
+  height: 1.6rem;
   display: block;
 }
 
