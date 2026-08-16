@@ -21,6 +21,8 @@ const snippet = computed(() => data.data.value ?? undefined);
 useSeoMeta({
   title: () => `Strudel Snippets ${snippet.value?.title}` || '',
   ogTitle: () => `Strudel Snippets ${snippet.value?.title}` || '',
+  description: () => `${useDate(snippet.value?.date ?? "")} ${snippet.value?.title}`,
+  ogDescription: () => `${useDate(snippet.value?.date ?? "")} ${snippet.value?.title}`,
   ogUrl: () => `https://braveeeeen.com${route.fullPath}`,
 });
 
@@ -145,7 +147,7 @@ watch(isMenuShown, () => {
   <template v-else>
     <div class="flex-vert center- width-guard" @click="closeModal">
       <div class="content-box flex-vert center-">
-        <StrudelSnippetsHeader :title="snippet.title" :date="snippet.date"></StrudelSnippetsHeader>
+        <StrudelSnippetsHeader :title="snippet.title" :date="useDate(snippet.date)"></StrudelSnippetsHeader>
         <main>
           <div class="article-box article" v-html="parsedHtml" @click="handleArticleClick"></div>
         </main>

@@ -14,7 +14,7 @@ const formattedTitle = computed(() => props.title?.replace(/[\.(]/g, '-').replac
       <span>/</span>
       <span>{{ formattedTitle }}</span>
     </div>
-    <p>date: <span>{{ props.date ?? '' }}</span></p>
+    <p><span>{{ props.date ?? '' }}</span></p>
   </div>
 </template>
 
