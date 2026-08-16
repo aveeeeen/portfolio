@@ -66,7 +66,9 @@ function isEmbedOrMapsUrl(url: string): boolean {
     url.includes("google.com/maps") ||
     url.includes("maps.google.com") ||
     url.includes("maps.app.goo.gl") ||
-    url.includes("goo.gl/maps")
+    url.includes("goo.gl/maps") ||
+    url.startsWith("https://strudel.cc") ||
+    url.startsWith("http://strudel.cc")
   );
 }
 

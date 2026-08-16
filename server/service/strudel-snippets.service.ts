@@ -1,8 +1,13 @@
-import type { EventBlocksResult, ListEventInput, ListEventResult, Pagination, PaginationInput } from "./event.service.types";
-import * as EventRepository from "./event.repository";
+import type {
+  ListStrudelSnippetsInput,
+  ListStrudelSnippetsResult,
+  Pagination,
+  PaginationInput,
+  StrudelSnippetsBlocksResult
+} from "./strudel-snippets.service.types";
+import * as StrudelSnippetsRepository from "./strudel-snippets.repository";
 import { resolveEmbed } from "./embed.service";
 import { fetchOgpMeta } from "./ogp.service";
-import { EventImageSyncService } from "./event-image-sync.service";
 
 function isEmbedOrMapsUrl(url: string): boolean {
   if (!url) return false;
@@ -63,43 +68,18 @@ async function enrichBlocksWithEmbeds(blocks: any[]): Promise<void> {
   await Promise.all(promises);
 }
 
-export const listEvents = async (input: ListEventInput): Promise<ListEventResult[]> => {
-  const events = await EventRepository.getManyEvents(input);
-
-  const syncTargets = events.map(e => ({
-    id: e.id,
-    rawImageUrl: e.imageUrl,
-    updatedAt: e.updatedAt
-  }));
-
-  const syncedUrlMap = await EventImageSyncService.syncFlyerImagesForEvents(syncTargets);
-
-  return events.map(e => ({
-    ...e,
-    imageUrl: syncedUrlMap.get(e.id) ?? e.imageUrl
-  }));
+export const listStrudelSnippets = async (input: ListStrudelSnippetsInput): Promise<ListStrudelSnippetsResult[]> => {
+  const snippets = await StrudelSnippetsRepository.getManyStrudelSnippets(input);
+  return snippets;
 };
 
 export const getPaginationData = async (input: PaginationInput): Promise<Pagination> => {
-  const pagination = await EventRepository.getAllPagesAndCursors(input);
+  const pagination = await StrudelSnippetsRepository.getAllPagesAndCursors(input);
   return pagination;
 };
 
-export const getEventBlocksById = async (id: string): Promise<EventBlocksResult> => {
-  const event = await EventRepository.getEventBlocksById(id);
-  await enrichBlocksWithEmbeds(event.blocks);
-
-  if (event.imageUrl) {
-    const syncedUrlMap = await EventImageSyncService.syncFlyerImagesForEvents([
-      {
-        id: event.id,
-        rawImageUrl: event.imageUrl,
-        updatedAt: event.updatedAt
-      }
-    ]);
-    event.imageUrl = syncedUrlMap.get(event.id) ?? event.imageUrl;
-  }
-
-  return event;
+export const getStrudelSnippetBlocksById = async (id: string): Promise<StrudelSnippetsBlocksResult> => {
+  const snippet = await StrudelSnippetsRepository.getStrudelSnippetBlocksById(id);
+  await enrichBlocksWithEmbeds(snippet.blocks);
+  return snippet;
 };
-

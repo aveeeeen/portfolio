@@ -241,6 +241,11 @@ function formatYouTubeEmbedUrl(url: string): string | null {
  * Check static iframe patterns for supported providers
  */
 function matchStaticIframePattern(url: string): string | null {
+  // Strudel
+  if (url.startsWith("https://strudel.cc") || url.startsWith("http://strudel.cc")) {
+    return url;
+  }
+
   // YouTube
   const ytEmbed = formatYouTubeEmbedUrl(url);
   if (ytEmbed) {

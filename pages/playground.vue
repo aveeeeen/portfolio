@@ -20,6 +20,9 @@ useSeoMeta({
       </p>
       <ContentCard title="Fm Drim Kit" description="tone.jsで作られているfmベースのドラムシンセです。意外と遊べます。" path="./fmdrumkit">
       </ContentCard>
+      <ContentCard title="Strudel Snippets"
+        description="日記的に作ったJavaScriptのライブコーディング環境Strudelのコードです。Embedされているのでそのまま、編集できます。" path="./strudel-snippets">
+      </ContentCard>
 
     </div>
     <div class="bottom"></div>

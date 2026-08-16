@@ -4,6 +4,7 @@ import 'highlight.js/styles/atom-one-dark.css';
 
 const isUnderPageHeight = ref(false);
 const isMenuShown = ref(false);
+const videoRef = ref<HTMLVideoElement | null>(null);
 useTheme();
 
 useSeoMeta({
@@ -32,14 +33,17 @@ const getIsUnder = () => {
 }
 
 onMounted(() => {
-  console.log("mounted")
-  window.addEventListener("scroll", () => {
-    getIsUnder()
-  })
-})
+  if (videoRef.value) {
+    videoRef.value.muted = true;
+    videoRef.value.play().catch((err) => {
+      console.warn("Video autoplay prevented:", err);
+    });
+  }
+  window.addEventListener("scroll", getIsUnder);
+});
 
 onUnmounted(() => {
-  document.removeEventListener("scroll", getIsUnder);
+  window.removeEventListener("scroll", getIsUnder);
 });
 
 function scrollToAbout() {
@@ -52,7 +56,18 @@ function scrollToAbout() {
 </script>
 
 <template>
-  <video class="bg-video" src="~/assets/vid/bgVideo.mp4" autoplay playsinline muted loop></video>
+  <video
+    ref="videoRef"
+    class="bg-video"
+    src="~/assets/vid/bgVideo.mp4"
+    autoplay
+    playsinline
+    webkit-playsinline
+    :muted="true"
+    muted
+    loop
+    preload="auto"
+  ></video>
   <div class="intro-area">
     <div class="intro-box">
       <div class="intro-content">

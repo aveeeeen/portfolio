@@ -1,0 +1,39 @@
+<script setup lang="ts">
+const props = defineProps<{
+  title: string,
+  date: string,
+}>();
+
+const formattedTitle = computed(() => props.title?.replace(/[\.(]/g, '-').replace(/[\s)]/g, '').toLowerCase() ?? '');
+</script>
+
+<template>
+  <div class="snippet-header">
+    <div class="path-like">
+      <NuxtLink to="/strudel-snippets">strudel-snippets</NuxtLink><span>/</span><span>{{ formattedTitle }}</span>
+    </div>
+    <p>date: <span>{{ props.date ?? '' }}</span></p>
+  </div>
+</template>
+
+<style scoped>
+.snippet-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: var(--space-s) 0;
+  width: 100%;
+  border-bottom: solid 2px var(--text-color);
+}
+
+p {
+  margin: 0;
+}
+
+.path-like {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: var(--space-xs)
+}
+</style>

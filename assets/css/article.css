@@ -447,6 +447,12 @@ pre.mermaid p {
   border-radius: 6px;
 }
 
+.article > .notion-strudel iframe {
+  width: 100%;
+  height: 80svh;
+  max-width: 100%;
+}
+
 .article .notion-bookmark-card {
   margin: 12px 0;
   width: 600px;

@@ -604,6 +604,11 @@ export function useNotionBlockParser() {
     );
   };
 
+  const isStrudelUrl = (url: string): boolean => {
+    if (!url) return false;
+    return url.startsWith("https://strudel.cc") || url.startsWith("http://strudel.cc");
+  };
+
   const renderBookmark = (data: any, ogpData?: any, embedData?: any): string => {
     const url = data?.url || "";
     const caption = renderRichText(data?.caption || []);
@@ -623,23 +628,21 @@ export function useNotionBlockParser() {
       return renderEmbedResult(embedData, caption, url, false);
     }
 
-    // 2. Client-side iframe formatting fallback
-    const formatted = formatEmbedUrl(url);
-    if (formatted && formatted !== url) {
-      return `<div class="notion-embed">\n  <iframe src="${escapeHtml(formatted)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div class="notion-caption">${caption}</div>` : ""}\n</div>\n`;
-    }
-
     if (ogpData) {
       return renderOgpCard(ogpData, caption);
     }
 
-    // 3. Simple Link Card Fallback
+    // 2. Simple Link Card Fallback
     const linkTitle = isGoogleMapsUrl(url) ? "Google Maps で開く" : url;
     return `<div class="notion-embed notion-bookmark-card"><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(linkTitle)}</a>${caption ? `<div class="notion-caption">${caption}</div>` : ""}</div>\n`;
   };
 
   const formatEmbedUrl = (url: string): string => {
     if (!url) return "";
+
+    if (isStrudelUrl(url)) {
+      return url;
+    }
 
     // YouTube: watch?v=ID, youtu.be/ID, shorts/ID, or live/ID with timestamp
     const ytEmbedUrl = formatYouTubeEmbedUrl(url);
@@ -728,37 +731,29 @@ export function useNotionBlockParser() {
   };
 
   const renderEmbedResult = (embedData: any, caption: string, rawUrl: string, isEmbedBlock = false): string => {
-    const forceEmbed = isEmbedBlock || rawUrl.includes("embed");
-
-    if (!embedData || embedData.type === "fallback") {
-      const formatted = formatEmbedUrl(rawUrl);
-      const targetIframeSrc = (formatted && formatted !== rawUrl) ? formatted : rawUrl;
-
-      if (!isShortlinkUrl(targetIframeSrc) && (forceEmbed || (formatted && formatted !== rawUrl))) {
-        return `<div class="notion-embed">\n  <iframe src="${escapeHtml(targetIframeSrc)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div class="notion-caption">${caption}</div>` : ""}\n</div>\n`;
-      }
-
-      const displayTitle = isGoogleMapsUrl(rawUrl) ? "Google Maps で場所を開く" : rawUrl;
-      return `<div class="notion-embed notion-bookmark-card"><a href="${escapeHtml(rawUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(displayTitle)}</a>${caption ? `<div class="notion-caption">${caption}</div>` : ""}</div>\n`;
-    }
-
-    if (embedData.type === "oembed") {
+    // 1. oEmbed
+    if (embedData?.type === "oembed") {
       return `<div class="notion-embed notion-oembed">\n  ${embedData.html}\n  ${caption ? `<div class="notion-caption">${caption}</div>` : ""}\n</div>\n`;
     }
 
-    if (embedData.type === "iframe") {
-      return `<div class="notion-embed notion-iframe">\n  <iframe src="${escapeHtml(embedData.iframeUrl)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div class="notion-caption">${caption}</div>` : ""}\n</div>\n`;
+    // 2. Iframe
+    if (embedData?.type === "iframe") {
+      const isStrudel = isStrudelUrl(embedData.iframeUrl || rawUrl);
+      const containerClass = isStrudel ? "notion-embed notion-strudel" : "notion-embed notion-iframe";
+      return `<div class="${containerClass}">\n  <iframe src="${escapeHtml(embedData.iframeUrl)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div class="notion-caption">${caption}</div>` : ""}\n</div>\n`;
     }
 
-    if (embedData.type === "bookmark") {
-      if (forceEmbed) {
-        const formatted = formatEmbedUrl(rawUrl);
-        const targetIframeSrc = (formatted && formatted !== rawUrl) ? formatted : rawUrl;
-        if (!isShortlinkUrl(targetIframeSrc) && formatted && formatted !== rawUrl) {
-          return `<div class="notion-embed">\n  <iframe src="${escapeHtml(targetIframeSrc)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div class="notion-caption">${caption}</div>` : ""}\n</div>\n`;
-        }
-      }
+    // 3. For embed blocks, always prioritize rendering iframe
+    if (isEmbedBlock) {
+      const formatted = formatEmbedUrl(rawUrl);
+      const targetIframeSrc = formatted || rawUrl;
+      const isStrudel = isStrudelUrl(targetIframeSrc || rawUrl);
+      const containerClass = isStrudel ? "notion-embed notion-strudel" : "notion-embed";
+      return `<div class="${containerClass}">\n  <iframe src="${escapeHtml(targetIframeSrc)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div class="notion-caption">${caption}</div>` : ""}\n</div>\n`;
+    }
 
+    // 4. Bookmark blocks render OGP Card
+    if (embedData?.type === "bookmark") {
       return renderOgpCard({
         url: embedData.url || rawUrl,
         title: embedData.title,
@@ -776,21 +771,26 @@ export function useNotionBlockParser() {
     const url = data?.url || "";
     if (!url) return "";
     const caption = renderRichText(data?.caption || []);
+
     if (embedData) {
       return renderEmbedResult(embedData, caption, url, true);
     }
-    const embedUrl = formatEmbedUrl(url);
-    const targetSrc = (embedUrl && embedUrl !== url) ? embedUrl : url;
-    if (isShortlinkUrl(targetSrc)) {
-      return `<div class="notion-embed notion-bookmark-card"><a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">Google Maps で場所を開く</a>${caption ? `<div class="notion-caption">${caption}</div>` : ""}</div>\n`;
-    }
-    return `<div class="notion-embed">\n  <iframe src="${escapeHtml(targetSrc)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div class="notion-caption">${caption}</div>` : ""}\n</div>\n`;
+
+    const formatted = formatEmbedUrl(url);
+    const targetSrc = formatted || url;
+    const isStrudel = isStrudelUrl(targetSrc || url);
+    const containerClass = isStrudel ? "notion-embed notion-strudel" : "notion-embed";
+    return `<div class="${containerClass}">\n  <iframe src="${escapeHtml(targetSrc)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>\n  ${caption ? `<div class="notion-caption">${caption}</div>` : ""}\n</div>\n`;
   };
 
-  const renderLinkPreview = (data: any, ogpData?: any): string => {
+  const renderLinkPreview = (data: any, ogpData?: any, embedData?: any): string => {
     const url = data?.url || "";
     if (!url) return "";
     const caption = renderRichText(data?.caption || []);
+
+    if (embedData?.type === "bookmark") {
+      return renderOgpCard(embedData, caption);
+    }
 
     if (ogpData) {
       return renderOgpCard(ogpData, caption);

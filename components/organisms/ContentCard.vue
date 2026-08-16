@@ -21,7 +21,7 @@ const props = defineProps<{
 <style scoped>
 .tile-anchor {
   display: block;
-  width: fit-content;
+  width: auto;
   height: fit-content
 }
 
@@ -30,6 +30,8 @@ const props = defineProps<{
   border-radius: var(--space-s);
   border: solid 1.2px var(--text-color);
   box-sizing: border-box;
+  width: 80%;
+  margin-bottom: var(--space-s);
 }
 
 .tile-anchor:hover {
@@ -37,7 +39,7 @@ const props = defineProps<{
 }
 
 .tile-anchor:hover .tile {
-  background-color: color-mix(#00f 5%, var(--bg-color) 100%);
+  background-color: color-mix(#00f 2%, var(--bg-color) 100%);
 }
 
 .tile-anchor:hover span {
