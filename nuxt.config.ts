@@ -9,6 +9,11 @@ export default defineNuxtConfig({
       pathPrefix: false,
     },
   ],
+  postcss: {
+    plugins: {
+      autoprefixer: {},
+    },
+  },
   devtools: { enabled: true },
   plugins: [
     '~/plugins/directives',

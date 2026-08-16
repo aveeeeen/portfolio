@@ -50,6 +50,13 @@ const emit = defineEmits<{
 }
 
 button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
   font-family: Noto Sans JP, sans-serif;
   font-size: 1rem;
   display: inline;

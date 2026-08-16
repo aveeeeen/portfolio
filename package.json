@@ -20,5 +20,13 @@
   "devDependencies": {
     "tsx": "^4.23.12",
     "typescript": "^5.9.3"
-  }
+  },
+  "browserslist": [
+    "> 0.2%",
+    "last 2 versions",
+    "Firefox ESR",
+    "not dead",
+    "Safari >= 12",
+    "iOS >= 12"
+  ]
 }

@@ -468,6 +468,8 @@ function mapValuesToDrum(e, synth) {
 }
 
 .page-selector {
+  -webkit-appearance: none;
+  -moz-appearance: none;
   appearance: none;
   border-radius: 20px;
   border-color: white;
@@ -478,6 +480,8 @@ function mapValuesToDrum(e, synth) {
 }
 
 .play-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
   appearance: none;
   border-radius: 20px;
   border-color: white;

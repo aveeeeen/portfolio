@@ -51,17 +51,52 @@ html {
   font-optical-sizing: auto;
   letter-spacing: 0.05rch;
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Scrollbar cross-browser compatibility (Gecko / WebKit) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(128, 128, 128, 0.4) transparent;
+  -webkit-tap-highlight-color: transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(128, 128, 128, 0.4);
+  border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(128, 128, 128, 0.7);
 }
 
 body {
   box-sizing: border-box;
+  width: 100vw;
   width: 100svw;
+  min-height: 100vh;
+  min-height: 100svh;
   overflow-x: hidden;
   margin: 0;
   padding: 0;
   position: relative;
   display: block;
   background-color: var(--bg-color);
+  -webkit-overflow-scrolling: touch;
 }
 
 img {

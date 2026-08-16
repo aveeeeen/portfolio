@@ -5,10 +5,13 @@
   --p-line-height: 1.9;
   --p-font-weight: 360;
   --li-line-height: 1.7;
-  --code-bg-color: #555;
   letter-spacing: 0.06em;
   line-break: strict;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
   overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .article [id] {
@@ -211,6 +214,8 @@
   font-family: "Noto Sans Mono", monospace;
   font-size: 0.75em;
   line-height: 1;
+  -webkit-user-select: none;
+  -moz-user-select: none;
   user-select: none;
   z-index: 2;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -386,6 +391,8 @@ pre.mermaid p {
 .article .notion-callout-icon {
   font-size: 1.2em;
   line-height: 1.2;
+  -webkit-user-select: none;
+  -moz-user-select: none;
   user-select: none;
 }
 
@@ -489,6 +496,7 @@ pre.mermaid p {
   opacity: 0.75;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   margin-bottom: 8px;

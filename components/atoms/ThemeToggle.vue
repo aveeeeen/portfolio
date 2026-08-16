@@ -51,6 +51,13 @@ const { isDark, toggleTheme } = useTheme();
 
 <style scoped>
 .theme-toggle-circle {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
   background-color: var(--ui-bg-color);
   width: 2.5rem;
   height: 2.5rem;
